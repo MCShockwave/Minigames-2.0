@@ -1,0 +1,63 @@
+package net.mcshockwave.Minigames.Commands;
+
+import net.mcshockwave.MCS.MCShockwave;
+import net.mcshockwave.Minigames.Minigames;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+public class Opt implements CommandExecutor {
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
+		if (sender instanceof Player) {
+			Player p = (Player) sender;
+
+			boolean oo = Minigames.optedOut.contains(p.getName());
+
+			if (oo) {
+				Minigames.send(ChatColor.DARK_AQUA, p, "Opted %s to the minigame!", "in");
+				Minigames.optedOut.remove(p.getName());
+
+				if (Minigames.started) {
+					p.teleport(Minigames.currentGame.lobby);
+					Minigames.spectate(p);
+				} else {
+					p.teleport(new Location(p.getWorld(), 0, 103, 0));
+					p.setAllowFlight(false);
+				}
+				p.setPlayerListName(p.getName());
+				for (Player p2 : Bukkit.getOnlinePlayers()) {
+					MCShockwave.updateTab(p2);
+				}
+			} else {
+				Minigames.send(ChatColor.DARK_AQUA, p, "Opted %s of the minigame!", "out");
+				Minigames.optedOut.add(p.getName());
+
+				p.teleport(new Location(p.getWorld(), 0, 103, 0));
+				Minigames.resetPlayer(p);
+				if (Minigames.started) {
+					Minigames.setDead(p, false);
+					Minigames.sendDeathToGame(p);
+					p.setAllowFlight(false);
+					Minigames.resetPlayer(p);
+				} else {
+					String name = p.getName();
+					name = name.substring(0, name.length() > 14 ? 13 : name.length());
+					p.setPlayerListName(ChatColor.GRAY + name);
+					for (Player p2 : Bukkit.getOnlinePlayers()) {
+						MCShockwave.updateTab(p2);
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+}
