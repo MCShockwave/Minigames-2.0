@@ -119,7 +119,7 @@ public class Core implements IMinigame {
 		if (a == Action.RIGHT_CLICK_BLOCK) {
 			Block b = event.getClickedBlock();
 
-			if (LocUtils.isSame(b.getLocation(), c.getLocation()) && p.getLocation().distance(b.getLocation()) <= 3) {
+			if (LocUtils.isSame(b.getLocation(), c.getLocation()) && p.getLocation().distanceSquared(b.getLocation()) <= 4 * 4) {
 				GameTeam gt = Game.getTeam(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
 				p.teleport(gt.spawn);
 
