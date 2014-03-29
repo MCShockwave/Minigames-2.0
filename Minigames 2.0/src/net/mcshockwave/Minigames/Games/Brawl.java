@@ -26,8 +26,8 @@ public class Brawl implements IMinigame {
 
 	public Player	b1		= null, b2 = null;
 
-	Location		l1		= new Location(Minigames.getDefaultWorld(), 301.5, 134, -780, 90, 0);
-	Location		l2		= new Location(Minigames.getDefaultWorld(), 299, 134, -781, 270, 0);
+	Location		l1		= new Location(Minigames.getDefaultWorld(), 301.5, 134, -780, 270, 0);
+	Location		l2		= new Location(Minigames.getDefaultWorld(), 306.5, 134, -780, 90, 0);
 
 	public long		invin	= 0;
 
