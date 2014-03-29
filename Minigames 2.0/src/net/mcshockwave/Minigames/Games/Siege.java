@@ -18,6 +18,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitTask;
 
 public class Siege implements IMinigame {
@@ -68,6 +70,8 @@ public class Siege implements IMinigame {
 	public void giveKit(Player p) {
 		Minigames.clearInv(p);
 		p.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
+		Minigames.milkPlayer(p);
+		p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
 	}
 
 	@Override

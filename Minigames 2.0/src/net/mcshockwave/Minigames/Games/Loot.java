@@ -171,9 +171,11 @@ public class Loot implements IMinigame {
 		ItemStack it = p.getItemInHand();
 
 		if (it.getType() == Material.POTION) {
-			event.setCancelled(true);
-			Minigames.send(p, "You cannot use %s during invincibility! (%s seconds left)", "potions",
-					invinTime - TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()));
+			if (invinTime >= TimeUnit.NANOSECONDS.toSeconds(System.nanoTime())) {
+				event.setCancelled(true);
+				Minigames.send(p, "You cannot use %s during invincibility! (%s seconds left)", "potions", invinTime
+						- TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()));
+			}
 		}
 	}
 
