@@ -1,5 +1,6 @@
 package net.mcshockwave.Minigames.Games;
 
+import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
@@ -9,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -17,6 +19,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionEffect;
@@ -126,6 +129,20 @@ public class Siege implements IMinigame {
 				}
 				if (v == gv && Game.getTeam(d) != null && Game.getTeam(d).color == ChatColor.GREEN) {
 					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent e) {
+		if (Minigames.alivePlayers.contains(e.getPlayer().getName())) {
+			if (Minigames.currentGame == Game.Siege) {
+				if (e.getTo().getY() >= 107 && (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK || 
+						e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW || 
+						e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
+					e.getPlayer().setHealth(0.0);
+					MCShockwave.send(ChatColor.GRAY, e.getPlayer(), "Do not climb the mountains!");
 				}
 			}
 		}

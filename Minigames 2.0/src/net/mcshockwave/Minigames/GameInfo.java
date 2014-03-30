@@ -211,7 +211,33 @@ public enum GameInfo {
 		"Goal",
 		"Be the last team standing!",
 		"Tip",
-		"Defense can be the best offense"
+		"Defense can be the best offense"),
+	Loot( 
+		"Teams",
+		ChatColor.RED + "None",
+		"Respawn",
+		ChatColor.RED + "No",
+		"Main",
+		"Everyone spawns with random armour, potions and a random weapon. The aim of the game"
+				+ " is to kill opponents, and pick up their discarded loot. Any loot better"
+				+ " than your current loot is equipped. Every potion will be picked up.",
+		"Goal",
+		"Be the last competitor standing!",
+		"Tip",
+		"Use your potions wisely."),
+	Minotaur(
+		"Teams",
+		ChatColor.YELLOW + "Yes",
+		"Respawn",
+		ChatColor.RED + "No",
+		"Main",
+		"Everyone is spawned in a maze, with one person as the Minotaur. The Minotaur is equipped"
+				+ " with iron armour and a sword, and has to kill everyone. Everyone else has to find chests scattered"
+				+ " around the map, and group together to kill the Minotaur.",
+		"Goal",
+		"Minotaur- Kill Humans. Humans- Group together and slay the Minotaur",
+		"Tip",
+		"Teamwork is key"
 	);
 
 	public String[]	info;

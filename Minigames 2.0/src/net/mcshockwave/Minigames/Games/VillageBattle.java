@@ -3,6 +3,7 @@ package net.mcshockwave.Minigames.Games;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
@@ -21,6 +22,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -37,6 +39,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -231,7 +234,21 @@ public class VillageBattle implements IMinigame {
 					(pk.neg == PotionEffectType.DAMAGE_RESISTANCE ? -2 : 0)));
 		}
 	}
-
+	
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent e) {
+		if (Minigames.alivePlayers.contains(e.getPlayer().getName())) {
+			if (types.get(e.getPlayer()) == Profession.BUTCHER) {
+				if (e.getTo().getY() >= 107 && (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK || 
+						e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW || 
+						e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
+					e.getPlayer().setHealth(0.0);
+					MCShockwave.send(ChatColor.GRAY, e.getPlayer(), "Do not climb the mountains!");
+				}
+			}
+		}
+	}
+	
 	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		if (event.getEntityType() == EntityType.VILLAGER) {
