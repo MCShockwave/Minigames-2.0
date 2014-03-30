@@ -24,6 +24,15 @@ import org.bukkit.util.Vector;
 
 public class Brawl implements IMinigame {
 
+		Location loc = new Location(McMinigames.defaultWorld, 303, 138, -789)
+		Player p = (Player) sender;
+	    private boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
+	        if(commandLabel.equalsIgnoreCase("upsies"))
+	        	if (SQLTable.hasRank(p.getName()), Rank.JR_MOD) {
+	                p.teleport(loc);
+	}
+	    }
+	
 	public Player	b1		= null, b2 = null;
 
 	Location		l1		= new Location(Minigames.getDefaultWorld(), 301.5, 134, -780, 270, 0);
