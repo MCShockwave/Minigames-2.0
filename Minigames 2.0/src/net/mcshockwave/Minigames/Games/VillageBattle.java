@@ -242,8 +242,8 @@ public class VillageBattle implements IMinigame {
 				if (e.getTo().getY() >= 107 && (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK || 
 						e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW || 
 						e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
-					e.getPlayer().setHealth(0.0);
-					MCShockwave.send(ChatColor.GRAY, e.getPlayer(), "Do not climb the mountains!");
+					e.setTo(e.getFrom());
+					MCShockwave.send(e.getPlayer(), "Do not climb the %s!", "mountains");
 				}
 			}
 		}

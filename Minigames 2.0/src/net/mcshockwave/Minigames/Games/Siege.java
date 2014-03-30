@@ -133,17 +133,16 @@ public class Siege implements IMinigame {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if (Minigames.alivePlayers.contains(e.getPlayer().getName())) {
-			if (Minigames.currentGame == Game.Siege) {
-				if (e.getTo().getY() >= 107 && (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK || 
-						e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW || 
-						e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
-					e.getPlayer().setHealth(0.0);
-					MCShockwave.send(ChatColor.GRAY, e.getPlayer(), "Do not climb the mountains!");
-				}
+			if (e.getTo().getY() >= 120
+					&& (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK
+							|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW || e.getTo()
+							.getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
+				e.setTo(e.getFrom());
+				MCShockwave.send(e.getPlayer(), "Do not climb the %s!", "mountains");
 			}
 		}
 	}

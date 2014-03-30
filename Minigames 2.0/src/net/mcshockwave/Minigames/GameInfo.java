@@ -212,7 +212,7 @@ public enum GameInfo {
 		"Be the last team standing!",
 		"Tip",
 		"Defense can be the best offense"),
-	Loot( 
+	Loot(
 		"Teams",
 		ChatColor.RED + "None",
 		"Respawn",
@@ -237,8 +237,7 @@ public enum GameInfo {
 		"Goal",
 		"Minotaur- Kill Humans. Humans- Group together and slay the Minotaur",
 		"Tip",
-		"Teamwork is key"
-	);
+		"Teamwork is key");
 
 	public String[]	info;
 
