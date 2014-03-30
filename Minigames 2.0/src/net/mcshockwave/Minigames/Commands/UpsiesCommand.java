@@ -24,6 +24,7 @@ public class UpsiesCommand implements CommandExecutor {
 				sender.sendMessage("Unknown command. Type \"/help\" for help.");
 			} else {
 				if (SQLTable.hasRank(sender.getName(), Rank.JR_MOD)) {
+					if (Minigames.currentGame == Game.BRAWL) {
 					if (args[0].equalsIgnoreCase("r")) {
 						p.teleport(blue);
 					} else if (args[0].equalsIgnoreCase("b")) {
