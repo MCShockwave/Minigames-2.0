@@ -2,6 +2,7 @@ package net.mcshockwave.Minigames.Commands;
 
 import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.SQLTable.Rank;
+import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 
 import org.bukkit.Location;
@@ -24,12 +25,13 @@ public class UpsiesCommand implements CommandExecutor {
 				sender.sendMessage("Unknown command. Type \"/help\" for help.");
 			} else {
 				if (SQLTable.hasRank(sender.getName(), Rank.JR_MOD)) {
-					if (Minigames.currentGame == Game.BRAWL) {
-					if (args[0].equalsIgnoreCase("r")) {
-						p.teleport(blue);
-					} else if (args[0].equalsIgnoreCase("b")) {
-						if (SQLTable.hasRank(sender.getName(), Rank.JR_MOD)) {
-							p.teleport(red);
+					if (Minigames.currentGame == Game.Brawl) {
+						if (args[0].equalsIgnoreCase("r")) {
+							p.teleport(blue);
+						} else if (args[0].equalsIgnoreCase("b")) {
+							if (SQLTable.hasRank(sender.getName(), Rank.JR_MOD)) {
+								p.teleport(red);
+							}
 						}
 					}
 				}
