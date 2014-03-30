@@ -160,7 +160,59 @@ public enum GameInfo {
 		"Kill the other team's villagers and be the last team with villagers to win!",
 		"Tip",
 		"Kill unpossessed villagers on the opposing team, too! That way, nobody can claim them, "
-				+ "and you'll win the game faster!");
+				+ "and you'll win the game faster!"),
+	Hot_Potato(
+		"Teams",
+		ChatColor.RED + "None",
+		"Respawn",
+		ChatColor.RED + "No",
+		"Main",
+		"Everyone gets spawned in an arena, and a few players get randomly selected to have the potato. "
+				+ " While the potato is in your inventory, you will be set on fire and lose health. The aim is to get rid "
+				+ " of the potato as quickly as possible by throwing it using right click. Once the potato hits another person, "
+				+ " they will get the potato. You will stop being on fire, and you have to run around the arena, avoiding getting the potato again.",
+		"Goal",
+		"Be the last person standing!",
+		"Tip",
+		"Keep moving to make yourself harder to hit from others that have the potato!"),
+	Infection(
+		"Teams",
+		ChatColor.YELLOW + "2",
+		"Respawn",
+		ChatColor.GREEN + "Yes",
+		"Main",
+		"Players get spawned in the map as humans, and a few are randomly selected as zombies."
+				+ " The humans have to avoid the zombies, while the zombies try to kill the humans. "
+				+ "If the zombie kills a human the human becomes a zombie too.",
+		"Goal",
+		"Be the last human standing",
+		"Tip",
+		"Find a good spot to hide that won't get notcied by zombies!"),
+	Siege(
+		"Teams",
+		ChatColor.YELLOW + "2",
+		"Respawn",
+		ChatColor.YELLOW + "Varies",
+		"Main",
+		"Two teams spawn on either side of the map, and they both have kings, which are villagers."
+				+ " If you kill the other teams vilager, they wont respawn. You have to protect your own villager"
+				+ " while trying to eliminate the other teams villager in the process.",
+		"Tip",
+		"If your king dies, you won't respawn!"),
+	Gladiators(
+		"Teams",
+		ChatColor.YELLOW + "4",
+		"Respawn",
+		ChatColor.RED + "No",
+		"Main",
+		"Teams are spawned in their waiting areas, while one member of their team is randomly selected to go into the arena."
+				+ " They then fight the other 3 people in the arena from the other teams, while avoiding dying. If the member in the"
+				+ " arena dies, another member of the team is randomly selected to fight. If you are alive and your team wins you will be awarded points!",
+		"Goal",
+		"Be the last team standing!",
+		"Tip",
+		"Defense can be the best offense"
+	);
 
 	public String[]	info;
 
