@@ -80,14 +80,17 @@ public class Core implements IMinigame {
 		Player p = e.p;
 		if (coreTeam != null) {
 			if (e.t == null) {
-				giveKit(e.p);
 				return;
 			}
 			if (coreTeam != e.t) {
 				Minigames.broadcastDeath(p, e.k, "%s was eliminated", "%s was eliminated by %s");
 
 				Minigames.setDead(p, false);
+			} else {
+				giveKit(p);
 			}
+		} else {
+			giveKit(p);
 		}
 		if (Minigames.getTeamsLeft().size() <= 2 && !canGoIn && Minigames.started) {
 			Minigames.broadcast("All teams are now allowed in the %s!", "Core");
@@ -119,7 +122,8 @@ public class Core implements IMinigame {
 		if (a == Action.RIGHT_CLICK_BLOCK) {
 			Block b = event.getClickedBlock();
 
-			if (LocUtils.isSame(b.getLocation(), c.getLocation()) && p.getLocation().distanceSquared(b.getLocation()) <= 4 * 4) {
+			if (LocUtils.isSame(b.getLocation(), c.getLocation())
+					&& p.getLocation().distanceSquared(b.getLocation()) <= 4 * 4) {
 				GameTeam gt = Game.getTeam(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
 				p.teleport(gt.spawn);
 
