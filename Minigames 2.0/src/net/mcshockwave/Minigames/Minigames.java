@@ -13,6 +13,7 @@ import net.mcshockwave.Minigames.Commands.MgInfo;
 import net.mcshockwave.Minigames.Commands.Opt;
 import net.mcshockwave.Minigames.Commands.Shop;
 import net.mcshockwave.Minigames.Commands.TeamSelect;
+import net.mcshockwave.Minigames.Commands.UpsiesCommand;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.PreGame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
@@ -92,6 +93,7 @@ public class Minigames extends JavaPlugin {
 		getCommand("shop").setExecutor(new Shop());
 		// getCommand("points").setExecutor(new Points());
 		getCommand("team").setExecutor(new TeamSelect());
+		getCommand("upsies").setExecutor(new UpsiesCommand());
 
 		if (checkCanStart()) {
 			startCount();
