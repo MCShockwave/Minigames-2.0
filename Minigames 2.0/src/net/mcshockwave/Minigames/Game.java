@@ -190,7 +190,7 @@ public enum Game {
 		true,
 		new Location(Minigames.getDefaultWorld(), -404, 129, -12),
 		new Location(Minigames.getDefaultWorld(), -444, 109, -12),
-		8),
+		6),
 	Minotaur(
 		new Minotaur(),
 		Material.DIAMOND_AXE,
