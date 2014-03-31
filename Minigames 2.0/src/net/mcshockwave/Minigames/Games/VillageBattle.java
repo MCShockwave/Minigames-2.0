@@ -28,6 +28,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
@@ -40,6 +41,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -479,7 +481,23 @@ public class VillageBattle implements IMinigame {
 			event.getEntity().remove();
 		}
 	}
-
+	
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void onItemPickup(PlayerPickupItemEvent e) {
+		Player p = e.getPlayer();
+		Item i = e.getItem();
+		ItemStack is = e.getItem().getItemStack();
+		if (Minigames.currentGame == Game.Village_Battle) {
+			if (is.getType() == Material.ANVIL) {
+				i.remove();
+				is.setType(Material.AIR);
+				p.updateInventory();
+			}
+		}
+	}
+	
+	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		final Player p = event.getPlayer();
