@@ -236,21 +236,22 @@ public class VillageBattle implements IMinigame {
 					(pk.neg == PotionEffectType.DAMAGE_RESISTANCE ? -2 : 0)));
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if (Minigames.alivePlayers.contains(e.getPlayer().getName())) {
 			if (types.get(e.getPlayer()) == Profession.BUTCHER) {
-				if (e.getTo().getY() >= 107 && (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK || 
-						e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW || 
-						e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
+				if (e.getTo().getY() >= 107
+						&& (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK
+								|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW || e
+								.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
 					e.setTo(e.getFrom());
 					MCShockwave.send(e.getPlayer(), "Do not climb the %s!", "mountains");
 				}
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		if (event.getEntityType() == EntityType.VILLAGER) {
@@ -323,7 +324,7 @@ public class VillageBattle implements IMinigame {
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		Player p = event.getPlayer();
 		Entity rc = event.getRightClicked();
-		
+
 		event.setCancelled(true);
 
 		if (Minigames.alivePlayers.contains(p.getName()) && !types.containsKey(p) && rc instanceof Villager) {
@@ -481,23 +482,16 @@ public class VillageBattle implements IMinigame {
 			event.getEntity().remove();
 		}
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	@EventHandler
 	public void onItemPickup(PlayerPickupItemEvent e) {
-		Player p = e.getPlayer();
 		Item i = e.getItem();
-		ItemStack is = e.getItem().getItemStack();
-		if (Minigames.currentGame == Game.Village_Battle) {
-			if (is.getType() == Material.ANVIL) {
-				i.remove();
-				is.setType(Material.AIR);
-				p.updateInventory();
-			}
+		if (i.getItemStack().getType() == Material.ANVIL) {
+			i.remove();
+			e.setCancelled(true);
 		}
 	}
-	
-	
+
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		final Player p = event.getPlayer();
