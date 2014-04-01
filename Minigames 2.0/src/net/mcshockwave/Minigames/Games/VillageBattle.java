@@ -486,11 +486,9 @@ public class VillageBattle implements IMinigame {
 	@EventHandler
 	public void onItemPickup(PlayerPickupItemEvent e) {
 		Item i = e.getItem();
-		if (Minigames.currentGame == Game.Village_Battle) {
-			if (i.getItemStack().getType() == Material.ANVIL) {
-				e.setCancelled(true);
-				i.remove();
-			}
+		if (i.getItemStack().getType() == Material.ANVIL) {
+			e.setCancelled(true);
+			i.remove();
 		}
 	}
 
