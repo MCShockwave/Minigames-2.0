@@ -16,6 +16,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -23,7 +25,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class Brawl implements IMinigame {
-	
+
 	public Player	b1		= null, b2 = null;
 
 	Location		l1		= new Location(Minigames.getDefaultWorld(), 301.5, 134, -780, 270, 0);
@@ -60,6 +62,13 @@ public class Brawl implements IMinigame {
 					selectRandoms();
 				}
 			}, 2);
+		}
+	}
+
+	@EventHandler
+	public void onEntityDamage(EntityDamageEvent event) {
+		if (event.getEntity() instanceof Player && event.getCause() == DamageCause.FALL) {
+			event.setCancelled(true);
 		}
 	}
 
@@ -109,7 +118,7 @@ public class Brawl implements IMinigame {
 
 		specAbil(b1);
 		specAbil(b2);
-		
+
 		PotionEffect slow = new PotionEffect(PotionEffectType.SLOW, 20, 10);
 		b1.addPotionEffect(slow);
 		b2.addPotionEffect(slow);
