@@ -42,8 +42,8 @@ public class Core implements IMinigame {
 
 	HashMap<Player, Long>	cooldown	= new HashMap<Player, Long>();
 
-	Location[]				tree		= { new Location(w, 35.5, 104, 980.5, 180, 0),
-			new Location(w, -14.5, 104, 958.5, 270, 0), new Location(w, -5.5, 104, 1041.5, 180, 0) };
+	Location[]				tree		= { new Location(w, 0.5, 101, 1037.5, 180, 0),
+			new Location(w, 36.5, 101, 1000.5, 270, 0), new Location(w, 0.5, 101, 963.5, 180, 0) };
 
 	public void onGameStart() {
 		for (Player p : Minigames.getOptedIn()) {
