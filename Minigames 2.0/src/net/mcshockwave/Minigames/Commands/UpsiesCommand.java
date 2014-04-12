@@ -15,6 +15,7 @@ public class UpsiesCommand implements CommandExecutor {
 
 	Location	red		= new Location(Minigames.getDefaultWorld(), 303, 139, -789);
 	Location	blue	= new Location(Minigames.getDefaultWorld(), 304, 139, -771);
+	Location	fix		= new Location(Minigames.getDefaultWorld(), 303, 134, -780);
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -30,13 +31,14 @@ public class UpsiesCommand implements CommandExecutor {
 							p.teleport(blue);
 						} else if (args[0].equalsIgnoreCase("b")) {
 							if (SQLTable.hasRank(sender.getName(), Rank.JR_MOD)) {
-								p.teleport(red);
-							}
+								p.teleport(red);}	
+								}
+							} else if (args[0].equalsIgnoreCase("down")) {
+								p.teleport(fix);
 						}
 					}
 				}
 			}
-		}
 		return false;
 	}
 }
