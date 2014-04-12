@@ -30,11 +30,9 @@ public class UpsiesCommand implements CommandExecutor {
 						if (args[0].equalsIgnoreCase("r")) {
 							p.teleport(blue);
 						} else if (args[0].equalsIgnoreCase("b")) {
-							if (SQLTable.hasRank(sender.getName(), Rank.JR_MOD)) {
-								p.teleport(red);}	
-								}
-							} else if (args[0].equalsIgnoreCase("down")) {
-								p.teleport(fix);
+						        p.teleport(red);
+						} else if (args[0].equalsIgnoreCase("down")) {
+							p.teleport(fix);
 						}
 					}
 				}
