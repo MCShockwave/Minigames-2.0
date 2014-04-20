@@ -14,10 +14,12 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -62,6 +64,18 @@ public class Brawl implements IMinigame {
 					selectRandoms();
 				}
 			}, 2);
+		}
+	}
+	
+	@EventHandler
+	  public void onPlayerQuit(PlayerQuitEvent qe){
+	    Player qp = qe.getPlayer();
+		if (qp == b1 || qp == b2) {
+			if (qp == b1) {
+				b2.teleport(Game.Brawl.spawn);
+			} else {
+				b1.teleport(Game.Brawl.spawn);
+			}
 		}
 	}
 
