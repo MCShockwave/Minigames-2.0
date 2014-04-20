@@ -30,13 +30,14 @@ public class UpsiesCommand implements CommandExecutor {
 						if (args[0].equalsIgnoreCase("r")) {
 							p.teleport(blue);
 						} else if (args[0].equalsIgnoreCase("b")) {
-						        p.teleport(red);
+							p.teleport(red);
 						} else if (args[0].equalsIgnoreCase("down")) {
 							p.teleport(fix);
 						}
 					}
 				}
 			}
+		}
 		return false;
 	}
 }
