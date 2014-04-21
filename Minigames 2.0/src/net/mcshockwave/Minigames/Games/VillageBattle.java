@@ -242,11 +242,15 @@ public class VillageBattle implements IMinigame {
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if (Minigames.alivePlayers.contains(e.getPlayer().getName())) {
 			if (types.get(e.getPlayer()) == Profession.BUTCHER) {
-				if (e.getTo().getY() >= 107
-						&& (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK
-								|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW || e
-								.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
-					e.setTo(e.getFrom());
+				if (e.getTo().getY() >= 107 && (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.DIRT
+						|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS 
+						|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
+					
+					Player p = e.getPlayer();
+					Location l = p.getWorld().getHighestBlockAt(e.getFrom()).getLocation();
+			    	l.setPitch(p.getLocation().getPitch());
+			    	l.setYaw(p.getLocation().getYaw());
+			    	e.setTo(l);
 					MCShockwave.send(e.getPlayer(), "Do not climb the %s!", "mountains");
 				}
 			}
