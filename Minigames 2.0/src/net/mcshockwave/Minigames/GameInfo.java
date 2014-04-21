@@ -244,13 +244,13 @@ public enum GameInfo {
 			"Respawn",
 			ChatColor.GREEN + "Yes",
 			"Main",
-			"All players are equipped with guns (hoes) that fire lasers. Your"
-					+ " team starts with 250 points. If you shoot the other team they will lose a"
-					+ " point. If you shoot the Redstone Lamp in the enemies base they lose 3-5 points.",
+			"All players are equipped with guns (hoes) that fire lasers. Each"
+					+ " team starts with 250 points. If you shoot a player on the other team they lose a"
+					+ " point. If you shoot one of the enemies two bases (redsone lamps) they will lose 5 points.,
 			"Goal",
-			"Be the last team standing!",
+			"Reduce the other team's points to 0!",
 			"Tip",
-			"Make use of cover.");
+			"Make use of cover, and remember your gun has a 2 second cooldown after being shot.");
 	
 
 	public String[]	info;

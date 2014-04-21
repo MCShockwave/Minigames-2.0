@@ -71,11 +71,15 @@ public class LaserTag implements IMinigame {
 	@Override
 	public void onGameEnd() {
 		o.unregister();
+		cooldown.clear();
 	}
 
 	@Override
 	public void onPlayerDeath(DeathEvent e) {
 		Player p = e.p;
+		if (cooldown.contains(p.getName())) {
+			cooldown.remove(p.getName());
+		}
 		if (getLives(e.gt) < 0) {
 			Minigames.broadcastDeath(e.p, e.k, "%s was tagged for the final point!", "%s was tagged by %s for the final point!");
 		}
@@ -243,7 +247,7 @@ public class LaserTag implements IMinigame {
 			yint = set;
 			gscore.setScore(set);
 		}
-		List<Integer> nums = Arrays.asList(new Integer[] { 75, 50, 25, 10, 5, 4, 3, 2, 1, 0 });
+		List<Integer> nums = Arrays.asList(new Integer[] { 150, 100, 75, 50, 25, 10, 5, 4, 3, 2, 1, 0 });
 		if (nums.contains(set)) {
 			Minigames.broadcast(ChatColor.LIGHT_PURPLE, "%s has %s points left!", gt.color + gt.name, set);
 		}
