@@ -109,6 +109,9 @@ public class LaserTag implements IMinigame {
 			if (e.getAction() != Action.RIGHT_CLICK_AIR) {
 				return;
 			}
+		        if (cooldown.contains(e.getPlayer().getName())) {
+				return;
+			}
 			cooldown.add(e.getPlayer().getName());
 			Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 				public void run() {
