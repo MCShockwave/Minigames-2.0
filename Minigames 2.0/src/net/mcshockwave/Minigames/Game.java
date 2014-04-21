@@ -179,8 +179,7 @@ public enum Game {
 		new Location(Minigames.getDefaultWorld(), 347, 143, 189),
 		new GameTeam[] {
 				new GameTeam("Green", ChatColor.GREEN, new Location(Minigames.getDefaultWorld(), 282, 116, 156, 270, 0)),
-				new GameTeam("Yellow", ChatColor.YELLOW,
-						new Location(Minigames.getDefaultWorld(), 446, 116, 194, 90, 0)) }),
+				new GameTeam("Yellow", ChatColor.YELLOW, new Location(Minigames.getDefaultWorld(), 446, 116, 194, 90, 0)) }),
 	Loot(
 		new Loot(),
 		Material.DIAMOND_CHESTPLATE,
@@ -201,7 +200,30 @@ public enum Game {
 		new Location(Minigames.getDefaultWorld(), 1000, 111, 0),
 		new GameTeam[] {
 				new GameTeam("Humans", ChatColor.WHITE, new Location(Minigames.getDefaultWorld(), 1000, 111, 0)),
-				new GameTeam("The Minotaur", ChatColor.RED, new Location(Minigames.getDefaultWorld(), 1000, 111, 0)) });
+				new GameTeam("The Minotaur", ChatColor.RED, new Location(Minigames.getDefaultWorld(), 1000, 111, 0)) }),
+/*	Lockdown(
+		new Lockdown(),
+		Material.DIAMOND_BLOCK,
+		0,
+		10,
+		true,
+		true,
+		new Location(Minigames.getDefaultWorld(), 1500, 121, 0),
+		new GameTeam[] {
+			new GameTeam("Green", ChatColor.GREEN, new Location(Minigames.getDefaultWorld(), 1502, 95, -103)),
+			new GameTeam("Yellow", ChatColor.YELLOW, new Location(Minigames.getDefaultWorld(), 1498, 103, 100)) }),*/
+	Laser_Tag(
+		new LaserTag(),
+		Material.DIAMOND_HOE,
+		0,
+		10,
+		true,
+		true,
+		new Location(Minigames.getDefaultWorld(), -1500, 100, 0),
+		new GameTeam[] {
+			new GameTeam("Green", ChatColor.GREEN, new Location(Minigames.getDefaultWorld(), -1531, 101, 0)),
+			new GameTeam("Yellow", ChatColor.YELLOW, new Location(Minigames.getDefaultWorld(), -1496, 101, 0)) }
+		);
 
 	public String		name;
 	public IMinigame	mclass;
