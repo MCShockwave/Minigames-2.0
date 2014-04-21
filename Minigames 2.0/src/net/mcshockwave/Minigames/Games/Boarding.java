@@ -49,6 +49,7 @@ public class Boarding implements IMinigame {
 	HashMap<Player, Long>	lastFireTime	= new HashMap<Player, Long>();
 	private final int		reloadTime		= 10;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
 		Game g = Game.getInstance(this);

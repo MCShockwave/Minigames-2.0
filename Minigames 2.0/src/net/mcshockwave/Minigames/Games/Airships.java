@@ -142,14 +142,14 @@ public class Airships implements IMinigame {
 
 			if (health - dam <= 0) {
 				event.setCancelled(true);
-				p.setHealth(20);
+				p.setHealth(20f);
 				p.setAllowFlight(false);
 
 				Minigames.send(p, "Your %s has been destroyed!", "engine");
 
 				FireworkLaunchUtils.playFirework(p.getEyeLocation(), Color.RED, Color.ORANGE);
 			} else if (health - dam <= 6) {
-				p.setFireTicks(100000);
+				p.setFireTicks(Integer.MAX_VALUE);
 			}
 		}
 	}

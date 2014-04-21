@@ -1,18 +1,15 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
 import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Utils.LocUtils;
 
 import org.bukkit.Bukkit;
@@ -51,6 +48,9 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class VillageBattle implements IMinigame {
 
 	Location					gspawn	= new Location(w, 577, 103, 5);
@@ -68,6 +68,7 @@ public class VillageBattle implements IMinigame {
 
 	BukkitTask					bt		= null;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
 		int gvc = Game.getInstance(this).teams[0].team.getSize();
@@ -492,6 +493,7 @@ public class VillageBattle implements IMinigame {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		final Player p = event.getPlayer();

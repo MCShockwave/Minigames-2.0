@@ -139,7 +139,7 @@ public class Gladiators implements IMinigame {
 
 			if (de instanceof Player) {
 				if (Minigames.hasItem(p, ShopItem.Provocateur)) {
-					p.getWorld().playSound(p.getLocation(), Sound.HURT, 1, 1);
+					p.getWorld().playSound(p.getLocation(), Sound.HURT_FLESH, 1, 1);
 					PacketUtils.playBlockParticles(Material.IRON_BLOCK, 0, p.getEyeLocation());
 				}
 			}

@@ -128,7 +128,7 @@ public class Dogtag implements IMinigame {
 				name.setCustomNameVisible(true);
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 					public void run() {
-						name.setHealth(0);
+						name.setHealth(0f);
 					}
 				}, 2);
 			}

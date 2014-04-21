@@ -145,7 +145,7 @@ public class HotPotato implements IMinigame {
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event.getCause() == DamageCause.FIRE_TICK) {
-			event.setDamage(2);
+			event.setDamage(2f);
 		}
 	}
 }

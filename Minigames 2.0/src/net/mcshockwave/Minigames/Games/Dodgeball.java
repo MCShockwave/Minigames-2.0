@@ -88,11 +88,11 @@ public class Dodgeball implements IMinigame {
 				Player p = (Player) event.getEntity();
 				if (canBeHit.contains(p)) {
 					canBeHit.remove(p);
-					event.setDamage(0);
-					p.getWorld().playSound(p.getLocation(), Sound.HURT, 1, 1);
+					event.setDamage(0f);
+					p.getWorld().playSound(p.getLocation(), Sound.HURT_FLESH, 1, 1);
 					return;
 				}
-				event.setDamage(20);
+				event.setDamage(20f);
 				for (ItemStack it : p.getInventory().getContents()) {
 					if (it != null && it.getType() == Material.SNOW_BALL) {
 						for (int i = 0; i < it.getAmount(); i++) {
