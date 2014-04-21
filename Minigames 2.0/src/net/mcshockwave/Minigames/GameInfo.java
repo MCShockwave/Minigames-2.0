@@ -237,7 +237,21 @@ public enum GameInfo {
 		"Goal",
 		"Minotaur- Kill Humans. Humans- Group together and slay the Minotaur",
 		"Tip",
-		"Teamwork is key");
+		"Teamwork is key"),
+	Laser_Tag(
+			"Teams",
+			ChatColor.YELLOW + "2",
+			"Respawn",
+			ChatColor.GREEN + "Yes",
+			"Main",
+			"All players are equipped with guns (hoes) that fire lasers. Your"
+					+ " team starts with 250 points. If you shoot the other team they will lose a"
+					+ " point. If you shoot the Redstone Lamp in the enemies base they lose 3-5 points.",
+			"Goal",
+			"Be the last team standing!",
+			"Tip",
+			"Make use of cover.");
+	
 
 	public String[]	info;
 
