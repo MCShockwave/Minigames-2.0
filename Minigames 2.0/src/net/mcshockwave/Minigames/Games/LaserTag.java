@@ -1,8 +1,15 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import net.mcshockwave.MCS.SQLTable;
+import net.mcshockwave.MCS.Currency.LevelUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
+import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Game.GameTeam;
+import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.minecraft.server.v1_7_R2.PacketPlayOutWorldParticles;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,12 +17,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -26,30 +32,24 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.BlockIterator;
 
-import net.mcshockwave.MCS.SQLTable;
-import net.mcshockwave.MCS.Currency.LevelUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
-import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Minigames;
-import net.mcshockwave.Minigames.Events.DeathEvent;
-import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.minecraft.server.v1_7_R1.PacketPlayOutWorldParticles;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class LaserTag implements IMinigame {
-	
-	private Location yb1 = new Location(Minigames.getDefaultWorld(), -1474, 105, 2);
-	private Location yb2 = new Location(Minigames.getDefaultWorld(), -1474, 105, -1);
-	private Location gb1 = new Location(Minigames.getDefaultWorld(), -1525, 105, 2);
-	private Location gb2 = new Location(Minigames.getDefaultWorld(), -1525, 105, -1);
-	private int startp = 100;
-	private int gint = 100, yint = 100;
-	
-	Scoreboard s;
-	Score yscore, gscore;
-	Objective o;
-	
+
+	private Location	yb1		= new Location(Minigames.getDefaultWorld(), -1474, 105, 2);
+	private Location	yb2		= new Location(Minigames.getDefaultWorld(), -1474, 105, -1);
+	private Location	gb1		= new Location(Minigames.getDefaultWorld(), -1525, 105, 2);
+	private Location	gb2		= new Location(Minigames.getDefaultWorld(), -1525, 105, -1);
+	private int			startp	= 100;
+	private int			gint	= 100, yint = 100;
+
+	Scoreboard			s;
+	Score				yscore, gscore;
+	Objective			o;
+
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
 		s = Bukkit.getScoreboardManager().getMainScoreboard();
@@ -60,8 +60,8 @@ public class LaserTag implements IMinigame {
 		gscore.setScore(startp);
 		yscore.setScore(startp);
 		o.setDisplaySlot(DisplaySlot.SIDEBAR);
-		for (String s : Minigames.alivePlayers) {
-			giveItems(Bukkit.getPlayerExact(s));
+		for (Player p : Minigames.getOptedIn()) {
+			giveItems(p);
 		}
 	}
 
@@ -74,7 +74,8 @@ public class LaserTag implements IMinigame {
 	public void onPlayerDeath(DeathEvent e) {
 		Player p = e.p;
 		if (getLives(e.gt) < 0) {
-			Minigames.broadcastDeath(e.p, e.k, "%s was tagged for the final point!", "%s was tagged by %s for the final point!");
+			Minigames.broadcastDeath(e.p, e.k, "%s was tagged for the final point!",
+					"%s was tagged by %s for the final point!");
 		}
 		if (e.k != null) {
 			Player k = e.k;
@@ -85,7 +86,8 @@ public class LaserTag implements IMinigame {
 				LevelUtils.addXP(k, rand.nextInt(maxXp - minXp) + minXp, "killing " + p.getName(), true);
 			}
 		}
-		PacketUtils.sendPacketGlobally(p.getEyeLocation(), 50, PacketUtils.generateParticles(ParticleEffect.LAVA, p.getEyeLocation(), 0, 1, 50));
+		PacketUtils.sendPacketGlobally(p.getEyeLocation(), 50,
+				PacketUtils.generateParticles(ParticleEffect.LAVA, p.getEyeLocation(), 0, 1, 50));
 		p.getWorld().playSound(p.getEyeLocation(), Sound.CHICKEN_EGG_POP, 1, 0);
 		PlayerRespawnEvent pre = new PlayerRespawnEvent(p, p.getWorld().getSpawnLocation(), false);
 		Bukkit.getPluginManager().callEvent(pre);
@@ -99,7 +101,7 @@ public class LaserTag implements IMinigame {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInt(PlayerInteractEvent e) {
@@ -114,35 +116,31 @@ public class LaserTag implements IMinigame {
 				if (bi.next().getType() != Material.AIR) {
 					break;
 				}
-				
+
 				boolean bool = true;
-			    for (Entity ent : p.getNearbyEntities(50, 50, 50)) {
-			    	if (ent instanceof Player) {
-			    		Location end_loc = ent.getLocation();
-			    		int distance = (int) bi.next().getLocation().distance(end_loc);
-			    		if(distance <= 1){
-			    			bool = false;
-			    			break;
-			    		}
-			    	}
-			    }
-			    if (!bool) {
-			    	break;
-			    }
-			    
+				for (Entity ent : p.getNearbyEntities(50, 50, 50)) {
+					if (ent instanceof Player) {
+						Location end_loc = ent.getLocation();
+						int distance = (int) bi.next().getLocation().distance(end_loc);
+						if (distance <= 1) {
+							bool = false;
+							break;
+						}
+					}
+				}
+				if (!bool) {
+					break;
+				}
+
 				Location l = bi.next().getLocation();
 				for (Player pl : Bukkit.getOnlinePlayers()) {
-					((CraftPlayer)pl).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldParticles("fireworksSpark", 
-							(float) l.getX(),
-							(float) l.getY(),
-							(float) l.getZ(),
-							0,0,0,
-							0, 5));
+					((CraftPlayer) pl).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldParticles(
+							"fireworksSpark", (float) l.getX(), (float) l.getY(), (float) l.getZ(), 0, 0, 0, 0, 5));
 				}
-				
+
 				List<Block> bll = p.getLineOfSight(null, 50);
 				final Block b = bll.get(bll.size() - 1);
-				
+
 				boolean bool1 = true;
 				for (Block block : bll) {
 					for (Entity ent : p.getNearbyEntities(50, 50, 50)) {
@@ -168,7 +166,8 @@ public class LaserTag implements IMinigame {
 							for (GameTeam t : Game.Laser_Tag.teams) {
 								if (t.color == ChatColor.GREEN && pt.color == ChatColor.GREEN) {
 									if (b.getLocation() == yb1 || b.getLocation() == yb2) {
-										Minigames.broadcast(ChatColor.RED, "%s has hit the " + ChatColor.YELLOW + "Yellow" + ChatColor.RESET + " team's base!", p.getName());
+										Minigames.broadcast(ChatColor.RED, "%s has hit the " + ChatColor.YELLOW
+												+ "Yellow" + ChatColor.RESET + " team's base!", p.getName());
 										if (b.getLocation() == yb1) {
 											yb2.getBlock().setType(Material.REDSTONE_BLOCK);
 										} else if (b.getLocation() == yb2) {
@@ -186,7 +185,8 @@ public class LaserTag implements IMinigame {
 									}
 								} else if (t.color == ChatColor.YELLOW && pt.color == ChatColor.YELLOW) {
 									if (b.getLocation() == gb1 || b.getLocation() == gb2) {
-										Minigames.broadcast(ChatColor.RED, "%s has hit the " + ChatColor.GREEN + "Green" + ChatColor.RESET + " team's base!", p.getName());
+										Minigames.broadcast(ChatColor.RED, "%s has hit the " + ChatColor.GREEN
+												+ "Green" + ChatColor.RESET + " team's base!", p.getName());
 										if (b.getLocation() == gb1) {
 											gb2.getBlock().setType(Material.REDSTONE_BLOCK);
 										} else if (b.getLocation() == gb2) {
@@ -211,16 +211,16 @@ public class LaserTag implements IMinigame {
 			}
 		}
 	}
-	
+
 	private void giveItems(Player p) {
 		p.getInventory().clear();
 		p.getInventory().addItem(new ItemStack(Material.DIAMOND_HOE));
 	}
-	
+
 	private void addLives(GameTeam gt, int add) {
 		setLives(gt, getLives(gt) + add);
 	}
-	
+
 	private void setLives(GameTeam gt, int set) {
 		if (gt.color == ChatColor.YELLOW) {
 			yint = set;
@@ -235,7 +235,7 @@ public class LaserTag implements IMinigame {
 			Minigames.broadcast(ChatColor.LIGHT_PURPLE, "%s has %s points left!", gt.name, set);
 		}
 	}
-	
+
 	private int getLives(GameTeam gt) {
 		if (gt.color == ChatColor.YELLOW) {
 			return yint;
@@ -244,7 +244,7 @@ public class LaserTag implements IMinigame {
 		}
 		return 0;
 	}
-	
+
 	private void checkPoints(GameTeam t) {
 		if (getLives(t) <= 0) {
 			GameTeam[] teams = Game.Laser_Tag.teams;
