@@ -43,8 +43,9 @@ public class LaserTag implements IMinigame {
 	private Location yb2 = new Location(Minigames.getDefaultWorld(), -1474, 105, -1);
 	private Location gb1 = new Location(Minigames.getDefaultWorld(), -1525, 105, 2);
 	private Location gb2 = new Location(Minigames.getDefaultWorld(), -1525, 105, -1);
-	private int startp = 250;
-	private int gint = 250, yint = 250;
+	
+	private int startp = 120;
+	private int gint = 120, yint = 120;
 	
 	Scoreboard s;
 	Score yscore, gscore;
