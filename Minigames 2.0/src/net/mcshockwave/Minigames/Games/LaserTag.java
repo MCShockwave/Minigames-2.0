@@ -11,7 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,7 +35,7 @@ import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.minecraft.server.v1_7_R1.PacketPlayOutWorldParticles;
+import net.minecraft.server.v1_7_R2.PacketPlayOutWorldParticles;
 
 public class LaserTag implements IMinigame {
 	
@@ -63,8 +63,8 @@ public class LaserTag implements IMinigame {
 		gscore.setScore(startp);
 		yscore.setScore(startp);
 		o.setDisplaySlot(DisplaySlot.SIDEBAR);
-		for (String s : Minigames.alivePlayers) {
-			giveItems(Bukkit.getPlayerExact(s));
+		for (Player p : Minigames.getOptedIn()) {
+			giveItems(p);
 		}
 	}
 
@@ -72,6 +72,10 @@ public class LaserTag implements IMinigame {
 	public void onGameEnd() {
 		o.unregister();
 		cooldown.clear();
+		yb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+		yb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+		gb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+		gb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
 	}
 
 	@Override
@@ -114,7 +118,7 @@ public class LaserTag implements IMinigame {
 			if (e.getAction() != Action.RIGHT_CLICK_AIR) {
 				return;
 			}
-		        if (cooldown.contains(e.getPlayer().getName())) {
+			if (cooldown.contains(e.getPlayer().getName())) {
 				return;
 			}
 			cooldown.add(e.getPlayer().getName());
@@ -136,7 +140,7 @@ public class LaserTag implements IMinigame {
 			    	if (ent instanceof Player) {
 			    		Location end_loc = ent.getLocation();
 			    		int distance = (int) bi.next().getLocation().distance(end_loc);
-			    		if(distance <= 1){
+			    		if(distance <= 1 && Minigames.getOptedIn().contains(ent)){
 			    			bool = false;
 			    			break;
 			    		}
@@ -163,7 +167,7 @@ public class LaserTag implements IMinigame {
 					for (Entity ent : p.getNearbyEntities(50, 50, 50)) {
 						if (ent instanceof Player) {
 							int distance = (int) block.getLocation().distance(ent.getLocation());
-							if (distance <= 1) {
+							if (distance <= 1 && Minigames.getOptedIn().contains(ent)) {
 								bool1 = false;
 								Player pla = (Player) ent;
 								GameTeam gt = Game.getTeam(pla);
