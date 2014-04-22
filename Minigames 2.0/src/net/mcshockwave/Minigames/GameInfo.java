@@ -227,7 +227,7 @@ public enum GameInfo {
 		"Use your potions wisely."),
 	Minotaur(
 		"Teams",
-		ChatColor.YELLOW + "Yes",
+		ChatColor.YELLOW + "2",
 		"Respawn",
 		ChatColor.RED + "No",
 		"Main",
@@ -239,18 +239,18 @@ public enum GameInfo {
 		"Tip",
 		"Teamwork is key"),
 	Laser_Tag(
-			"Teams",
-			ChatColor.YELLOW + "2",
-			"Respawn",
-			ChatColor.GREEN + "Yes",
-			"Main",
-			"All players are equipped with guns (hoes) that fire lasers. Each"
-					+ " team starts with 250 points. If you shoot a player on the other team they lose a"
-					+ " point. If you shoot one of the enemies two bases (redsone lamps) they will lose 5 points.,
-			"Goal",
-			"Reduce the other team's points to 0!",
-			"Tip",
-			"Make use of cover, and remember your gun has a 2 second cooldown after being shot.");
+		"Teams",
+		ChatColor.YELLOW + "2",
+		"Respawn",
+		ChatColor.GREEN + "Yes",
+		"Main",
+		"All players are equipped with guns (hoes) that fire lasers. Each"
+				+ " team starts with 250 points. If you shoot a player on the other team they lose a"
+				+ " point. If you shoot one of the enemies two bases (redsone lamps) they will lose 5 points." ,
+		"Goal",
+		"Reduce the other team's points to 0!",
+		"Tip",
+		"Make use of cover, and remember your gun has a 2 second cooldown after being shot.");
 	
 
 	public String[]	info;

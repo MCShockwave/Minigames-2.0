@@ -218,7 +218,7 @@ public enum Game {
 		0,
 		10,
 		true,
-		true,
+		false,
 		new Location(Minigames.getDefaultWorld(), -1500, 100, 0),
 		new GameTeam[] {
 			new GameTeam("Green", ChatColor.GREEN, new Location(Minigames.getDefaultWorld(), -1531, 101, 0)),
