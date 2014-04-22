@@ -121,6 +121,10 @@ public class LaserTag implements IMinigame {
 			if (cooldown.contains(e.getPlayer().getName())) {
 				return;
 			}
+			if (Game.getTeam(e.getPlayer()).spawn.distance(e.getPlayer().getLocation()) < 5) {
+				Minigames.send(e.getPlayer(), "You can not %s while in your base!", ChatColor.RED + "shoot");
+				return;
+			}
 			cooldown.add(e.getPlayer().getName());
 			Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 				public void run() {
@@ -166,10 +170,10 @@ public class LaserTag implements IMinigame {
 				for (Block block : bll) {
 					for (Entity ent : p.getNearbyEntities(50, 50, 50)) {
 						if (ent instanceof Player) {
+							Player pla = (Player) ent;
 							int distance = (int) block.getLocation().distance(ent.getLocation());
-							if (distance <= 1 && Minigames.getOptedIn().contains(ent)) {
+							if (distance <= 1 && Minigames.getOptedIn().contains(ent) && Game.getTeam(pla).spawn.distance(pla.getLocation()) < 5) {
 								bool1 = false;
-								Player pla = (Player) ent;
 								GameTeam gt = Game.getTeam(pla);
 								if (Game.getTeam(p) != gt) {
 									this.onPlayerDeath(new DeathEvent(pla, p, DamageCause.CUSTOM, gt.team, gt));
