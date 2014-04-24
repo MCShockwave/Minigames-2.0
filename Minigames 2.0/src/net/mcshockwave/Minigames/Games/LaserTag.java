@@ -88,14 +88,6 @@ public class LaserTag implements IMinigame {
 			Minigames.broadcastDeath(e.p, e.k, "%s was tagged for the final point!",
 					"%s was tagged by %s for the final point!");
 		}
-		addLives(e.gt, -1);
-		GameTeam[] gta = Game.Laser_Tag.teams;
-		for (GameTeam gt : gta) {
-			if (gt == e.gt) {
-				checkPoints(gt);
-				break;
-			}
-		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -141,6 +133,8 @@ public class LaserTag implements IMinigame {
 								break;
 							}
 							pla.damage(pla.getHealth());
+							addLives(Game.getTeam(pla), -1);
+							checkPoints(Game.getTeam(pla));
 							break;
 						}
 					}
@@ -166,6 +160,8 @@ public class LaserTag implements IMinigame {
 								GameTeam gt = Game.getTeam(pla);
 								if (Game.getTeam(p) != gt) {
 									pla.damage(pla.getHealth());
+									addLives(Game.getTeam(pla), -1);
+									checkPoints(Game.getTeam(pla));
 								}
 								break;
 							} else {
@@ -187,8 +183,12 @@ public class LaserTag implements IMinigame {
 										yb1.getBlock().setType(Material.GLOWSTONE);
 									}
 								}, 200l);
-								addLives(gt, -5);
-								checkPoints(gt);
+								for (GameTeam t : Game.Laser_Tag.teams) {
+									if (t != gt) {
+										addLives(t, -5);
+										checkPoints(t);
+									}
+								}
 							}
 							if (LocUtils.isSame(yb2, b.getLocation())) {
 								yb2.getBlock().setType(Material.REDSTONE_BLOCK);
@@ -198,12 +198,13 @@ public class LaserTag implements IMinigame {
 										yb2.getBlock().setType(Material.GLOWSTONE);
 									}
 								}, 200l);
-								addLives(gt, -5);
-								checkPoints(gt);
+								for (GameTeam t : Game.Laser_Tag.teams) {
+									if (t != gt) {
+										addLives(t, -5);
+										checkPoints(t);
+									}
+								}
 							}
-							
-							addLives(gt, -5);
-							checkPoints(gt);
 						}
 						if (gt.color == ChatColor.YELLOW) {
 							if (LocUtils.isSame(gb1, b.getLocation())) {
@@ -214,8 +215,12 @@ public class LaserTag implements IMinigame {
 										gb1.getBlock().setType(Material.GLOWSTONE);
 									}
 								}, 200l);
-								addLives(gt, -5);
-								checkPoints(gt);
+								for (GameTeam t : Game.Laser_Tag.teams) {
+									if (t != gt) {
+										addLives(t, -5);
+										checkPoints(t);
+									}
+								}
 							}
 							if (LocUtils.isSame(gb2, b.getLocation())) {
 								gb2.getBlock().setType(Material.REDSTONE_BLOCK);
@@ -225,8 +230,12 @@ public class LaserTag implements IMinigame {
 										gb2.getBlock().setType(Material.GLOWSTONE);
 									}
 								}, 200l);
-								addLives(gt, -5);
-								checkPoints(gt);
+								for (GameTeam t : Game.Laser_Tag.teams) {
+									if (t != gt) {
+										addLives(t, -5);
+										checkPoints(t);
+									}
+								}
 							}
 						}
 					}
