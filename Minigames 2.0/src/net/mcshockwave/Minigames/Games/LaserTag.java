@@ -53,6 +53,7 @@ public class LaserTag implements IMinigame {
 	
 	ArrayList<String> cooldown = new ArrayList<String>();
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
 		cooldown.clear();
