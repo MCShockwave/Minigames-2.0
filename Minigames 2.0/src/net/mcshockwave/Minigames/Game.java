@@ -218,11 +218,11 @@ public enum Game {
 		0,
 		10,
 		true,
-		false,
+		true,
 		new Location(Minigames.getDefaultWorld(), -1500, 100, 0),
 		new GameTeam[] {
 			new GameTeam("Green", ChatColor.GREEN, new Location(Minigames.getDefaultWorld(), -1531, 101, 0)),
-			new GameTeam("Yellow", ChatColor.YELLOW, new Location(Minigames.getDefaultWorld(), -1496, 101, 0)) }
+			new GameTeam("Yellow", ChatColor.YELLOW, new Location(Minigames.getDefaultWorld(), -1468, 101, 0)) }
 		);
 
 	public String		name;
