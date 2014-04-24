@@ -45,7 +45,6 @@ public class LaserTag implements IMinigame {
 	private Location gb2 = new Location(Minigames.getDefaultWorld(), -1525, 104, -2);
 	
 	private int startp = 120;
-	private int gint = 120, yint = 120;
 	
 	Scoreboard s;
 	Score yscore, gscore;
@@ -254,11 +253,9 @@ public class LaserTag implements IMinigame {
 	
 	private void setLives(GameTeam gt, int set) {
 		if (gt.color == ChatColor.YELLOW) {
-			yint = set;
 			yscore.setScore(set);
 		}
 		if (gt.color == ChatColor.GREEN) {
-			yint = set;
 			gscore.setScore(set);
 		}
 		List<Integer> nums = Arrays.asList(new Integer[] { 150, 100, 75, 50, 25, 10, 5, 4, 3, 2, 1, 0 });
@@ -269,9 +266,9 @@ public class LaserTag implements IMinigame {
 	
 	private int getLives(GameTeam gt) {
 		if (gt.color == ChatColor.YELLOW) {
-			return yint;
+			return yscore.getScore();
 		} else if (gt.color == ChatColor.GREEN) {
-			return gint;
+			return gscore.getScore();
 		}
 		return 0;
 	}
