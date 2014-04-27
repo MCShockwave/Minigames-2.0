@@ -118,7 +118,7 @@ public class Gladiators implements IMinigame {
 		pi.setItem(
 				0,
 				new ItemStack(Minigames.hasItem(p, ShopItem.Murmillo) ? Material.WOOD_SWORD : Minigames.hasItem(p,
-						ShopItem.Provocateur) ? Material.IRON_SWORD : Material.STONE_SWORD));
+						ShopItem.Provocateur) ? Material.WOOD_SWORD : Material.STONE_SWORD));
 		if (Minigames.hasItem(p, ShopItem.Murmillo)) {
 			pi.setItem(1, new ItemStack(Material.BOW));
 			pi.setItem(2, new ItemStack(Material.ARROW, 32));

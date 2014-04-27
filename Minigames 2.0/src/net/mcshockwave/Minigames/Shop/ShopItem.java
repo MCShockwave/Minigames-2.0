@@ -202,9 +202,9 @@ public enum ShopItem {
 		0,
 		true,
 		3000,
-		"You are armed with an iron sword and",
-		"iron chestplate. However, you will be",
-		"very slow."),
+		"You are armed with a wooden sword and",
+		"iron chestplate. You will be very",
+		"slow."),
 	Man_at_Arms(
 		Game.Gladiators,
 		1,
