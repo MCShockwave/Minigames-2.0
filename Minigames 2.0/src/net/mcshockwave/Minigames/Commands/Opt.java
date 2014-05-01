@@ -1,6 +1,8 @@
 package net.mcshockwave.Minigames.Commands;
 
 import net.mcshockwave.MCS.MCShockwave;
+import net.mcshockwave.MCS.SQLTable;
+import net.mcshockwave.MCS.SQLTable.Rank;
 import net.mcshockwave.Minigames.Minigames;
 
 import org.bukkit.Bukkit;
@@ -18,6 +20,11 @@ public class Opt implements CommandExecutor {
 
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
+
+			if (!SQLTable.hasRank(p.getName(), Rank.IRON)) {
+				MCShockwave.send(p, "You must be %s to use /opt! Buy it at buy.mcshockwave.net", "Iron+");
+				return false;
+			}
 
 			boolean oo = Minigames.optedOut.contains(p.getName());
 
