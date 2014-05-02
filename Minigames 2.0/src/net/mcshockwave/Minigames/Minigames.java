@@ -761,6 +761,7 @@ public class Minigames extends JavaPlugin {
 	public static void resetPlayer(Player p) {
 		p.setHealth(20);
 		p.setFireTicks(0);
+		p.setWalkSpeed(0.2f);
 		clearInv(p);
 		if (p.getGameMode() != GameMode.CREATIVE) {
 			p.setAllowFlight(false);
