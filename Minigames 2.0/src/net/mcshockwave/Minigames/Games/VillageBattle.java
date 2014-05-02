@@ -242,15 +242,16 @@ public class VillageBattle implements IMinigame {
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if (Minigames.alivePlayers.contains(e.getPlayer().getName())) {
 			if (types.get(e.getPlayer()) == Profession.BUTCHER) {
-				if (e.getTo().getY() >= 107 && (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.DIRT
-						|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS 
-						|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
-					
+				if (e.getTo().getY() >= 107
+						&& (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.DIRT
+								|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS || e
+								.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
+
 					Player p = e.getPlayer();
 					Location l = p.getWorld().getHighestBlockAt(e.getFrom()).getLocation();
-			    	l.setPitch(p.getLocation().getPitch());
-			    	l.setYaw(p.getLocation().getYaw());
-			    	e.setTo(l);
+					l.setPitch(p.getLocation().getPitch());
+					l.setYaw(p.getLocation().getYaw());
+					e.setTo(l);
 					MCShockwave.send(e.getPlayer(), "Do not climb the %s!", "mountains");
 				}
 			}
@@ -600,7 +601,15 @@ public class VillageBattle implements IMinigame {
 				}
 
 				if (pro == Profession.BUTCHER) {
-					p.setVelocity(p.getVelocity().add(p.getLocation().getDirection().multiply(2).setY(0.5)));
+					final float before = p.getWalkSpeed();
+
+					p.setWalkSpeed(p.getWalkSpeed() + 0.1f);
+					Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
+						public void run() {
+							p.setWalkSpeed(before);
+						}
+					}, 60l);
+					
 					p.getWorld().playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1, 0);
 				}
 
@@ -643,7 +652,7 @@ public class VillageBattle implements IMinigame {
 			"Evade",
 			PotionEffectType.SPEED,
 			PotionEffectType.DAMAGE_RESISTANCE,
-			"Launches you in the direction you are pointing");
+			"Speeds you up for a few seconds");
 
 		ItemStack			main;
 		String				specAbilName;

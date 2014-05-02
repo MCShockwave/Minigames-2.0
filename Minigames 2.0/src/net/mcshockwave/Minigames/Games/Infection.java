@@ -121,8 +121,9 @@ public class Infection implements IMinigame {
 		if (p.getGameMode() != GameMode.CREATIVE && Minigames.alivePlayers.contains(p.getName()) && event.isFlying()) {
 			event.setCancelled(true);
 			p.setFlying(false);
-			if (p.getLocation().add(0, -1, 0).getBlock().getType() != Material.AIR
-					|| p.getLocation().add(0, -2, 0).getBlock().getType() != Material.AIR) {
+			if (p.getLocation().getBlock().getType() != Material.VINE
+					&& (p.getLocation().add(0, -1, 0).getBlock().getType() != Material.AIR || p.getLocation()
+							.add(0, -2, 0).getBlock().getType() != Material.AIR)) {
 				p.setVelocity(p.getVelocity().add(new Vector(0, 1.5, 0)));
 				p.getWorld().playSound(p.getLocation(), Sound.ENDERDRAGON_WINGS, 3, 1);
 			} else

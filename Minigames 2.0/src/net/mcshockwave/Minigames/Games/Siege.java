@@ -21,22 +21,40 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 
 public class Siege implements IMinigame {
 
-	Villager	yv	= null;
-	Villager	gv	= null;
+	Villager	yv			= null;
+	Villager	gv			= null;
 
-	Location	yl	= new Location(Minigames.getDefaultWorld(), 453.5, 117.5, 195, 90, 0);
-	Location	gl	= new Location(Minigames.getDefaultWorld(), 275.5, 117.5, 156, 270, 0);
+	Location	yl			= new Location(Minigames.getDefaultWorld(), 453.5, 117.5, 195, 90, 0);
+	Location	gl			= new Location(Minigames.getDefaultWorld(), 275.5, 117.5, 156, 270, 0);
 
-	BukkitTask	bt	= null;
+	BukkitTask	bt			= null;
 
+	Objective	hp			= null;
+	Score		yhealth		= null;
+	Score		ghealth		= null;
+
+	int			startHealth	= 50;
+
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
+		hp = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("VillagerHealth", "dummy");
+		hp.setDisplayName("§dKing Health");
+
+		yhealth = hp.getScore(Bukkit.getOfflinePlayer("§eYellow King"));
+		yhealth.setScore(startHealth);
+
+		ghealth = hp.getScore(Bukkit.getOfflinePlayer("§aGreen King"));
+		ghealth.setScore(startHealth);
+
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				yv = (Villager) w.spawnEntity(yl, EntityType.VILLAGER);
@@ -44,13 +62,13 @@ public class Siege implements IMinigame {
 
 				yv.setCustomName(ChatColor.YELLOW + "Yellow King");
 				yv.setCustomNameVisible(true);
-				yv.setMaxHealth(50);
-				yv.setHealth(50);
+				yv.setMaxHealth(startHealth);
+				yv.setHealth(startHealth);
 
 				gv.setCustomName(ChatColor.GREEN + "Green King");
 				gv.setCustomNameVisible(true);
-				gv.setMaxHealth(50);
-				gv.setHealth(50);
+				gv.setMaxHealth(startHealth);
+				gv.setHealth(startHealth);
 			}
 		}, 10l);
 
@@ -130,6 +148,13 @@ public class Siege implements IMinigame {
 				if (v == gv && Game.getTeam(d) != null && Game.getTeam(d).color == ChatColor.GREEN) {
 					event.setCancelled(true);
 				}
+
+				if (v == yv) {
+					yhealth.setScore((int) yv.getHealth());
+				}
+				if (v == gv) {
+					ghealth.setScore((int) gv.getHealth());
+				}
 			}
 		}
 	}
@@ -137,15 +162,16 @@ public class Siege implements IMinigame {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if (Minigames.alivePlayers.contains(e.getPlayer().getName())) {
-			if (e.getTo().getY() >= 120 && (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK
-					|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW
-					|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
-				
+			if (e.getTo().getY() >= 120
+					&& (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK
+							|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.SNOW || e.getTo()
+							.getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
+
 				Player p = e.getPlayer();
 				Location l = p.getWorld().getHighestBlockAt(e.getFrom()).getLocation();
-		    	l.setPitch(p.getLocation().getPitch());
-		    	l.setYaw(p.getLocation().getYaw());
-		    	e.setTo(l);
+				l.setPitch(p.getLocation().getPitch());
+				l.setYaw(p.getLocation().getYaw());
+				e.setTo(l);
 				MCShockwave.send(e.getPlayer(), "Do not climb the %s!", "mountains");
 			}
 		}
