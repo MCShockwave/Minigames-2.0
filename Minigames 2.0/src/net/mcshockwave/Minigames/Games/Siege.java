@@ -100,6 +100,8 @@ public class Siege implements IMinigame {
 		yv.remove();
 		gv.remove();
 		bt.cancel();
+		
+		hp.unregister();
 	}
 
 	@Override
