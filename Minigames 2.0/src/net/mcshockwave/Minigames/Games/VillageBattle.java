@@ -1,6 +1,7 @@
 package net.mcshockwave.Minigames.Games;
 
 import net.mcshockwave.MCS.MCShockwave;
+import net.mcshockwave.MCS.Utils.CooldownUtils;
 import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
@@ -10,6 +11,7 @@ import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.LocUtils;
 
 import org.bukkit.Bukkit;
@@ -78,10 +80,10 @@ public class VillageBattle implements IMinigame {
 		yvc *= 3;
 
 		for (int i = 0; i < gvc; i++) {
-			spawnVillager(true);
+			spawnVillager(true, false);
 		}
 		for (int i = 0; i < yvc; i++) {
-			spawnVillager(false);
+			spawnVillager(false, false);
 		}
 
 		Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
@@ -128,7 +130,7 @@ public class VillageBattle implements IMinigame {
 		p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100000, 0));
 	}
 
-	public void spawnVillager(boolean isGreen) {
+	public Villager spawnVillager(boolean isGreen, boolean update) {
 		Location l = getValidSpawnPoint(isGreen);
 		Villager v = (Villager) w.spawnEntity(l, EntityType.VILLAGER);
 		Profession p = Profession.values()[rand.nextInt(Profession.values().length)];
@@ -154,6 +156,12 @@ public class VillageBattle implements IMinigame {
 		v.setCustomName(cusname);
 		v.setCustomNameVisible(true);
 		(isGreen ? greVil : yelVil).add(v);
+
+		if (update) {
+			GameTeam gt = Game.getTeam(Game.Village_Battle, isGreen ? "Green" : "Yellow");
+			setCount(gt, getTotalCountOnTeam(gt));
+		}
+		return v;
 	}
 
 	public Location getValidSpawnPoint(boolean isGreen) {
@@ -193,7 +201,6 @@ public class VillageBattle implements IMinigame {
 
 	@Override
 	public void onPlayerDeath(DeathEvent e) {
-		startPlayer(e.p, e.gt);
 		for (Villager v : greVil) {
 			if (!v.isValid() || v.isDead()) {
 				greVil.remove(v);
@@ -206,9 +213,25 @@ public class VillageBattle implements IMinigame {
 		}
 		if (!types.containsKey(e.p))
 			return;
+		startPlayer(e.p, e.gt);
 		addCount(e.gt, -1);
 		setCount(e.gt, getTotalCountOnTeam(e.gt));
 		Minigames.broadcastDeath(e.p, e.k, "%s was killed", "%s was murdered by %s");
+
+		if (e.k != null) {
+			if (Minigames.hasItem(e.k, ShopItem.Ressurector) && rand.nextInt(3) == 0) {
+				final Location loc = e.p.getLocation();
+				final Villager v = spawnVillager(e.gt.color == ChatColor.GREEN, true);
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+					public void run() {
+						v.teleport(loc);
+					}
+				}, 10l);
+			}
+			if (Minigames.hasItem(e.k, ShopItem.Thief)) {
+				e.k.setLevel(e.k.getLevel() + (e.p.getLevel() / 3));
+			}
+		}
 	}
 
 	public void giveKit(Player p, Profession pro) {
@@ -229,6 +252,12 @@ public class VillageBattle implements IMinigame {
 							ItemMetaUtils.setItemName(new ItemStack(Material.ENCHANTED_BOOK), ChatColor.AQUA
 									+ pk.specAbilName), desc));
 			p.getInventory().addItem(pk.main);
+			if (Minigames.hasItem(p, ShopItem.Disruptor)) {
+				p.getInventory().setItem(
+						8,
+						ItemMetaUtils.setItemName(ItemMetaUtils.setLore(new ItemStack(Material.NETHER_STAR),
+								"Click to disable enemy", "possessing for 15 seconds!"), "§eDisruptor"));
+			}
 			if (pk.main.getType() == Material.BOW) {
 				p.getInventory().setItem(27, new ItemStack(Material.ARROW));
 			}
@@ -336,6 +365,12 @@ public class VillageBattle implements IMinigame {
 		if (Minigames.alivePlayers.contains(p.getName()) && !types.containsKey(p) && rc instanceof Villager) {
 			Villager v = (Villager) rc;
 			GameTeam gt = Game.getTeam(p);
+
+			if (CooldownUtils.isOnCooldown("Disruptor", gt.name)) {
+				Minigames.send(p, "Your team has their possessing disabled for %s more seconds!",
+						CooldownUtils.getCooldownForSec("Disruptor", gt.name, 1));
+				return;
+			}
 
 			String name = v.getCustomName();
 			ChatColor cc = ChatColor.getByChar(name.charAt(1));
@@ -511,6 +546,30 @@ public class VillageBattle implements IMinigame {
 
 			final int slot = p.getInventory().getHeldItemSlot();
 
+			if (it.getType() == Material.NETHER_STAR && Minigames.hasItem(p, ShopItem.Disruptor)) {
+				if (!CooldownUtils.isOnCooldown("PlayerDisrupt", p.getName())) {
+					final GameTeam oppo = Game.getTeam(Game.Village_Battle,
+							Game.getTeam(p).color == ChatColor.GREEN ? "Yellow" : "Green");
+
+					CooldownUtils.addCooldown("Disruptor", oppo.name, 200, new Runnable() {
+						public void run() {
+							Minigames.broadcast(oppo.color, "%s can posess villagers again!", oppo.name);
+						}
+					});
+					Minigames.broadcast(oppo.color, Game.getTeam(p).color + "§o" + p.getName()
+							+ "§7 has disabled %s possession for 10 seconds!", oppo.name);
+
+					CooldownUtils.addCooldown("PlayerDisrupt", p.getName(), 3600, new Runnable() {
+						public void run() {
+							Minigames.send(p, "You can now use %s!", "Disruptor");
+						}
+					});
+				} else {
+					Minigames.send(p, "You can't use that for another %s seconds!",
+							CooldownUtils.getCooldownForSec("PlayerDisrupt", p.getName(), 1));
+				}
+			}
+
 			if (it.getType() == Material.STONE_HOE && pro == Profession.FARMER) {
 				p.setItemInHand(null);
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
@@ -603,13 +662,13 @@ public class VillageBattle implements IMinigame {
 				if (pro == Profession.BUTCHER) {
 					final float before = p.getWalkSpeed();
 
-					p.setWalkSpeed(p.getWalkSpeed() + 0.1f);
+					p.setWalkSpeed(p.getWalkSpeed() + 0.2f);
 					Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 						public void run() {
 							p.setWalkSpeed(before);
 						}
 					}, 60l);
-					
+
 					p.getWorld().playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1, 0);
 				}
 

@@ -245,7 +245,7 @@ public enum ShopItem {
 		2500,
 		"As a human you do 1/2 heart more damage to",
 		"zombies. As a zombie any human you hit will",
-		"be withered for a short time.");
+		"be withered for a short time."),
 	// Loot
 	// Minotaur
 	// Siege
@@ -253,6 +253,30 @@ public enum ShopItem {
 	// Tiers
 	// TRON
 	// Village Battle
+	Ressurector(
+		Game.Village_Battle,
+		0,
+		true,
+		2750,
+		"Killing enemy players has a slight chance of",
+		"giving your team one un-possessed villager.",
+		"It will respawn right in front of you, and",
+		"ghosts on your team can instantly possess it,",
+		"giving you help in battle."),
+	Thief(
+		Game.Village_Battle,
+		1,
+		true,
+		1250,
+		"Killing enemy villagers will grant you a",
+		"fraction of their stamina."),
+	Disruptor(
+		Game.Village_Battle,
+		2,
+		true,
+		3000,
+		"Disable the enemy team’s possessing abilities",
+		" for 10 seconds!");
 
 	public String	name;
 	public Game		mg;
