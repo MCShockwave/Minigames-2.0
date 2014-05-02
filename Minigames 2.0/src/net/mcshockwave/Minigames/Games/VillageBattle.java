@@ -221,7 +221,7 @@ public class VillageBattle implements IMinigame {
 		if (e.k != null) {
 			if (Minigames.hasItem(e.k, ShopItem.Ressurector) && rand.nextInt(3) == 0) {
 				final Location loc = e.p.getLocation();
-				final Villager v = spawnVillager(e.gt.color == ChatColor.GREEN, true);
+				final Villager v = spawnVillager(e.gt.color != ChatColor.GREEN, true);
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 					public void run() {
 						v.teleport(loc);
