@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 
@@ -48,6 +49,7 @@ public class Siege implements IMinigame {
 	public void onGameStart() {
 		hp = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("VillagerHealth", "dummy");
 		hp.setDisplayName("§dKing Health");
+		hp.setDisplaySlot(DisplaySlot.SIDEBAR);
 
 		yhealth = hp.getScore(Bukkit.getOfflinePlayer("§eYellow King"));
 		yhealth.setScore(startHealth);
@@ -57,6 +59,9 @@ public class Siege implements IMinigame {
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
+				yl.getChunk().load();
+				gl.getChunk().load();
+				
 				yv = (Villager) w.spawnEntity(yl, EntityType.VILLAGER);
 				gv = (Villager) w.spawnEntity(gl, EntityType.VILLAGER);
 
@@ -126,10 +131,12 @@ public class Siege implements IMinigame {
 			if (v == yv) {
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.YELLOW,
 						"The %s Villager has died!\n%s can no longer respawn!", "Yellow", "Yellow"));
+				yhealth.getScoreboard().resetScores(yhealth.getPlayer());
 			}
 			if (v == gv) {
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.GREEN,
 						"The %s Villager has died!\n%s can no longer respawn!", "Green", "Green"));
+				ghealth.getScoreboard().resetScores(ghealth.getPlayer());
 			}
 		}
 	}

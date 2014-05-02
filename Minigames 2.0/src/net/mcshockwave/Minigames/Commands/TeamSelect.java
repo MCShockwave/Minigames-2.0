@@ -1,5 +1,6 @@
 package net.mcshockwave.Minigames.Commands;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -16,6 +17,8 @@ import org.bukkit.entity.Player;
 
 public class TeamSelect implements CommandExecutor {
 
+	public Game[]	gamesNoTeam	= { Game.Infection, Game.Minotaur };
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -26,6 +29,11 @@ public class TeamSelect implements CommandExecutor {
 				Minigames.send(p,
 						"You have to be at least %s VIP to choose your team!\nBuy VIP at buy.mcshockwave.net",
 						"Emerald");
+				return false;
+			}
+
+			if (Arrays.asList(gamesNoTeam).contains(Minigames.currentGame)) {
+				Minigames.send(p, "%s is disabled for %s", "/team", Minigames.currentGame.name);
 				return false;
 			}
 
@@ -74,5 +82,4 @@ public class TeamSelect implements CommandExecutor {
 
 		return false;
 	}
-
 }
