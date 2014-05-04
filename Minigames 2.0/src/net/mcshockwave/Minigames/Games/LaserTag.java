@@ -34,10 +34,10 @@ import java.util.List;
 
 public class LaserTag implements IMinigame {
 
-	private Location	yb1			= new Location(Minigames.getDefaultWorld(), -1475, 105, 2);
-	private Location	yb2			= new Location(Minigames.getDefaultWorld(), -1475, 105, -2);
-	private Location	gb1			= new Location(Minigames.getDefaultWorld(), -1525, 105, 2);
-	private Location	gb2			= new Location(Minigames.getDefaultWorld(), -1525, 105, -2);
+	private Location	yb1			= new Location(Minigames.getDefaultWorld(), -1475, 106, 2);
+	private Location	yb2			= new Location(Minigames.getDefaultWorld(), -1475, 106, -2);
+	private Location	gb1			= new Location(Minigames.getDefaultWorld(), -1525, 106, 2);
+	private Location	gb2			= new Location(Minigames.getDefaultWorld(), -1525, 106, -2);
 
 	private int			startp		= 100;
 
@@ -72,10 +72,10 @@ public class LaserTag implements IMinigame {
 	public void onGameEnd() {
 		o.unregister();
 		cooldown.clear();
-		yb1.getBlock().setType(Material.GLOWSTONE);
-		yb2.getBlock().setType(Material.GLOWSTONE);
-		gb1.getBlock().setType(Material.GLOWSTONE);
-		gb2.getBlock().setType(Material.GLOWSTONE);
+		yb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+		yb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+		gb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+		gb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
 	}
 
 	@Override
@@ -173,14 +173,16 @@ public class LaserTag implements IMinigame {
 				if (bool1) {
 					GameTeam gt = Game.getTeam(p);
 
-					if (b.getType() == Material.GLOWSTONE) {
+					if (b.getType() == Material.REDSTONE_LAMP_OFF) {
 						if (gt.color == ChatColor.GREEN) {
 							if (LocUtils.isSame(yb1, b.getLocation())) {
 								yb1.getBlock().setType(Material.REDSTONE_BLOCK);
+								yb2.getBlock().setType(Material.REDSTONE_BLOCK);
 								Minigames.broadcast(gt.color, "%s has hit the §e§oYellow§7 base!", p.getName());
 								Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 									public void run() {
-										yb1.getBlock().setType(Material.GLOWSTONE);
+										yb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+										yb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
 									}
 								}, 200l);
 								for (GameTeam t : Game.Laser_Tag.teams) {
@@ -192,10 +194,12 @@ public class LaserTag implements IMinigame {
 							}
 							if (LocUtils.isSame(yb2, b.getLocation())) {
 								yb2.getBlock().setType(Material.REDSTONE_BLOCK);
+								yb1.getBlock().setType(Material.REDSTONE_BLOCK);
 								Minigames.broadcast(gt.color, "%s has hit the §e§oYellow§7 base!", p.getName());
 								Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 									public void run() {
-										yb2.getBlock().setType(Material.GLOWSTONE);
+										yb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+										yb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
 									}
 								}, 200l);
 								for (GameTeam t : Game.Laser_Tag.teams) {
@@ -209,10 +213,12 @@ public class LaserTag implements IMinigame {
 						if (gt.color == ChatColor.YELLOW) {
 							if (LocUtils.isSame(gb1, b.getLocation())) {
 								gb1.getBlock().setType(Material.REDSTONE_BLOCK);
+								gb2.getBlock().setType(Material.REDSTONE_BLOCK);
 								Minigames.broadcast(gt.color, "%s has hit the §a§oGreen§7 base!", p.getName());
 								Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 									public void run() {
-										gb1.getBlock().setType(Material.GLOWSTONE);
+										gb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+										gb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
 									}
 								}, 200l);
 								for (GameTeam t : Game.Laser_Tag.teams) {
@@ -224,10 +230,12 @@ public class LaserTag implements IMinigame {
 							}
 							if (LocUtils.isSame(gb2, b.getLocation())) {
 								gb2.getBlock().setType(Material.REDSTONE_BLOCK);
+								gb1.getBlock().setType(Material.REDSTONE_BLOCK);
 								Minigames.broadcast(gt.color, "%s has hit the §a§oGreen§7 base!", p.getName());
 								Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 									public void run() {
-										gb2.getBlock().setType(Material.GLOWSTONE);
+										gb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+										gb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
 									}
 								}, 200l);
 								for (GameTeam t : Game.Laser_Tag.teams) {
