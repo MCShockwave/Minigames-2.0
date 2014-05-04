@@ -51,10 +51,10 @@ public class LaserTag implements IMinigame {
 	@Override
 	public void onGameStart() {
 		cooldown.clear();
-		yb1.getBlock().setType(Material.GLOWSTONE);
-		yb2.getBlock().setType(Material.GLOWSTONE);
-		gb1.getBlock().setType(Material.GLOWSTONE);
-		gb2.getBlock().setType(Material.GLOWSTONE);
+		yb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+		yb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+		gb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+		gb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
 		s = Bukkit.getScoreboardManager().getMainScoreboard();
 		o = s.registerNewObjective("Points", "dummy");
 		o.setDisplayName(ChatColor.LIGHT_PURPLE + "Points Left");
