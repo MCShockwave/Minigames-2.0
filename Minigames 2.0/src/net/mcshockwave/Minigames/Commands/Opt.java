@@ -51,7 +51,9 @@ public class Opt implements CommandExecutor {
 				Minigames.resetPlayer(p);
 				if (Minigames.started) {
 					Minigames.setDead(p, false);
-					Minigames.sendDeathToGame(p);
+					if (Minigames.alivePlayers.contains(p.getName())) {
+						Minigames.sendDeathToGame(p);
+					}
 					p.setAllowFlight(false);
 					Minigames.resetPlayer(p);
 				} else {
