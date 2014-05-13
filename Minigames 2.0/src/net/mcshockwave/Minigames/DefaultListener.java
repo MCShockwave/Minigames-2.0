@@ -145,14 +145,7 @@ public class DefaultListener implements Listener {
 		Player p = event.getEntity();
 
 		event.setDeathMessage("");
-		if (Minigames.optedOut.contains(p.getName())) {
-			PlayerRespawnEvent pre = new PlayerRespawnEvent(p, new Location(Minigames.w, 0, 103, 0), false);
-			Bukkit.getPluginManager().callEvent(pre);
-			p.setHealth(20);
-			p.teleport(pre.getRespawnLocation());
-			return;
-		}
-		if (Minigames.currentGame != null && Minigames.started) {
+		if (!Minigames.optedOut.contains(p.getName()) && Minigames.currentGame != null && Minigames.started) {
 			if (!Minigames.currentGame.canRespawn) {
 				Minigames.setDead(p, true);
 			} else {
@@ -416,7 +409,7 @@ public class DefaultListener implements Listener {
 			e.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler
 	public void onItemConsume(final PlayerItemConsumeEvent event) {
 		Bukkit.getScheduler().runTask(plugin, new Runnable() {
