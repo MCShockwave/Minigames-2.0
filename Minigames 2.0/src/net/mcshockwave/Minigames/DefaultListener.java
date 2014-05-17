@@ -100,7 +100,7 @@ public class DefaultListener implements Listener {
 	}
 
 	public void onQuit(Player p) {
-		if (Minigames.getOptedIn().size() < 3 && !Minigames.started) {
+		if (Minigames.getOptedIn().size() < 3) {
 			Minigames.stop(null);
 		}
 		Minigames.optedOut.remove(p.getName());
