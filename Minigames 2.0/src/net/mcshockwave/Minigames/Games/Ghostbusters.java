@@ -6,8 +6,14 @@ import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -64,6 +70,29 @@ public class Ghostbusters implements IMinigame {
 			} else {
 				Minigames.broadcastDeath(e.p, e.k, "%s died of natural causes", "%s had their soul stolen by %s");
 			}
+		}
+	}
+
+	@EventHandler
+	public void onPlayerRegainHealth(EntityRegainHealthEvent event) {
+		Entity e = event.getEntity();
+		if (e instanceof Player) {
+			if (event.getRegainReason() == RegainReason.SATIATED && Game.getTeam((Player) e) == getHumans()) {
+				event.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
+		final Player p = event.getPlayer();
+		final ItemStack it = event.getItem();
+		if (it.getType() == Material.GOLDEN_APPLE) {
+			Bukkit.getScheduler().runTask(plugin, new Runnable() {
+				public void run() {
+					p.removePotionEffect(PotionEffectType.ABSORPTION);
+				}
+			});
 		}
 	}
 
