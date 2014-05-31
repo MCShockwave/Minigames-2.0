@@ -460,7 +460,7 @@ public class Minigames extends JavaPlugin {
 						break;
 					}
 				}
-				if (currentGame == Game.Infection) {
+				if (currentGame == Game.Infection || currentGame == Game.Ghostbusters) {
 					int max = getOptedIn().size() > 6 ? 3 : 1;
 					if (tid == 0 && ts[0].getPlayers().size() >= max) {
 						tid = 1;

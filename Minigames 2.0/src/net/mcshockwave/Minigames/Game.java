@@ -1,8 +1,24 @@
 package net.mcshockwave.Minigames;
 
-import java.util.Random;
-
-import net.mcshockwave.Minigames.Games.*;
+import net.mcshockwave.Minigames.Games.Airships;
+import net.mcshockwave.Minigames.Games.Boarding;
+import net.mcshockwave.Minigames.Games.Brawl;
+import net.mcshockwave.Minigames.Games.BuildAndFight;
+import net.mcshockwave.Minigames.Games.Core;
+import net.mcshockwave.Minigames.Games.Dodgeball;
+import net.mcshockwave.Minigames.Games.Dogtag;
+import net.mcshockwave.Minigames.Games.FourCorners;
+import net.mcshockwave.Minigames.Games.Ghostbusters;
+import net.mcshockwave.Minigames.Games.Gladiators;
+import net.mcshockwave.Minigames.Games.HotPotato;
+import net.mcshockwave.Minigames.Games.Infection;
+import net.mcshockwave.Minigames.Games.LaserTag;
+import net.mcshockwave.Minigames.Games.Loot;
+import net.mcshockwave.Minigames.Games.Minotaur;
+import net.mcshockwave.Minigames.Games.Siege;
+import net.mcshockwave.Minigames.Games.Spleef;
+import net.mcshockwave.Minigames.Games.TRON;
+import net.mcshockwave.Minigames.Games.VillageBattle;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 
 import org.bukkit.Bukkit;
@@ -12,6 +28,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public enum Game {
 
@@ -224,16 +244,16 @@ public enum Game {
 	Ghostbusters(
 		new Ghostbusters(),
 		Material.SKULL_ITEM,
-		1,
+		0,
 		10,
 		false,
 		true,
-		new Location(Minigames.getDefaultWorld(), 0, 0, 0),
-		new GameTeam[] { new GameTeam("Humans", ChatColor.YELLOW, new Location(Minigames.getDefaultWorld(), 0, 0, 0)),
-				new GameTeam("Ghosts", ChatColor.DARK_GRAY, new Location(Minigames.getDefaultWorld(), 0, 0, 0)) }); // TODO
-	// add
-	// actual
-	// location
+		new Location(Minigames.getDefaultWorld(), -7, 125, -991),
+		new GameTeam[] {
+				new GameTeam("Ghosts", ChatColor.DARK_GRAY, new Location(Minigames.getDefaultWorld(), 14, 107, -969,
+						180, 0)),
+				new GameTeam("Humans", ChatColor.WHITE, new Location(Minigames.getDefaultWorld(), -36, 108, -989, 270,
+						0)) });
 
 	public String		name;
 	public IMinigame	mclass;
@@ -281,6 +301,18 @@ public enum Game {
 			this.name = name;
 			this.color = color;
 			this.spawn = spawn.add(0.5, 0.2, 0.5);
+		}
+
+		public List<Player> getPlayers() {
+			ArrayList<Player> ret = new ArrayList<>();
+			
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				if (Game.getTeam(p) == this) {
+					ret.add(p);
+				}
+			}
+			
+			return ret;
 		}
 	}
 
