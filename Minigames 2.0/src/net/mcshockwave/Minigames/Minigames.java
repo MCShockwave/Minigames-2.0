@@ -461,7 +461,7 @@ public class Minigames extends JavaPlugin {
 					}
 				}
 				if (currentGame == Game.Ghostbusters) {
-					int max = getOptedIn().size() / 4;
+					int max = getOptedIn().size() / 4 + 1;
 					if (tid == 0 && ts[0].getPlayers().size() >= max) {
 						tid = 1;
 					}
