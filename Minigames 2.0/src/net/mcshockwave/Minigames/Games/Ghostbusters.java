@@ -42,16 +42,15 @@ public class Ghostbusters implements IMinigame {
 		ItemStack[] items;
 		if (ghosts) {
 			items = new ItemStack[] { new ItemStack(Material.DIAMOND_SWORD),
-					new ItemStack(Material.POTION, 2, (short) 16420), new ItemStack(Material.POTION, 4, (short) 16428),
-					new ItemStack(Material.POTION, 1, (short) 8229), new ItemStack(Material.POTION, 1, (short) 8229),
-					new ItemStack(Material.POTION, 1, (short) 8229) };
+					new ItemStack(Material.POTION, 4, (short) 16428), new ItemStack(Material.POTION, 1, (short) 8229),
+					new ItemStack(Material.POTION, 1, (short) 8229), new ItemStack(Material.POTION, 1, (short) 8229) };
 			p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
 		} else {
 			items = new ItemStack[] { new ItemStack(Material.WOOD_SWORD), new ItemStack(Material.GOLDEN_APPLE, 2) };
 			p.getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
-			p.getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
-			p.getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+			p.getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+			p.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
 			p.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
 		}
 
@@ -82,7 +81,7 @@ public class Ghostbusters implements IMinigame {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
 		final Player p = event.getPlayer();
@@ -91,6 +90,8 @@ public class Ghostbusters implements IMinigame {
 			Bukkit.getScheduler().runTask(plugin, new Runnable() {
 				public void run() {
 					p.removePotionEffect(PotionEffectType.ABSORPTION);
+					p.removePotionEffect(PotionEffectType.REGENERATION);
+					p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 170, 1));
 				}
 			});
 		}

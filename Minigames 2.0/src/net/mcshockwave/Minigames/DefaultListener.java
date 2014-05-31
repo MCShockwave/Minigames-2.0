@@ -412,6 +412,9 @@ public class DefaultListener implements Listener {
 
 	@EventHandler
 	public void onItemConsume(final PlayerItemConsumeEvent event) {
+		if (event.getItem().getType() != Material.POTION) {
+			return;
+		}
 		Bukkit.getScheduler().runTask(plugin, new Runnable() {
 			public void run() {
 				event.getPlayer().setItemInHand(null);
