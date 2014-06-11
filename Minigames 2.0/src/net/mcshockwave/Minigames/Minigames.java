@@ -478,7 +478,7 @@ public class Minigames extends JavaPlugin {
 						ts[0].addPlayer(p);
 					}
 				} else if (currentGame == Game.Storm_The_Castle) {
-					int max = getOptedIn().size() / 4 + 1;
+					int max = getOptedIn().size() / 3;
 					if (tid == 0 && ts[0].getPlayers().size() >= max) {
 						tid = 1;
 					}
