@@ -302,7 +302,8 @@ public class Minigames extends JavaPlugin {
 				}
 			}
 			if (winName != null) {
-				broadcast(winColor, "%s has won %s!", winName, currentGame.name);
+				String has = winName.endsWith("s") ? "have" : "has";
+				broadcast(winColor, "%s " + has + " won %s!", winName, currentGame.name);
 			} else {
 				broadcast("%s has ended!", currentGame.name);
 			}
@@ -477,7 +478,7 @@ public class Minigames extends JavaPlugin {
 						ts[0].addPlayer(p);
 					}
 				} else if (currentGame == Game.Storm_The_Castle) {
-					int max = getOptedIn().size() / 3 + 1;
+					int max = getOptedIn().size() / 4 + 1;
 					if (tid == 0 && ts[0].getPlayers().size() >= max) {
 						tid = 1;
 					}

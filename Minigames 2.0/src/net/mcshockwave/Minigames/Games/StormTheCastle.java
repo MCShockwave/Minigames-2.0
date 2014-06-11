@@ -7,6 +7,7 @@ import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -37,10 +38,14 @@ public class StormTheCastle implements IMinigame {
 			public void run() {
 				for (Player p : Game.Storm_The_Castle.getTeam("Barbarians").getPlayers()) {
 					if (p.getInventory().contains(Material.BEACON)) {
-						Item i = p.getWorld().dropItem(p.getEyeLocation(), new ItemStack(Material.BEACON));
+						final Item i = p.getWorld().dropItem(p.getEyeLocation(), new ItemStack(Material.BEACON));
 						i.setPickupDelay(Short.MAX_VALUE);
-						i.setTicksLived(6000 - 20);
 						i.setVelocity(new Vector(0, 0.5, 0));
+						Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+							public void run() {
+								i.remove();
+							}
+						}, 20l);
 					}
 				}
 			}
@@ -65,8 +70,8 @@ public class StormTheCastle implements IMinigame {
 			if (p.getInventory().contains(Material.BEACON)) {
 				Minigames.broadcastDeath(p, e.k, "%s killed themselves and lost a beacon",
 						"%s was killed by %s and lost a beacon");
-				giveItems(p);
 			}
+			giveItems(p);
 		} else {
 			Minigames.broadcastDeath(p, e.k, "%s killed themselves", "%s was killed by %s");
 			giveItems(p);
@@ -74,20 +79,23 @@ public class StormTheCastle implements IMinigame {
 	}
 
 	private void giveItems(Player p) {
+		Minigames.clearInv(p);
+		Minigames.milkPlayer(p);
+
 		GameTeam gt = Game.getTeam(p);
 		PlayerInventory pi = p.getInventory();
-		if (gt.team == Game.Storm_The_Castle.getTeam("Knights")) {
+		if (gt == Game.Storm_The_Castle.getTeam("Knights")) {
 			pi.setHelmet(new ItemStack(Material.IRON_HELMET));
 			pi.setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
 			pi.setLeggings(new ItemStack(Material.IRON_LEGGINGS));
 			pi.setBoots(new ItemStack(Material.IRON_BOOTS));
 			pi.addItem(new ItemStack(Material.IRON_SWORD));
-		} else if (gt.team == Game.Storm_The_Castle.getTeam("Barbarians")) {
+		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
 			pi.setHelmet(new ItemStack(Material.LEATHER_HELMET));
 			pi.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
 			pi.setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
 			pi.setBoots(new ItemStack(Material.LEATHER_BOOTS));
-			pi.addItem(new ItemStack(Material.STONE_AXE));
+			pi.addItem(new ItemStack(Material.IRON_AXE));
 		}
 	}
 
