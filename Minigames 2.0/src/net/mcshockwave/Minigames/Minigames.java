@@ -524,8 +524,8 @@ public class Minigames extends JavaPlugin {
 					Minigames.broadcast(ChatColor.GREEN, "Times up! Ending %s!", "game");
 					stop(null);
 				} else {
-					Minigames.broadcast(ChatColor.GREEN, "Times up, the %s win!", "knights");
-					stop(Game.getTeam(Game.Storm_The_Castle, "Knights"));
+					Minigames.broadcast(ChatColor.GREEN, "Times up, the %s win!", "Knights");
+					stop(Game.Storm_The_Castle.getTeam("Knights").team);
 				}
 			}
 		}, time * 1200));

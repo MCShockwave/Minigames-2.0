@@ -25,11 +25,11 @@ import org.bukkit.potion.PotionEffectType;
 public class Ghostbusters implements IMinigame {
 
 	public GameTeam getGhosts() {
-		return Game.getTeam(Game.Ghostbusters, "Ghosts");
+		return Game.Ghostbusters.getTeam("Ghosts");
 	}
 
 	public GameTeam getHumans() {
-		return Game.getTeam(Game.Ghostbusters, "Humans");
+		return Game.Ghostbusters.getTeam("Humans");
 	}
 
 	@Override
@@ -46,20 +46,14 @@ public class Ghostbusters implements IMinigame {
 		ItemStack[] items;
 		if (ghosts) {
 			items = new ItemStack[] { new ItemStack(Material.DIAMOND_SWORD),
-					new ItemStack(Material.POTION, 4, (short) 16428),
-					new ItemStack(Material.POTION, 1, (short) 8229),
-					new ItemStack(Material.POTION, 1, (short) 8229),
-					new ItemStack(Material.POTION, 1, (short) 8229) };
-			p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,
-					Integer.MAX_VALUE, 0));
-			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
-					Integer.MAX_VALUE, 0));
+					new ItemStack(Material.POTION, 4, (short) 16428), new ItemStack(Material.POTION, 1, (short) 8229),
+					new ItemStack(Material.POTION, 1, (short) 8229), new ItemStack(Material.POTION, 1, (short) 8229) };
+			p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
 		} else {
-			items = new ItemStack[] { new ItemStack(Material.WOOD_SWORD),
-					new ItemStack(Material.GOLDEN_APPLE, 2) };
+			items = new ItemStack[] { new ItemStack(Material.WOOD_SWORD), new ItemStack(Material.GOLDEN_APPLE, 2) };
 			p.getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
-			p.getInventory().setChestplate(
-					new ItemStack(Material.IRON_CHESTPLATE));
+			p.getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
 			p.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
 			p.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
 		}
@@ -75,11 +69,9 @@ public class Ghostbusters implements IMinigame {
 	public void onPlayerDeath(DeathEvent e) {
 		if (e.gt != null) {
 			if (e.gt == getGhosts()) {
-				Minigames.broadcastDeath(e.p, e.k, "%s was exterminated",
-						"%s was ghostbusted by %s");
+				Minigames.broadcastDeath(e.p, e.k, "%s was exterminated", "%s was ghostbusted by %s");
 			} else {
-				Minigames.broadcastDeath(e.p, e.k, "%s died of natural causes",
-						"%s had their soul stolen by %s");
+				Minigames.broadcastDeath(e.p, e.k, "%s died of natural causes", "%s had their soul stolen by %s");
 			}
 		}
 	}
@@ -88,8 +80,7 @@ public class Ghostbusters implements IMinigame {
 	public void onPlayerRegainHealth(EntityRegainHealthEvent event) {
 		Entity e = event.getEntity();
 		if (e instanceof Player) {
-			if (event.getRegainReason() == RegainReason.SATIATED
-					&& Game.getTeam((Player) e) == getHumans()) {
+			if (event.getRegainReason() == RegainReason.SATIATED && Game.getTeam((Player) e) == getHumans()) {
 				event.setCancelled(true);
 			}
 		}
@@ -104,8 +95,7 @@ public class Ghostbusters implements IMinigame {
 				public void run() {
 					p.removePotionEffect(PotionEffectType.ABSORPTION);
 					p.removePotionEffect(PotionEffectType.REGENERATION);
-					p.addPotionEffect(new PotionEffect(
-							PotionEffectType.REGENERATION, 170, 1));
+					p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 170, 1));
 				}
 			});
 		}
@@ -115,16 +105,13 @@ public class Ghostbusters implements IMinigame {
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if (Minigames.alivePlayers.contains(e.getPlayer().getName())) {
 			if (e.getTo().getY() >= 125
-					&& (e.getTo().getBlock().getRelative(BlockFace.DOWN)
-							.getType() == Material.STAINED_CLAY)) {
+					&& (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STAINED_CLAY)) {
 				Player p = e.getPlayer();
-				Location l = p.getWorld().getHighestBlockAt(e.getFrom())
-						.getLocation();
+				Location l = p.getWorld().getHighestBlockAt(e.getFrom()).getLocation();
 				l.setPitch(p.getLocation().getPitch());
 				l.setYaw(p.getLocation().getYaw());
 				e.setTo(l);
-				MCShockwave.send(e.getPlayer(), "Do not climb the %s!",
-						"hills");
+				MCShockwave.send(e.getPlayer(), "Do not climb the %s!", "hills");
 			}
 		}
 	}

@@ -273,12 +273,13 @@ public enum Game {
 		new StormTheCastle(),
 		Material.BEACON,
 		0,
-		10,
+		8,
 		true,
 		true,
 		new Location(Minigames.getDefaultWorld(), 0, 0, 0),
-		new GameTeam[] { new GameTeam("Knights", ChatColor.BLUE, new Location(Minigames.getDefaultWorld(), 0, 0, 0)),
-				new GameTeam("Barbarians", ChatColor.RED, new Location(Minigames.getDefaultWorld(), 0, 0, 0)) });
+		new GameTeam[] {
+				new GameTeam("Knights", ChatColor.AQUA, new Location(Minigames.getDefaultWorld(), 2570, 104, -3)),
+				new GameTeam("Barbarians", ChatColor.RED, new Location(Minigames.getDefaultWorld(), 2418, 81, -3)) });
 
 	public String		name;
 	public IMinigame	mclass;
@@ -361,8 +362,8 @@ public enum Game {
 		return null;
 	}
 
-	public static GameTeam getTeam(Game g, String s) {
-		for (GameTeam gt : g.teams) {
+	public GameTeam getTeam(String s) {
+		for (GameTeam gt : teams) {
 			if (gt.name.equalsIgnoreCase(s)) {
 				return gt;
 			}
