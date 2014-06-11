@@ -254,20 +254,7 @@ public enum Game {
 				new GameTeam("Ghosts", ChatColor.DARK_GRAY, new Location(Minigames.getDefaultWorld(), 14, 107, -969,
 						180, 0)),
 				new GameTeam("Humans", ChatColor.WHITE, new Location(Minigames.getDefaultWorld(), -36, 108, -989, 270,
-						0)) }),
-	Tiers(
-		new Tiers(),
-		Material.DIAMOND_SWORD,
-		0,
-		8,
-		true,
-		true,
-		new Location(Minigames.getDefaultWorld(), 399, 138, -246),
-		new GameTeam[] {
-				new GameTeam("Green", ChatColor.GREEN, new Location(Minigames.getDefaultWorld(), 341, 112, -246)),
-				new GameTeam("Yellow", ChatColor.YELLOW, new Location(Minigames.getDefaultWorld(), 399, 112, -188)),
-				new GameTeam("Red", ChatColor.RED, new Location(Minigames.getDefaultWorld(), 457, 112, -246)),
-				new GameTeam("Blue", ChatColor.BLUE, new Location(Minigames.getDefaultWorld(), 399, 112, -304)) });
+						0)) });
 
 	public String		name;
 	public IMinigame	mclass;
