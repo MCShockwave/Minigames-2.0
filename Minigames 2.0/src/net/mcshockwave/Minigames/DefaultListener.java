@@ -394,7 +394,7 @@ public class DefaultListener implements Listener {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+		if (event.getPlayer().getGameMode() != GameMode.CREATIVE && Minigames.currentGame != Game.Storm_The_Castle) {
 			event.setCancelled(true);
 		}
 	}

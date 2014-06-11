@@ -476,6 +476,11 @@ public class Minigames extends JavaPlugin {
 					} else {
 						ts[0].addPlayer(p);
 					}
+				} else if (currentGame == Game.Storm_The_Castle) {
+					int max = getOptedIn().size() / 3 + 1;
+					if (tid == 0 && ts[0].getPlayers().size() >= max) {
+						tid = 1;
+					}
 				} else {
 					tid++;
 					if (tid >= tsal.size()) {
@@ -515,8 +520,13 @@ public class Minigames extends JavaPlugin {
 		currentGame.mclass.onGameStart();
 		timer.add(Bukkit.getScheduler().runTaskLaterAsynchronously(ins, new Runnable() {
 			public void run() {
-				Minigames.broadcast(ChatColor.GREEN, "Times up! Ending %s!", "game");
-				stop(null);
+				if (currentGame != Game.Storm_The_Castle) {
+					Minigames.broadcast(ChatColor.GREEN, "Times up! Ending %s!", "game");
+					stop(null);
+				} else {
+					Minigames.broadcast(ChatColor.GREEN, "Times up, the %s win!", "knights");
+					stop(Game.getTeam(Game.Storm_The_Castle, "Knights"));
+				}
 			}
 		}, time * 1200));
 	}

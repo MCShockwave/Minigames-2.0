@@ -17,6 +17,7 @@ import net.mcshockwave.Minigames.Games.Loot;
 import net.mcshockwave.Minigames.Games.Minotaur;
 import net.mcshockwave.Minigames.Games.Siege;
 import net.mcshockwave.Minigames.Games.Spleef;
+import net.mcshockwave.Minigames.Games.StormTheCastle;
 import net.mcshockwave.Minigames.Games.TRON;
 import net.mcshockwave.Minigames.Games.VillageBattle;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
@@ -250,10 +251,21 @@ public enum Game {
 		true,
 		new Location(Minigames.getDefaultWorld(), -7, 125, -991),
 		new GameTeam[] {
-				new GameTeam("Ghosts", ChatColor.DARK_GRAY, new Location(Minigames.getDefaultWorld(), 14, 107, -969,
-						180, 0)),
-				new GameTeam("Humans", ChatColor.WHITE, new Location(Minigames.getDefaultWorld(), -36, 108, -989, 270,
-						0)) });
+				new GameTeam("Ghosts", ChatColor.DARK_GRAY, new Location(Minigames.getDefaultWorld(), 14, 107, -969, 180, 0)),
+				new GameTeam("Humans", ChatColor.WHITE, new Location(Minigames.getDefaultWorld(), -36, 108, -989, 270, 0)) }),
+	Storm_The_Castle(
+			new StormTheCastle(),
+			Material.BEACON,
+			0,
+			10,
+			true,
+			true,
+			new Location(Minigames.getDefaultWorld(), 0,0,0),
+			new GameTeam[] {
+				new GameTeam("Knights", ChatColor.BLUE, new Location(Minigames.getDefaultWorld(),0,0,0)),
+				new GameTeam("Barbarians", ChatColor.RED, new Location(Minigames.getDefaultWorld(), 0,0,0))
+			});
+
 
 	public String		name;
 	public IMinigame	mclass;
