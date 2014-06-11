@@ -6,6 +6,7 @@ import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Utils.PointsUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -120,6 +121,9 @@ public class StormTheCastle implements IMinigame {
 		Block against = e.getBlockAgainst();
 		if (Game.getTeam(p).name.equalsIgnoreCase("Barbarians") && LocUtils.isSame(b.getLocation(), beaconPlace)
 				&& against.getType() == Material.GOLD_BLOCK) {
+			Minigames.broadcast(ChatColor.RED, "%s placed the beacon!", p.getName());
+			PointsUtils.addPoints(p, Game.Storm_The_Castle.getTeam("Knights").getPlayers().size() * 100,
+					"placing the beacon", true);
 			Minigames.stop(Game.getTeam(p).team);
 		}
 	}
