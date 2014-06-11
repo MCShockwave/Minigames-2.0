@@ -19,6 +19,7 @@ import net.mcshockwave.Minigames.Games.Siege;
 import net.mcshockwave.Minigames.Games.Spleef;
 import net.mcshockwave.Minigames.Games.StormTheCastle;
 import net.mcshockwave.Minigames.Games.TRON;
+import net.mcshockwave.Minigames.Games.Tiers;
 import net.mcshockwave.Minigames.Games.VillageBattle;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 
