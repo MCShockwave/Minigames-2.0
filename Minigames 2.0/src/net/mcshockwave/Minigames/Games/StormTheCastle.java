@@ -17,6 +17,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -126,6 +127,11 @@ public class StormTheCastle implements IMinigame {
 					"placing the beacon", true);
 			Minigames.stop(Game.getTeam(p).team);
 		}
+	}
+	
+	@EventHandler
+	public void onItemframeBreak(HangingBreakByEntityEvent e) {
+		e.setCancelled(true);
 	}
 
 }
