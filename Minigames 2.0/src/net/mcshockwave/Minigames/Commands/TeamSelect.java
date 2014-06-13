@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 
 public class TeamSelect implements CommandExecutor {
 
-	public Game[]	gamesNoTeam	= { Game.Infection, Game.Minotaur, Game.Ghostbusters };
+	public Game[]	gamesNoTeam	= { Game.Infection, Game.Minotaur, Game.Ghostbusters, Game.Storm_The_Castle };
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
