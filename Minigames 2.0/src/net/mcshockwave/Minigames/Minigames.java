@@ -693,13 +693,17 @@ public class Minigames extends JavaPlugin {
 			clearInv(p);
 
 			checkDone();
-
-			if (currentGame != null) {
-				p.teleport(Minigames.currentGame.lobby);
+			
+			if (!Minigames.optedOut.contains(p.getName())) {
+				if (currentGame != null) {
+					p.teleport(Minigames.currentGame.lobby);
+					spectate(p);
+				} else {
+					p.teleport(new Location(w, 0, 102, 0));
+				}
 			} else {
 				p.teleport(new Location(w, 0, 102, 0));
 			}
-			spectate(p);
 			String name = p.getName();
 			name = name.substring(0, name.length() > 14 ? 13 : name.length());
 			p.setPlayerListName(ChatColor.GRAY + name);
