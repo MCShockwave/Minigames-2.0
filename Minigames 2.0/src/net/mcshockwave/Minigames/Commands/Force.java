@@ -46,14 +46,17 @@ public class Force implements CommandExecutor {
 		for (Game g : Game.values()) {
 			i.addItem(ItemMetaUtils.setLore(
 					ItemMetaUtils.setItemName(g.icon.clone(), ChatColor.GRAY + "Force: " + ChatColor.GOLD + g.name),
-					"", "Cost: " + getCost(g) + " points"));
+					"", "Cost: " + getCost(g, p) + " points"));
 		}
 		return i;
 	}
 
-	public static int getCost(Game g) {
-		int cost = 2500;
-		return cost;
+	public static int getCost(Game g, Player p) {
+		if (SQLTable.hasRank(p.getName(), Rank.ENDER)) {
+			return 1000;
+		} else {
+			return 2500;
+		}
 	}
 
 	public static long getForceTime(Player p) {
@@ -108,7 +111,7 @@ public class Force implements CommandExecutor {
 		}
 
 		if (g != null) {
-			if (PointsUtils.getPoints(p2) < getCost(g) && !force) {
+			if (PointsUtils.getPoints(p2) < getCost(g, p2) && !force) {
 				Minigames.send(p2, "Not enough %s!", "points");
 				return;
 			}
@@ -124,7 +127,7 @@ public class Force implements CommandExecutor {
 			}
 
 			if (!force) {
-				PointsUtils.addPoints(p2, -getCost(g), "forcing " + g.name, false);
+				PointsUtils.addPoints(p2, -getCost(g, p2), "forcing " + g.name, false);
 
 				setForceTime(p2, translateLong(System.currentTimeMillis(), true) + 20);
 			}
