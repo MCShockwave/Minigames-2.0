@@ -279,7 +279,7 @@ public enum Game {
 		new Location(Minigames.getDefaultWorld(), 2440, 98, -3),
 		new GameTeam[] {
 				new GameTeam("Knights", ChatColor.AQUA, new Location(Minigames.getDefaultWorld(), 2570, 104, -3)),
-				new GameTeam("Barbarians", ChatColor.RED, new Location(Minigames.getDefaultWorld(), 2418, 81, -3)) });
+				new GameTeam("Barbarians", ChatColor.RED, new Location(Minigames.getDefaultWorld(), 2418, 82, -3)) });
 
 	public String		name;
 	public IMinigame	mclass;

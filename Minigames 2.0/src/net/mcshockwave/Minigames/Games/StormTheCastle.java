@@ -17,11 +17,14 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 public class StormTheCastle implements IMinigame {
@@ -127,5 +130,20 @@ public class StormTheCastle implements IMinigame {
 			Minigames.stop(Game.getTeam(p).team);
 		}
 	}
-
+	
+	@EventHandler
+	public void onItemframeBreak(HangingBreakByEntityEvent e) {
+		e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onMove(PlayerMoveEvent e) {
+		Team t = Game.getTeam(e.getPlayer()).team;
+		if (t == Game.Storm_The_Castle.getTeam("Knights") && e.getTo().getBlock().getType() == Material.GOLD_BLOCK) {
+			e.setTo(e.getFrom());
+			Minigames.send(e.getPlayer(), "Do not walk on the %s!", "gold block");
+		}
+		
+	}
+	
 }
