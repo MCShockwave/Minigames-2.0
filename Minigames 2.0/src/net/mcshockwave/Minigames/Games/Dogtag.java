@@ -117,8 +117,10 @@ public class Dogtag implements IMinigame {
 	public void onPlayerDeath(final DeathEvent e) {
 		Minigames.broadcastDeath(e.p, e.k, "%s killed themselves", "%s was murdered by %s");
 
-		final Item i = e.p.getWorld().dropItem(e.p.getLocation(),
-				new ItemStack(Material.WOOL, 1, Game.getWoolColor(e.gt)));
+		final Item i = e.p.getWorld().dropItem(
+				e.p.getLocation(),
+				ItemMetaUtils.setItemName(new ItemStack(Material.WOOL, 1, Game.getWoolColor(e.gt)), UUID.randomUUID()
+						.toString()));
 		Item sk = e.p.getWorld().dropItem(
 				e.p.getLocation(),
 				ItemMetaUtils.setItemName(new ItemStack(Material.SKULL_ITEM, 1, (short) 3), UUID.randomUUID()
