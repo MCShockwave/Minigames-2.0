@@ -24,15 +24,25 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 public class StormTheCastle implements IMinigame {
 
-	Location	beaconPlace	= new Location(Minigames.getDefaultWorld(), 2578, 106, -3);
+	Location				beaconPlace		= new Location(Minigames.getDefaultWorld(), 2578, 106, -3);
 
-	BukkitTask	holders		= null;
+	BukkitTask				holders			= null;
 
+	public static final int	BEACONS_NEEDED	= 4;
+
+	public static Objective	neededObj		= null;
+	public static Score		needed			= null;
+
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
 		for (Player p : Minigames.getOptedIn()) {
@@ -54,11 +64,21 @@ public class StormTheCastle implements IMinigame {
 				}
 			}
 		}.runTaskTimer(Minigames.ins, 10, 10);
+
+		Scoreboard ma = Bukkit.getScoreboardManager().getMainScoreboard();
+		neededObj = ma.registerNewObjective("Needed", "dummy");
+		neededObj.setDisplaySlot(DisplaySlot.SIDEBAR);
+		neededObj.setDisplayName("§eBeacons");
+
+		needed = neededObj.getScore(Bukkit.getOfflinePlayer("§cLeft:"));
+		needed.setScore(BEACONS_NEEDED);
 	}
 
 	@Override
 	public void onGameEnd() {
 		holders.cancel();
+		
+		neededObj.unregister();
 	}
 
 	@Override
@@ -124,18 +144,21 @@ public class StormTheCastle implements IMinigame {
 		Block against = e.getBlockAgainst();
 		if (Game.getTeam(p).name.equalsIgnoreCase("Barbarians") && LocUtils.isSame(b.getLocation(), beaconPlace)
 				&& against.getType() == Material.GOLD_BLOCK) {
-			Minigames.broadcast(ChatColor.RED, "%s placed the beacon!", p.getName());
-			PointsUtils.addPoints(p, Game.Storm_The_Castle.getTeam("Knights").getPlayers().size() * 100,
-					"placing the beacon", true);
-			Minigames.stop(Game.getTeam(p).team);
+			Minigames.broadcast(ChatColor.RED, "%s placed a beacon!", p.getName());
+			PointsUtils.addPoints(p, Game.Storm_The_Castle.getTeam("Knights").getPlayers().size() * 50,
+					"placing a beacon", true);
+			needed.setScore(needed.getScore() - 1);
+			if (needed.getScore() < 1) {
+				Minigames.stop(Game.getTeam(p).team);
+			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onItemframeBreak(HangingBreakByEntityEvent e) {
 		e.setCancelled(true);
 	}
-	
+
 	@EventHandler
 	public void onMove(PlayerMoveEvent e) {
 		Team t = Game.getTeam(e.getPlayer()).team;
@@ -143,7 +166,7 @@ public class StormTheCastle implements IMinigame {
 			e.setTo(e.getFrom());
 			Minigames.send(e.getPlayer(), "Do not walk on the %s!", "gold block");
 		}
-		
+
 	}
-	
+
 }
