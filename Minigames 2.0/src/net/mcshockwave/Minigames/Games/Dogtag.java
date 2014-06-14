@@ -3,6 +3,7 @@ package net.mcshockwave.Minigames.Games;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
@@ -103,7 +104,7 @@ public class Dogtag implements IMinigame {
 		tag.clear();
 		comPo.cancel();
 
-		for (Map.Entry<Block, GameTeam> e : mines.entrySet()){
+		for (Map.Entry<Block, GameTeam> e : mines.entrySet()) {
 			Block b = e.getKey();
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				PacketUtils.setBlockFromPacket(p, b, b.getType(), b.getData());
@@ -118,7 +119,10 @@ public class Dogtag implements IMinigame {
 
 		final Item i = e.p.getWorld().dropItem(e.p.getLocation(),
 				new ItemStack(Material.WOOL, 1, Game.getWoolColor(e.gt)));
-		Item sk = e.p.getWorld().dropItem(e.p.getLocation(), new ItemStack(Material.SKULL_ITEM, 1, (short) 3));
+		Item sk = e.p.getWorld().dropItem(
+				e.p.getLocation(),
+				ItemMetaUtils.setItemName(new ItemStack(Material.SKULL_ITEM, 1, (short) 3), UUID.randomUUID()
+						.toString()));
 		i.setPassenger(sk);
 		slimes.put(e.p.getName(), Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
 			public void run() {
