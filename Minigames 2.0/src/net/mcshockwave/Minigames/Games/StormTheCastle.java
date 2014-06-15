@@ -28,7 +28,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 public class StormTheCastle implements IMinigame {
@@ -77,7 +76,7 @@ public class StormTheCastle implements IMinigame {
 	@Override
 	public void onGameEnd() {
 		holders.cancel();
-		
+
 		neededObj.unregister();
 	}
 
@@ -161,9 +160,10 @@ public class StormTheCastle implements IMinigame {
 	}
 
 	@EventHandler
-	public void onMove(PlayerMoveEvent e) {
-		Team t = Game.getTeam(e.getPlayer()).team;
-		if (t == Game.Storm_The_Castle.getTeam("Knights").team && e.getTo().getBlock().getType() == Material.GOLD_BLOCK) {
+	public void onPlayerMove(PlayerMoveEvent e) {
+		GameTeam t = Game.getTeam(e.getPlayer());
+		if (t == Game.Storm_The_Castle.getTeam("Knights")
+				&& e.getTo().add(0, -1, 0).getBlock().getType() == Material.GOLD_BLOCK) {
 			e.setTo(e.getFrom());
 			Minigames.send(e.getPlayer(), "Do not walk on the %s!", "gold block");
 		}
