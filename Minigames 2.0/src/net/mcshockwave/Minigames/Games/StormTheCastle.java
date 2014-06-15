@@ -148,10 +148,10 @@ public class StormTheCastle implements IMinigame {
 			PointsUtils.addPoints(p, Game.Storm_The_Castle.getTeam("Knights").getPlayers().size() * 50,
 					"placing a beacon", true);
 			needed.setScore(needed.getScore() - 1);
-			p.getItemInHand().setAmount(0);
 			if (needed.getScore() < 1) {
 				Minigames.stop(Game.getTeam(p).team);
 			}
+			p.setItemInHand(null);
 		}
 	}
 
