@@ -148,6 +148,7 @@ public class StormTheCastle implements IMinigame {
 			PointsUtils.addPoints(p, Game.Storm_The_Castle.getTeam("Knights").getPlayers().size() * 50,
 					"placing a beacon", true);
 			needed.setScore(needed.getScore() - 1);
+			p.getItemInHand().setAmount(0);
 			if (needed.getScore() < 1) {
 				Minigames.stop(Game.getTeam(p).team);
 			}
@@ -162,7 +163,7 @@ public class StormTheCastle implements IMinigame {
 	@EventHandler
 	public void onMove(PlayerMoveEvent e) {
 		Team t = Game.getTeam(e.getPlayer()).team;
-		if (t == Game.Storm_The_Castle.getTeam("Knights") && e.getTo().getBlock().getType() == Material.GOLD_BLOCK) {
+		if (t == Game.Storm_The_Castle.getTeam("Knights").team && e.getTo().getBlock().getType() == Material.GOLD_BLOCK) {
 			e.setTo(e.getFrom());
 			Minigames.send(e.getPlayer(), "Do not walk on the %s!", "gold block");
 		}
