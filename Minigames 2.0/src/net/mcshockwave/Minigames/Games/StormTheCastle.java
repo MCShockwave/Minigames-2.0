@@ -97,6 +97,9 @@ public class StormTheCastle implements IMinigame {
 			Minigames.broadcastDeath(p, e.k, "%s killed themselves and dropped a beacon!",
 					"%s was killed by %s and dropped a beacon!");
 			giveItems(p);
+			if (e.k != null) {
+				e.k.setHealth(e.k.getMaxHealth());
+			}
 		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
 			if (p.getInventory().contains(Material.BEACON)) {
 				Minigames.broadcastDeath(p, e.k, "%s killed themselves and lost a beacon",
