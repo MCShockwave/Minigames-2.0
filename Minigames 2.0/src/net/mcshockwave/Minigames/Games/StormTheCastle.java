@@ -22,6 +22,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -59,6 +61,12 @@ public class StormTheCastle implements IMinigame {
 								i.remove();
 							}
 						}, 20l);
+
+						PotionEffectType[] buffs = { PotionEffectType.SPEED, PotionEffectType.DAMAGE_RESISTANCE,
+								PotionEffectType.INCREASE_DAMAGE };
+						for (PotionEffectType pet : buffs) {
+							p.addPotionEffect(new PotionEffect(pet, 30, 0));
+						}
 					}
 				}
 			}
