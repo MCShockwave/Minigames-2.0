@@ -131,7 +131,7 @@ public class Force implements CommandExecutor {
 
 				setForceTime(p2, translateLong(System.currentTimeMillis(), true) + 20);
 
-				SQLTable.ForceCosts.set("Cost", (getCost(g) + 1) + "", "Minigame", g.name());
+				SQLTable.ForceCosts.set("Cost", (getCost(g) + 5) + "", "Minigame", g.name());
 			}
 		}
 	}
