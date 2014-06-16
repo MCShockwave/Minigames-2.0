@@ -145,7 +145,7 @@ public class StormTheCastle implements IMinigame {
 			e.setCancelled(true);
 			e.getItem().remove();
 			Minigames.broadcast(ChatColor.GOLD, "A %s was recovered by the knights!", "beacon");
-		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
+		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians") && !p.getInventory().contains(Material.BEACON)) {
 			Minigames.broadcast(ChatColor.GOLD, p.getName() + " has picked up a %s!", "beacon");
 			Minigames.send(p, "You have a %s! Go place it on the %s to win!", "beacon", "gold block");
 		}
