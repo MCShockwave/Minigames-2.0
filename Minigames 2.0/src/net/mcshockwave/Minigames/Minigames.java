@@ -499,7 +499,7 @@ public class Minigames extends JavaPlugin {
 		int[] secs = { 45, 30, 15, 10, 5, 4, 3, 2, 1 };
 		for (int i = time; i > 0; i--) {
 			final int i2 = time - i;
-			timer.add(Bukkit.getScheduler().runTaskLaterAsynchronously(ins, new Runnable() {
+			timer.add(Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 				public void run() {
 					Minigames.broadcast(ChatColor.GREEN, "Game ending in %s minutes", i2);
 				}
@@ -507,21 +507,21 @@ public class Minigames extends JavaPlugin {
 		}
 		for (int i : secs) {
 			final int i2 = i;
-			timer.add(Bukkit.getScheduler().runTaskLaterAsynchronously(ins, new Runnable() {
+			timer.add(Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 				public void run() {
 					Minigames.broadcast(ChatColor.GREEN, "Game ending in %s seconds", i2);
 				}
 			}, ((time - 1) * 1200) + (60 - i) * 20));
 		}
 		currentGame.mclass.onGameStart();
-		timer.add(Bukkit.getScheduler().runTaskLaterAsynchronously(ins, new Runnable() {
+		timer.add(Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 			public void run() {
-				if (currentGame != Game.Storm_The_Castle) {
-					Minigames.broadcast(ChatColor.GREEN, "Times up! Ending %s!", "game");
-					stop(null);
-				} else {
+				if (currentGame == Game.Storm_The_Castle) {
 					Minigames.broadcast(ChatColor.GREEN, "Times up, the %s win!", "Knights");
 					stop(Game.Storm_The_Castle.getTeam("Knights").team);
+				} else {
+					Minigames.broadcast(ChatColor.GREEN, "Times up! Ending %s!", "game");
+					stop(null);
 				}
 			}
 		}, time * 1200));
