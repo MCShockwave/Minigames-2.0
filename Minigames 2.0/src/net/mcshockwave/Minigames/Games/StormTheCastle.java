@@ -22,6 +22,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -59,6 +61,12 @@ public class StormTheCastle implements IMinigame {
 								i.remove();
 							}
 						}, 20l);
+
+						PotionEffectType[] buffs = { PotionEffectType.SPEED, PotionEffectType.DAMAGE_RESISTANCE,
+								PotionEffectType.INCREASE_DAMAGE };
+						for (PotionEffectType pet : buffs) {
+							p.addPotionEffect(new PotionEffect(pet, 50, 1));
+						}
 					}
 				}
 			}
@@ -89,6 +97,9 @@ public class StormTheCastle implements IMinigame {
 			Minigames.broadcastDeath(p, e.k, "%s killed themselves and dropped a beacon!",
 					"%s was killed by %s and dropped a beacon!");
 			giveItems(p);
+			if (e.k != null) {
+				e.k.setHealth(e.k.getMaxHealth());
+			}
 		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
 			if (p.getInventory().contains(Material.BEACON)) {
 				Minigames.broadcastDeath(p, e.k, "%s killed themselves and lost a beacon",
