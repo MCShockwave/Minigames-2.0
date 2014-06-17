@@ -61,7 +61,7 @@ public class StormTheCastle implements IMinigame {
 								i.remove();
 							}
 						}, 20l);
-						
+
 						PotionEffectType[] buffs = { PotionEffectType.SPEED, PotionEffectType.DAMAGE_RESISTANCE,
 								PotionEffectType.INCREASE_DAMAGE };
 						for (PotionEffectType pet : buffs) {
