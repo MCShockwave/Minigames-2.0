@@ -178,6 +178,8 @@ public class Minigames extends JavaPlugin {
 									}
 								} else
 									currentGame.spawn.getChunk().load();
+
+								resetGameWorld(currentGame);
 							}
 							if (b == 15) {
 								for (Method m : currentGame.mclass.getClass().getMethods()) {
@@ -356,6 +358,24 @@ public class Minigames extends JavaPlugin {
 			}
 		}, 100);
 		resetScoreboard();
+	}
+
+	public static void resetGameWorld(final Game map) {
+		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+			public void run() {
+				Multiworld.deleteWorld(Multiworld.getGame());
+			}
+		}, 10);
+		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+			public void run() {
+				Multiworld.copyWorld(map.name(), Multiworld.worlds[1].name());
+			}
+		}, 20);
+		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+			public void run() {
+				Multiworld.worlds[1].createWorld();
+			}
+		}, 30);
 	}
 
 	public static void start() {
