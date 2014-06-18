@@ -5,6 +5,7 @@ import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,8 +34,8 @@ public class Siege implements IMinigame {
 	Villager	yv			= null;
 	Villager	gv			= null;
 
-	Location	yl			= new Location(Minigames.getDefaultWorld(), 453.5, 117.5, 195, 90, 0);
-	Location	gl			= new Location(Minigames.getDefaultWorld(), 275.5, 117.5, 156, 270, 0);
+	Location	yl			= new Location(Multiworld.getGame(), 453.5, 117.5, 195, 90, 0);
+	Location	gl			= new Location(Multiworld.getGame(), 275.5, 117.5, 156, 270, 0);
 
 	BukkitTask	bt			= null;
 
@@ -61,7 +62,7 @@ public class Siege implements IMinigame {
 			public void run() {
 				yl.getChunk().load();
 				gl.getChunk().load();
-				
+
 				yv = (Villager) w.spawnEntity(yl, EntityType.VILLAGER);
 				gv = (Villager) w.spawnEntity(gl, EntityType.VILLAGER);
 
@@ -105,7 +106,7 @@ public class Siege implements IMinigame {
 		yv.remove();
 		gv.remove();
 		bt.cancel();
-		
+
 		hp.unregister();
 	}
 

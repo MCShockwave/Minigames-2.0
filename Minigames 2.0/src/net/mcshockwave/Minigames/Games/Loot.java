@@ -3,6 +3,7 @@ package net.mcshockwave.Minigames.Games;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -52,7 +53,7 @@ public class Loot implements IMinigame {
 	}
 
 	public void onGameEnd() {
-		for (Entity i : Minigames.w.getEntities()) {
+		for (Entity i : Multiworld.getGame().getEntities()) {
 			if (i.getType() == EntityType.DROPPED_ITEM) {
 				i.remove();
 			}

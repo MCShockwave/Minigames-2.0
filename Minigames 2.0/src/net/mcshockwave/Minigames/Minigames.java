@@ -3,8 +3,8 @@ package net.mcshockwave.Minigames;
 import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.SQLTable.Rank;
-import net.mcshockwave.MCS.Stats.Statistics;
 import net.mcshockwave.MCS.Commands.VanishCommand;
+import net.mcshockwave.MCS.Stats.Statistics;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Commands.Force;
@@ -22,6 +22,7 @@ import net.mcshockwave.Minigames.Shop.ShopUtils;
 import net.mcshockwave.Minigames.Utils.PointsUtils;
 import net.mcshockwave.Minigames.Utils.SoundUtils;
 import net.mcshockwave.Minigames.Utils.TeleportUtils;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,7 +32,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -71,8 +71,6 @@ public class Minigames extends JavaPlugin {
 
 	public static int						pointsOnWin		= 0;
 
-	public static World						w;
-
 	public static HashMap<Player, ShopItem>	used			= new HashMap<Player, ShopItem>();
 	public static HashMap<Player, ShopItem>	usedNoPay		= new HashMap<Player, ShopItem>();
 
@@ -99,14 +97,7 @@ public class Minigames extends JavaPlugin {
 			startCount();
 		}
 
-		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-			public void run() {
-				World dw = Bukkit.getWorld("McMinigames");
-				if (w == null) {
-					w = dw;
-				}
-			}
-		}, 10L);
+		Multiworld.loadAll();
 
 		resetScoreboard();
 	}
@@ -230,7 +221,7 @@ public class Minigames extends JavaPlugin {
 
 		used.clear();
 
-		TeleportUtils.spread(new Location(w, 0, 103, 0), 5, getOptedIn().toArray(new Player[0]));
+		TeleportUtils.spread(new Location(Multiworld.getLobby(), 0, 103, 0), 5, getOptedIn().toArray(new Player[0]));
 
 		for (Player p : getOptedIn()) {
 			Minigames.milkPlayer(p);
@@ -345,7 +336,7 @@ public class Minigames extends JavaPlugin {
 				giveHelm(p);
 			}
 		}
-		for (Entity e : w.getEntities()) {
+		for (Entity e : Multiworld.getGame().getEntities()) {
 			if (e instanceof Item || e instanceof Slime) {
 				e.remove();
 			}
@@ -529,11 +520,6 @@ public class Minigames extends JavaPlugin {
 
 	// @@@@@@@@@@@@@@@@@@@@@@@ [ OTHER ] @@@@@@@@@@@@@@@@@@@@@@@
 
-	public static World getDefaultWorld() {
-		World dw = Bukkit.getWorld("McMinigames");
-		return dw;
-	}
-
 	public static float getMultiplier(Player p) {
 		if (SQLTable.hasRank(p.getName(), Rank.NETHER)) {
 			return 3;
@@ -694,10 +680,10 @@ public class Minigames extends JavaPlugin {
 					p.teleport(Minigames.currentGame.lobby);
 					spectate(p);
 				} else {
-					p.teleport(new Location(w, 0, 102, 0));
+					p.teleport(new Location(Multiworld.getLobby(), 0, 102, 0));
 				}
 			} else {
-				p.teleport(new Location(w, 0, 102, 0));
+				p.teleport(new Location(Multiworld.getLobby(), 0, 102, 0));
 			}
 			String name = p.getName();
 			name = name.substring(0, name.length() > 14 ? 13 : name.length());

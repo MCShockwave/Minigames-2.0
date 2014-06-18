@@ -6,6 +6,7 @@ import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -28,8 +29,8 @@ public class Brawl implements IMinigame {
 
 	public Player	b1		= null, b2 = null;
 
-	Location		l1		= new Location(Minigames.getDefaultWorld(), 301.5, 134, -780, 270, 0);
-	Location		l2		= new Location(Minigames.getDefaultWorld(), 306.5, 134, -780, 90, 0);
+	Location		l1		= new Location(Multiworld.getGame(), 301.5, 134, -780, 270, 0);
+	Location		l2		= new Location(Multiworld.getGame(), 306.5, 134, -780, 90, 0);
 
 	public long		invin	= 0;
 

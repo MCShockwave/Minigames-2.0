@@ -8,6 +8,7 @@ import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,10 +35,10 @@ import java.util.List;
 
 public class LaserTag implements IMinigame {
 
-	private Location	yb1			= new Location(Minigames.getDefaultWorld(), -1475, 105, 2);
-	private Location	yb2			= new Location(Minigames.getDefaultWorld(), -1475, 105, -2);
-	private Location	gb1			= new Location(Minigames.getDefaultWorld(), -1525, 105, 2);
-	private Location	gb2			= new Location(Minigames.getDefaultWorld(), -1525, 105, -2);
+	private Location	yb1			= new Location(Multiworld.getGame(), -1475, 105, 2);
+	private Location	yb2			= new Location(Multiworld.getGame(), -1475, 105, -2);
+	private Location	gb1			= new Location(Multiworld.getGame(), -1525, 105, 2);
+	private Location	gb2			= new Location(Multiworld.getGame(), -1525, 105, -2);
 
 	private int			startp		= 100;
 

@@ -8,6 +8,7 @@ import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.BlockUtils;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,23 +29,23 @@ import org.bukkit.potion.PotionEffectType;
 
 public class FourCorners implements IMinigame {
 
-	Location			rs		= new Location(Minigames.getDefaultWorld(), 191, 105, -13);
-	Location			re		= new Location(Minigames.getDefaultWorld(), 195, 105, -9);
-	Location			ys		= new Location(Minigames.getDefaultWorld(), 215, 105, -13);
-	Location			ye		= new Location(Minigames.getDefaultWorld(), 211, 105, -9);
-	Location			gs		= new Location(Minigames.getDefaultWorld(), 215, 105, 11);
-	Location			ge		= new Location(Minigames.getDefaultWorld(), 211, 105, 7);
-	Location			bs		= new Location(Minigames.getDefaultWorld(), 191, 105, 11);
-	Location			be		= new Location(Minigames.getDefaultWorld(), 195, 105, 7);
+	Location			rs		= new Location(Multiworld.getGame(), 191, 105, -13);
+	Location			re		= new Location(Multiworld.getGame(), 195, 105, -9);
+	Location			ys		= new Location(Multiworld.getGame(), 215, 105, -13);
+	Location			ye		= new Location(Multiworld.getGame(), 211, 105, -9);
+	Location			gs		= new Location(Multiworld.getGame(), 215, 105, 11);
+	Location			ge		= new Location(Multiworld.getGame(), 211, 105, 7);
+	Location			bs		= new Location(Multiworld.getGame(), 191, 105, 11);
+	Location			be		= new Location(Multiworld.getGame(), 195, 105, 7);
 
-	Location			p1s		= new Location(Minigames.getDefaultWorld(), 196, 105, -12);
-	Location			p1e		= new Location(Minigames.getDefaultWorld(), 210, 105, -10);
-	Location			p2s		= new Location(Minigames.getDefaultWorld(), 214, 105, -8);
-	Location			p2e		= new Location(Minigames.getDefaultWorld(), 212, 105, 6);
-	Location			p3s		= new Location(Minigames.getDefaultWorld(), 210, 105, 10);
-	Location			p3e		= new Location(Minigames.getDefaultWorld(), 196, 105, 8);
-	Location			p4s		= new Location(Minigames.getDefaultWorld(), 192, 105, 6);
-	Location			p4e		= new Location(Minigames.getDefaultWorld(), 194, 105, -8);
+	Location			p1s		= new Location(Multiworld.getGame(), 196, 105, -12);
+	Location			p1e		= new Location(Multiworld.getGame(), 210, 105, -10);
+	Location			p2s		= new Location(Multiworld.getGame(), 214, 105, -8);
+	Location			p2e		= new Location(Multiworld.getGame(), 212, 105, 6);
+	Location			p3s		= new Location(Multiworld.getGame(), 210, 105, 10);
+	Location			p3e		= new Location(Multiworld.getGame(), 196, 105, 8);
+	Location			p4s		= new Location(Multiworld.getGame(), 192, 105, 6);
+	Location			p4e		= new Location(Multiworld.getGame(), 194, 105, -8);
 
 	Material			set		= Material.STAINED_CLAY;
  

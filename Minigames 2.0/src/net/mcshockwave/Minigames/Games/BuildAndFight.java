@@ -11,6 +11,7 @@ import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.BlockUtils;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,8 +36,8 @@ import org.bukkit.util.BlockIterator;
 
 public class BuildAndFight implements IMinigame {
 
-	Location			bSt			= new Location(Minigames.getDefaultWorld(), -603, 100, 8);
-	Location			bEn			= new Location(Minigames.getDefaultWorld(), -600, 100, -6);
+	Location			bSt			= new Location(Multiworld.getGame(), -603, 100, 8);
+	Location			bEn			= new Location(Multiworld.getGame(), -600, 100, -6);
 	boolean				building	= true;
 
 	ArrayList<Block>	blocks		= new ArrayList<Block>();

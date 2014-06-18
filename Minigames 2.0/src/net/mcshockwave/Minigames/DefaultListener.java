@@ -9,6 +9,7 @@ import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
 import net.mcshockwave.Minigames.Game.GameTeam;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 import net.mcshockwave.Minigames.Commands.Force;
 import net.mcshockwave.Minigames.Commands.MgInfo;
 
@@ -68,7 +69,7 @@ public class DefaultListener implements Listener {
 		}
 
 		if (!Minigames.started) {
-			p.teleport(new Location(Minigames.w, 0, 102, 0));
+			p.teleport(new Location(Multiworld.getLobby(), 0, 102, 0));
 		} else {
 			p.teleport(Minigames.currentGame.lobby);
 			String name = p.getName();
@@ -234,7 +235,7 @@ public class DefaultListener implements Listener {
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player p = event.getPlayer();
 		if (!Minigames.started) {
-			event.setRespawnLocation(new Location(Minigames.w, 0, 103, 0));
+			event.setRespawnLocation(new Location(Multiworld.getLobby(), 0, 103, 0));
 		} else {
 			if (!Minigames.alivePlayers.contains(p.getName())) {
 				event.setRespawnLocation(Minigames.currentGame.lobby);
@@ -277,7 +278,7 @@ public class DefaultListener implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-			
+
 			if (Minigames.started && !Minigames.alivePlayers.contains(p.getName())
 					&& !Minigames.deadPlayers.contains(p.getName())) {
 				event.setCancelled(false);

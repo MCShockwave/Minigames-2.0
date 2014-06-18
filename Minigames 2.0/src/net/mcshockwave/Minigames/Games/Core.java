@@ -10,6 +10,7 @@ import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.LocUtils;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -152,10 +153,10 @@ public class Core implements IMinigame {
 
 	public void doEffect(final byte teamColor, long time) {
 		for (int c = 2; c < 16; c += 2) {
-			Block b1 = Minigames.w.getBlockAt(c, 101, 1000 + c);
-			Block b2 = Minigames.w.getBlockAt(-c, 101, 1000 + c);
-			Block b3 = Minigames.w.getBlockAt(c, 101, 1000 - c);
-			Block b4 = Minigames.w.getBlockAt(-c, 101, 1000 - c);
+			Block b1 = Multiworld.getGame().getBlockAt(c, 101, 1000 + c);
+			Block b2 = Multiworld.getGame().getBlockAt(-c, 101, 1000 + c);
+			Block b3 = Multiworld.getGame().getBlockAt(c, 101, 1000 - c);
+			Block b4 = Multiworld.getGame().getBlockAt(-c, 101, 1000 - c);
 
 			final Block[] bs = { b1, b2, b3, b4 };
 

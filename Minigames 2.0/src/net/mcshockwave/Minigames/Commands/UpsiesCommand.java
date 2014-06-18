@@ -4,6 +4,7 @@ import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.SQLTable.Rank;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -13,9 +14,9 @@ import org.bukkit.entity.Player;
 
 public class UpsiesCommand implements CommandExecutor {
 
-	Location	red		= new Location(Minigames.getDefaultWorld(), 303, 139, -789);
-	Location	blue	= new Location(Minigames.getDefaultWorld(), 304, 139, -771);
-	Location	fix		= new Location(Minigames.getDefaultWorld(), 303, 134, -780);
+	Location	red		= new Location(Multiworld.getGame(), 303, 139, -789);
+	Location	blue	= new Location(Multiworld.getGame(), 304, 139, -771);
+	Location	fix		= new Location(Multiworld.getGame(), 303, 134, -780);
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {

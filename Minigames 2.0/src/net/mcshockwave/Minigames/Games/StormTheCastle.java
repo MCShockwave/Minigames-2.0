@@ -7,6 +7,7 @@ import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Utils.PointsUtils;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,7 +35,7 @@ import org.bukkit.util.Vector;
 
 public class StormTheCastle implements IMinigame {
 
-	Location				beaconPlace		= new Location(Minigames.getDefaultWorld(), 2578, 106, -3);
+	Location				beaconPlace		= new Location(Multiworld.getGame(), 2578, 106, -3);
 
 	BukkitTask				holders			= null;
 
