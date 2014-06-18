@@ -1,6 +1,6 @@
 name: MCMinigames
 main: net.mcshockwave.Minigames.Minigames
-version: 2.0
+version: 2.5
 commands:
    opt:
    mg:
