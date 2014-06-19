@@ -1,26 +1,6 @@
 package net.mcshockwave.Minigames;
 
-import net.mcshockwave.Minigames.Games.Airships;
-import net.mcshockwave.Minigames.Games.Boarding;
-import net.mcshockwave.Minigames.Games.Brawl;
-import net.mcshockwave.Minigames.Games.BuildAndFight;
-import net.mcshockwave.Minigames.Games.Core;
-import net.mcshockwave.Minigames.Games.Dodgeball;
-import net.mcshockwave.Minigames.Games.Dogtag;
-import net.mcshockwave.Minigames.Games.FourCorners;
-import net.mcshockwave.Minigames.Games.Ghostbusters;
-import net.mcshockwave.Minigames.Games.Gladiators;
-import net.mcshockwave.Minigames.Games.HotPotato;
-import net.mcshockwave.Minigames.Games.Infection;
-import net.mcshockwave.Minigames.Games.LaserTag;
-import net.mcshockwave.Minigames.Games.Loot;
-import net.mcshockwave.Minigames.Games.Minotaur;
-import net.mcshockwave.Minigames.Games.Siege;
-import net.mcshockwave.Minigames.Games.Spleef;
-import net.mcshockwave.Minigames.Games.StormTheCastle;
-import net.mcshockwave.Minigames.Games.TRON;
-import net.mcshockwave.Minigames.Games.Tiers;
-import net.mcshockwave.Minigames.Games.VillageBattle;
+import net.mcshockwave.Minigames.Games.*;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.worlds.Multiworld;
 
@@ -46,11 +26,11 @@ public enum Game {
 		10,
 		true,
 		true,
-		new Vector(0, 102, 1000),
-		new GameTeam[] { new GameTeam("Red", ChatColor.RED, new Vector(45, 100, 955)),
-				new GameTeam("Blue", ChatColor.BLUE, new Vector(-45, 100, 955)),
-				new GameTeam("Green", ChatColor.GREEN, new Vector(-45, 100, 1045)),
-				new GameTeam("Yellow", ChatColor.YELLOW, new Vector(45, 100, 1045)) }),
+		new Vector(0, 102, 0),
+		new GameTeam[] { new GameTeam("Red", ChatColor.RED, new Vector(45, 100, -45)),
+				new GameTeam("Blue", ChatColor.BLUE, new Vector(-45, 100, -45)),
+				new GameTeam("Green", ChatColor.GREEN, new Vector(-45, 100, 45)),
+				new GameTeam("Yellow", ChatColor.YELLOW, new Vector(45, 100, 45)) }),
 	Airships(
 		new Airships(),
 		Material.BOW,
@@ -213,12 +193,18 @@ public enum Game {
 		new Vector(1000, 111, 0),
 		new GameTeam[] { new GameTeam("Humans", ChatColor.WHITE, new Vector(1000, 111, 0)),
 				new GameTeam("The Minotaur", ChatColor.RED, new Vector(1000, 111, 0)) }),
-	/*
-	 * Lockdown( new Lockdown(), Material.DIAMOND_BLOCK, 0, 10, true, true, new
-	 * Location(1500, 121, 0), new GameTeam[] { new GameTeam("Green",
-	 * ChatColor.GREEN, new Location(1502, 95, -103)), new GameTeam("Yellow",
-	 * ChatColor.YELLOW, new Location(1498, 103, 100)) }),
-	 */
+	// Lockdown(
+	// new Lockdown(),
+	// Material.DIAMOND_BLOCK,
+	// 0,
+	// 10,
+	// true,
+	// true,
+	// new Location(1500, 121, 0),
+	// new GameTeam[] { new GameTeam("Green", ChatColor.GREEN, new
+	// Location(1502, 95, -103)),
+	// new GameTeam("Yellow", ChatColor.YELLOW, new Location(1498, 103, 100))
+	// }),
 	Laser_Tag(
 		new LaserTag(),
 		Material.DIAMOND_HOE,
@@ -261,14 +247,17 @@ public enum Game {
 		new Vector(2440, 98, -3),
 		new GameTeam[] { new GameTeam("Knights", ChatColor.AQUA, new Vector(2570, 104, -3)),
 				new GameTeam("Barbarians", ChatColor.RED, new Vector(2418, 82, -3)) });
+	;
 
-	public String		name;
-	public IMinigame	mclass;
-	public GameTeam[]	teams	= null;
-	public Location		spawn	= null, lobby = null;
-	public int			radius	= -1, time;
-	public boolean		canRespawn, allowPVP;
-	public ItemStack	icon	= null;
+	public String			name;
+	public IMinigame		mclass;
+	public GameTeam[]		teams	= null;
+	public Location			spawn	= null, lobby = null;
+	public int				radius	= -1, time;
+	public boolean			canRespawn, allowPVP;
+	public ItemStack		icon	= null;
+
+	public static Game[]	enabled	= { Game.Core };
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, Vector lobby,
 			GameTeam[] teams) {

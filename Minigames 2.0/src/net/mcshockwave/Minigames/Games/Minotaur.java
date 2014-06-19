@@ -4,6 +4,7 @@ import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,8 +28,8 @@ public class Minotaur implements IMinigame {
 
 	public BukkitTask	refill		= null;
 
-	Location			startArea	= new Location(w, 1039, 111, 39);
-	Location			endArea		= new Location(w, 961, 111, -39);
+	Location			startArea	= new Location(Multiworld.getGame(), 1039, 111, 39);
+	Location			endArea		= new Location(Multiworld.getGame(), 961, 111, -39);
 
 	public void refillChests() {
 		int minX = Math.min(startArea.getBlockX(), endArea.getBlockX()), minZ = Math.min(startArea.getBlockZ(),
@@ -39,7 +40,7 @@ public class Minotaur implements IMinigame {
 		int y = startArea.getBlockY();
 		for (int x = minX; x <= maxX; x++) {
 			for (int z = minZ; z <= maxZ; z++) {
-				Block b = w.getBlockAt(new Location(w, x, y, z));
+				Block b = Multiworld.getGame().getBlockAt(new Location(Multiworld.getGame(), x, y, z));
 				if (b.getType() == Material.CHEST) {
 					Chest c = (Chest) b.getState();
 

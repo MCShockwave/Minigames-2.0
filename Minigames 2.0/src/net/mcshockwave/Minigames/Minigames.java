@@ -32,6 +32,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -79,6 +82,8 @@ public class Minigames extends JavaPlugin {
 	public void onEnable() {
 		ins = this;
 
+		Multiworld.loadAll();
+
 		MCShockwave.setMaxPlayers(30);
 
 		Bukkit.getPluginManager().registerEvents(new DefaultListener(ins), ins);
@@ -96,8 +101,6 @@ public class Minigames extends JavaPlugin {
 		if (checkCanStart()) {
 			startCount();
 		}
-
-		Multiworld.loadAll();
 
 		resetScoreboard();
 	}
@@ -130,8 +133,10 @@ public class Minigames extends JavaPlugin {
 			return;
 		}
 
-		currentGame = Game.values()[rand.nextInt(Game.values().length)];
-		if (currentGame == gameBefore) {
+		// TODO temp
+		// currentGame = Game.values()[rand.nextInt(Game.values().length)];
+		currentGame = Game.enabled[rand.nextInt(Game.enabled.length)];
+		if (currentGame == gameBefore && Game.enabled.length > 1) {
 			startCount();
 			return;
 		}
@@ -361,21 +366,42 @@ public class Minigames extends JavaPlugin {
 	}
 
 	public static void resetGameWorld(final Game map) {
+		System.out.println("Deleting game world file...");
+		Multiworld.deleteWorld("Game");
+
 		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 			public void run() {
-				Multiworld.deleteWorld(Multiworld.getGame());
+				System.out.println("Copying world files...");
+
+				Multiworld.copyWorld(map.name(), "Game");
 			}
-		}, 10);
+		}, 30l);
+
 		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 			public void run() {
-				Multiworld.copyWorld(map.name(), Multiworld.worlds[1].name());
+				System.out.println("Saving all worlds...");
+
+				for (World w : Bukkit.getWorlds()) {
+					w.save();
+				}
+
+				System.out.println("Loading arena world...");
+
+				World w = new WorldCreator("Game").type(WorldType.FLAT).createWorld();
+
+				System.out.println("Setting gamerules...");
+
+				String[] gmrls = { "doDaylightCycle:false", "doMobSpawning:false", "doMobLoot:false",
+						"keepInventory:true" };
+				w.setTime(5000);
+				for (String s : gmrls) {
+					String[] spl = s.split(":");
+					w.setGameRuleValue(spl[0], spl[1]);
+				}
+
+				System.out.println("Done resetting world!");
 			}
-		}, 20);
-		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-			public void run() {
-				Multiworld.worlds[1].createWorld();
-			}
-		}, 30);
+		}, 80l);
 	}
 
 	public static void start() {
@@ -472,28 +498,28 @@ public class Minigames extends JavaPlugin {
 						break;
 					}
 				}
-				if (currentGame == Game.Ghostbusters) {
-					int max = getOptedIn().size() / 4 + 1;
-					if (tid == 0 && ts[0].getPlayers().size() >= max) {
-						tid = 1;
-					}
-				} else if (currentGame == Game.Infection) {
-					int max = getOptedIn().size() > 6 ? 3 : 1;
-					if (tid == 0 && ts[0].getPlayers().size() >= max) {
-						tid = 1;
-					}
-				} else if (currentGame == Game.Minotaur) {
-					if (ts[1].getPlayers().size() < 1) {
-						ts[1].addPlayer(p);
-					} else {
-						ts[0].addPlayer(p);
-					}
-				} else {
-					tid++;
-					if (tid >= tsal.size()) {
-						tid = 0;
-					}
+				// if (currentGame == Game.Ghostbusters) {
+				// int max = getOptedIn().size() / 4 + 1;
+				// if (tid == 0 && ts[0].getPlayers().size() >= max) {
+				// tid = 1;
+				// }
+				// } else if (currentGame == Game.Infection) {
+				// int max = getOptedIn().size() > 6 ? 3 : 1;
+				// if (tid == 0 && ts[0].getPlayers().size() >= max) {
+				// tid = 1;
+				// }
+				// } else if (currentGame == Game.Minotaur) {
+				// if (ts[1].getPlayers().size() < 1) {
+				// ts[1].addPlayer(p);
+				// } else {
+				// ts[0].addPlayer(p);
+				// }
+				// } else {
+				tid++;
+				if (tid >= tsal.size()) {
+					tid = 0;
 				}
+				// }
 			}
 		} else {
 			TeleportUtils.spread(currentGame.spawn, currentGame.radius, getOptedIn().toArray(new Player[0]));
@@ -727,9 +753,10 @@ public class Minigames extends JavaPlugin {
 			}
 		}
 		p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 0));
-		if (currentGame == Game.TRON || currentGame == Game.Airships) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 0));
-		}
+		// if (currentGame == Game.TRON || currentGame == Game.Airships) {
+		// p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,
+		// 1000000, 0));
+		// }
 		p.getInventory().setItem(
 				8,
 				ItemMetaUtils.setItemName(new ItemStack(Material.FEATHER), ChatColor.GOLD

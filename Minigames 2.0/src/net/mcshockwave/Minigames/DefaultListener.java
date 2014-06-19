@@ -171,6 +171,7 @@ public class DefaultListener implements Listener {
 		Bukkit.getPluginManager().callEvent(pre);
 		p.setHealth(20);
 		p.teleport(pre.getRespawnLocation());
+		p.setVelocity(new Vector());
 	}
 
 	@EventHandler

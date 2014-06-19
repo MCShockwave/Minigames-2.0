@@ -1,7 +1,5 @@
 package net.mcshockwave.Minigames.worlds;
 
-import net.mcshockwave.MCS.Utils.CustomSignUtils.CustomSign;
-import net.mcshockwave.MCS.Utils.CustomSignUtils.SignRunnable;
 import net.mcshockwave.Minigames.Minigames;
 
 import org.bukkit.Bukkit;
@@ -9,9 +7,6 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 
@@ -61,15 +56,7 @@ public class Multiworld {
 
 	public static void loadAll() {
 		for (WorldCreator wc : worlds) {
-			final World w = wc.createWorld();
-
-			CustomSign wsign = new CustomSign("§8[Teleport]", "§2" + wc.name(), "", "Click to TP", "[World]",
-					wc.name(), "", "");
-			wsign.onClick(new SignRunnable() {
-				public void run(Player p, Sign s, PlayerInteractEvent e) {
-					p.teleport(w.getSpawnLocation().add(0.5, 1, 0.5));
-				}
-			});
+			wc.createWorld();
 		}
 	}
 

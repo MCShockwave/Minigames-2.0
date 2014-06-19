@@ -1,13 +1,11 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.HashMap;
-
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.LocUtils;
 import net.mcshockwave.Minigames.worlds.Multiworld;
@@ -30,26 +28,34 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.util.Vector;
+
+import java.util.HashMap;
 
 public class Core implements IMinigame {
 
 	public Team				coreTeam	= null;
 
-	public Block			c			= w.getBlockAt(0, 110, 1000);
+	public Vector			c			= new Vector(0, 109, 0);
 
-	public Location			rad			= new Location(w, 0, 102, 1000);
+	public Vector			rad			= new Vector(0, 102, 0);
 
 	public boolean			canGoIn		= false;
 
 	HashMap<Player, Long>	cooldown	= new HashMap<Player, Long>();
 
-	Location[]				tree		= { new Location(w, 0.5, 101, 1037.5, 180, 0),
-			new Location(w, 36.5, 101, 1000.5, 270, 0), new Location(w, 0.5, 101, 963.5, 180, 0) };
+	Location[]				tree		= { new Location(Multiworld.getGame(), 0.5, 101, 37.5, 180, 0),
+			new Location(Multiworld.getGame(), 36.5, 101, 00.5, 270, 0),
+			new Location(Multiworld.getGame(), 0.5, 101, -36.5, 180, 0) };
 
 	public void onGameStart() {
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
 		}
+	}
+
+	public Location getLoc(Vector v) {
+		return new Location(Multiworld.getGame(), v.getX(), v.getY(), v.getZ());
 	}
 
 	public void giveKit(Player p) {
@@ -72,7 +78,7 @@ public class Core implements IMinigame {
 	@SuppressWarnings("deprecation")
 	public void onGameEnd() {
 		coreTeam = null;
-		c.setData((byte) 0);
+		getLoc(c).getBlock().setData((byte) 0);
 		doEffect((byte) 0, 0);
 		canGoIn = false;
 	}
@@ -123,7 +129,7 @@ public class Core implements IMinigame {
 		if (a == Action.RIGHT_CLICK_BLOCK) {
 			Block b = event.getClickedBlock();
 
-			if (LocUtils.isSame(b.getLocation(), c.getLocation())
+			if (LocUtils.isSame(b.getLocation(), getLoc(c))
 					&& p.getLocation().distanceSquared(b.getLocation()) <= 4 * 4) {
 				GameTeam gt = Game.getTeam(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
 				p.teleport(gt.spawn);
@@ -131,7 +137,7 @@ public class Core implements IMinigame {
 				if (gt.team == coreTeam)
 					return;
 
-				c.setData(getTeamData(gt));
+				getLoc(c).getBlock().setData(getTeamData(gt));
 				doEffect(getTeamData(gt), 2);
 
 				Minigames.broadcastAll(
@@ -153,10 +159,10 @@ public class Core implements IMinigame {
 
 	public void doEffect(final byte teamColor, long time) {
 		for (int c = 2; c < 16; c += 2) {
-			Block b1 = Multiworld.getGame().getBlockAt(c, 101, 1000 + c);
-			Block b2 = Multiworld.getGame().getBlockAt(-c, 101, 1000 + c);
-			Block b3 = Multiworld.getGame().getBlockAt(c, 101, 1000 - c);
-			Block b4 = Multiworld.getGame().getBlockAt(-c, 101, 1000 - c);
+			Block b1 = Multiworld.getGame().getBlockAt(c, 100, c);
+			Block b2 = Multiworld.getGame().getBlockAt(-c, 100, c);
+			Block b3 = Multiworld.getGame().getBlockAt(c, 100, -c);
+			Block b4 = Multiworld.getGame().getBlockAt(-c, 100, -c);
 
 			final Block[] bs = { b1, b2, b3, b4 };
 
@@ -196,8 +202,8 @@ public class Core implements IMinigame {
 			return;
 		}
 		if (Minigames.getTeamsLeft().size() > 2 && coreTeam != null && gt.team == coreTeam) {
-			if (p.getLocation().distance(rad) <= 12) {
-				p.setVelocity(LocUtils.getVelocity(rad, p.getLocation()).multiply(0.5));
+			if (p.getLocation().distanceSquared(getLoc(rad)) <= 12 * 12) {
+				p.setVelocity(LocUtils.getVelocity(getLoc(rad), p.getLocation()).multiply(0.5));
 				Minigames.send(p, "You can't enter your %s until there are 2 teams left!", "Core");
 			}
 		}

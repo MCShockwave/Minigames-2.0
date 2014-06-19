@@ -9,6 +9,7 @@ import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Shop.ShopItem;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -29,10 +30,10 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class Gladiators implements IMinigame {
 
-	Location	rs	= new Location(w, 0.5, 103, 178.5);
-	Location	ys	= new Location(w, -23.5, 103, 202.5);
-	Location	bs	= new Location(w, 24.5, 103, 202.5);
-	Location	gs	= new Location(w, 0.5, 103, 226.5);
+	Location	rs	= new Location(Multiworld.getGame(), 0.5, 103, 178.5);
+	Location	ys	= new Location(Multiworld.getGame(), -23.5, 103, 202.5);
+	Location	bs	= new Location(Multiworld.getGame(), 24.5, 103, 202.5);
+	Location	gs	= new Location(Multiworld.getGame(), 0.5, 103, 226.5);
 
 	BukkitTask	bt;
 

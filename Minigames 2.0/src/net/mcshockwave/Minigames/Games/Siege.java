@@ -63,8 +63,8 @@ public class Siege implements IMinigame {
 				yl.getChunk().load();
 				gl.getChunk().load();
 
-				yv = (Villager) w.spawnEntity(yl, EntityType.VILLAGER);
-				gv = (Villager) w.spawnEntity(gl, EntityType.VILLAGER);
+				yv = (Villager) Multiworld.getGame().spawnEntity(yl, EntityType.VILLAGER);
+				gv = (Villager) Multiworld.getGame().spawnEntity(gl, EntityType.VILLAGER);
 
 				yv.setCustomName(ChatColor.YELLOW + "Yellow King");
 				yv.setCustomNameVisible(true);

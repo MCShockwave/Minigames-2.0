@@ -13,6 +13,7 @@ import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.LocUtils;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -55,8 +56,8 @@ import java.util.HashMap;
 
 public class VillageBattle implements IMinigame {
 
-	Location					gspawn	= new Location(w, 577, 103, 5);
-	Location					yspawn	= new Location(w, 667, 103, -166);
+	Location					gspawn	= new Location(Multiworld.getGame(), 577, 103, 5);
+	Location					yspawn	= new Location(Multiworld.getGame(), 667, 103, -166);
 
 	Score						gs, ys;
 	Objective					o;
@@ -132,7 +133,7 @@ public class VillageBattle implements IMinigame {
 
 	public Villager spawnVillager(boolean isGreen, boolean update) {
 		Location l = getValidSpawnPoint(isGreen);
-		Villager v = (Villager) w.spawnEntity(l, EntityType.VILLAGER);
+		Villager v = (Villager) Multiworld.getGame().spawnEntity(l, EntityType.VILLAGER);
 		Profession p = Profession.values()[rand.nextInt(Profession.values().length)];
 		v.setProfession(p);
 		String cusname = (isGreen ? ChatColor.GREEN : ChatColor.YELLOW).toString();

@@ -9,6 +9,7 @@ import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Shop.ShopItem;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -74,8 +75,9 @@ public class Dodgeball implements IMinigame {
 
 	public void dropDodgeballs() {
 		for (Vector v : drop) {
-			Item i = w.dropItem(new Location(w, v.getBlockX() + 0.5, v.getY(), v.getBlockZ() + 0.5), new ItemStack(
-					Material.SNOW_BALL));
+			Item i = Multiworld.getGame().dropItem(
+					new Location(Multiworld.getGame(), v.getBlockX() + 0.5, v.getY(), v.getBlockZ() + 0.5),
+					new ItemStack(Material.SNOW_BALL));
 			i.setVelocity(new Vector());
 		}
 		Minigames.broadcast("%s have been dropped!", "Dodgeballs");
@@ -96,7 +98,8 @@ public class Dodgeball implements IMinigame {
 				for (ItemStack it : p.getInventory().getContents()) {
 					if (it != null && it.getType() == Material.SNOW_BALL) {
 						for (int i = 0; i < it.getAmount(); i++) {
-							w.dropItem(event.getEntity().getLocation(), new ItemStack(Material.SNOW_BALL));
+							Multiworld.getGame().dropItem(event.getEntity().getLocation(),
+									new ItemStack(Material.SNOW_BALL));
 						}
 					}
 				}
@@ -179,7 +182,7 @@ public class Dodgeball implements IMinigame {
 							e.remove();
 						}
 					}
-					
+
 					p.getWorld().playSound(p.getLocation(), Sound.PORTAL_TRIGGER, 5, 2);
 				}
 
