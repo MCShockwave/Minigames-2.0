@@ -720,6 +720,7 @@ public class Minigames extends JavaPlugin {
 				}
 			}
 		}
+		Minigames.milkPlayer(p);
 		p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 0));
 		if (currentGame == Game.TRON || currentGame == Game.Airships) {
 			p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 0));
