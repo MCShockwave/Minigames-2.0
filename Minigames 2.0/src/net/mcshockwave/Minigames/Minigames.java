@@ -37,6 +37,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.event.HandlerList;
@@ -136,7 +137,7 @@ public class Minigames extends JavaPlugin {
 		// TODO temp
 		// currentGame = Game.values()[rand.nextInt(Game.values().length)];
 		currentGame = Game.enabled[rand.nextInt(Game.enabled.length)];
-		if (currentGame == gameBefore && Game.enabled.length > 1) {
+		if (currentGame == gameBefore) {
 			startCount();
 			return;
 		}
@@ -397,6 +398,14 @@ public class Minigames extends JavaPlugin {
 				for (String s : gmrls) {
 					String[] spl = s.split(":");
 					w.setGameRuleValue(spl[0], spl[1]);
+				}
+
+				System.out.println("Butchering....");
+
+				for (Entity e : w.getEntities()) {
+					if (e instanceof LivingEntity && !(e instanceof Player)) {
+						e.remove();
+					}
 				}
 
 				System.out.println("Done resetting world!");

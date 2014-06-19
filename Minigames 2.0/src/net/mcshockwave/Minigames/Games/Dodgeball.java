@@ -39,9 +39,9 @@ import org.bukkit.util.Vector;
 
 public class Dodgeball implements IMinigame {
 
-	Vector[]			drop		= { new Vector(-16, 116, -201), new Vector(-11, 116, -201),
-			new Vector(-7, 116, -201), new Vector(-2, 116, -201), new Vector(2, 116, -201), new Vector(7, 116, -201),
-			new Vector(11, 116, -201), new Vector(16, 116, -201) };
+	Vector[]			drop		= { new Vector(-16, 116, 0), new Vector(-11, 116, 0), new Vector(-7, 116, 0),
+			new Vector(-2, 116, 0), new Vector(2, 116, 0), new Vector(7, 116, 0), new Vector(11, 116, 0),
+			new Vector(16, 116, 0)	};
 
 	BukkitTask			sn			= null;
 
@@ -116,10 +116,10 @@ public class Dodgeball implements IMinigame {
 		Location l = p.getLocation();
 		GameTeam gt = Game.getTeam(p);
 		if (gt != null) {
-			if (gt.color == ChatColor.GREEN && l.getZ() <= -200) {
+			if (gt.color == ChatColor.GREEN && l.getZ() <= 0.5) {
 				p.setVelocity(p.getVelocity().add(new Vector(0, -0.25, 1)));
 			}
-			if (gt.color == ChatColor.YELLOW && l.getZ() >= -200) {
+			if (gt.color == ChatColor.YELLOW && l.getZ() >= 0.5) {
 				p.setVelocity(p.getVelocity().add(new Vector(0, -0.25, -1)));
 			}
 		}

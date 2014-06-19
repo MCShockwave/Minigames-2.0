@@ -1,13 +1,11 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.HashMap;
-
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.worlds.Multiworld;
 
@@ -27,15 +25,22 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
+
+import java.util.HashMap;
 
 public class Gladiators implements IMinigame {
 
-	Location	rs	= new Location(Multiworld.getGame(), 0.5, 103, 178.5);
-	Location	ys	= new Location(Multiworld.getGame(), -23.5, 103, 202.5);
-	Location	bs	= new Location(Multiworld.getGame(), 24.5, 103, 202.5);
-	Location	gs	= new Location(Multiworld.getGame(), 0.5, 103, 226.5);
+	Vector		rs	= new Vector(0.5, 112, -21.5);
+	Vector		ys	= new Vector(-21.5, 112, 0.5);
+	Vector		bs	= new Vector(22.5, 112, 0.5);
+	Vector		gs	= new Vector(0.5, 112, 22.5);
 
 	BukkitTask	bt;
+
+	public Location getLoc(Vector v) {
+		return new Location(Multiworld.getGame(), v.getX(), v.getY(), v.getZ());
+	}
 
 	@Override
 	public void onGameStart() {
@@ -85,16 +90,16 @@ public class Gladiators implements IMinigame {
 			giveKit(p);
 			switch (gt.color) {
 				case RED:
-					p.teleport(rs);
+					p.teleport(getLoc(rs));
 					break;
 				case YELLOW:
-					p.teleport(ys);
+					p.teleport(getLoc(ys));
 					break;
 				case GREEN:
-					p.teleport(gs);
+					p.teleport(getLoc(gs));
 					break;
 				case BLUE:
-					p.teleport(bs);
+					p.teleport(getLoc(bs));
 					break;
 				default:
 					break;

@@ -68,9 +68,9 @@ public enum Game {
 		6,
 		false,
 		true,
-		new Vector(28, 119, -201),
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN, new Vector(0, 115, -182)),
-				new GameTeam("Yellow", ChatColor.YELLOW, new Vector(0, 115, -220)) }),
+		new Vector(28, 106, 0),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN, new Vector(0, 102, 18)),
+				new GameTeam("Yellow", ChatColor.YELLOW, new Vector(0, 102, -18)) }),
 	Four_Corners(
 		new FourCorners(),
 		Material.STAINED_CLAY,
@@ -138,11 +138,11 @@ public enum Game {
 		10,
 		false,
 		true,
-		new Vector(0, 114, 202),
-		new GameTeam[] { new GameTeam("Red", ChatColor.RED, new Vector(0, 112, 168)),
-				new GameTeam("Blue", ChatColor.BLUE, new Vector(34, 112, 202)),
-				new GameTeam("Green", ChatColor.GREEN, new Vector(0, 112, 236)),
-				new GameTeam("Yellow", ChatColor.YELLOW, new Vector(-34, 112, 202)) }),
+		new Vector(0, 124, 0),
+		new GameTeam[] { new GameTeam("Red", ChatColor.RED, new Vector(0, 112, -34)),
+				new GameTeam("Blue", ChatColor.BLUE, new Vector(34, 112, 0)),
+				new GameTeam("Green", ChatColor.GREEN, new Vector(0, 112, 34)),
+				new GameTeam("Yellow", ChatColor.YELLOW, new Vector(-34, 112, 0)) }),
 	Hot_Potato(
 		new HotPotato(),
 		Material.BAKED_POTATO,
@@ -257,7 +257,7 @@ public enum Game {
 	public boolean			canRespawn, allowPVP;
 	public ItemStack		icon	= null;
 
-	public static Game[]	enabled	= { Game.Core };
+	public static Game[]	enabled	= { Game.Core, Game.Dodgeball };
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, Vector lobby,
 			GameTeam[] teams) {
