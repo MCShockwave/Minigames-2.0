@@ -11,6 +11,7 @@ import net.mcshockwave.Minigames.Commands.Force;
 import net.mcshockwave.Minigames.Commands.MGC;
 import net.mcshockwave.Minigames.Commands.MgInfo;
 import net.mcshockwave.Minigames.Commands.Opt;
+import net.mcshockwave.Minigames.Commands.Revive;
 import net.mcshockwave.Minigames.Commands.Shop;
 import net.mcshockwave.Minigames.Commands.TeamSelect;
 import net.mcshockwave.Minigames.Commands.UpsiesCommand;
@@ -94,6 +95,7 @@ public class Minigames extends JavaPlugin {
 		// getCommand("points").setExecutor(new Points());
 		getCommand("team").setExecutor(new TeamSelect());
 		getCommand("upsies").setExecutor(new UpsiesCommand());
+		getCommand("revive").setExecutor(new Revive());
 
 		if (checkCanStart()) {
 			startCount();
@@ -709,6 +711,7 @@ public class Minigames extends JavaPlugin {
 	}
 
 	public static void spectate(Player p) {
+		clearInv(p);
 		for (Player p2 : Bukkit.getOnlinePlayers()) {
 			if (p2 != p) {
 				if (alivePlayers.contains(p2.getName())) {

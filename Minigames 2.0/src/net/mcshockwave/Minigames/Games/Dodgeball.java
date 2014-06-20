@@ -44,7 +44,7 @@ public class Dodgeball implements IMinigame {
 
 	BukkitTask			sn			= null;
 
-	ArrayList<Player>	canBeHit	= new ArrayList<>();
+	public ArrayList<Player>	canBeHit	= new ArrayList<>();
 
 	public void onGameStart() {
 		for (Player p : Minigames.getOptedIn()) {

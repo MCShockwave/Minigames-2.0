@@ -261,7 +261,7 @@ public class LaserTag implements IMinigame {
 		}
 	}
 
-	private void giveItems(Player p) {
+	public void giveItems(Player p) {
 		p.getInventory().clear();
 		p.getInventory().addItem(new ItemStack(Material.DIAMOND_HOE));
 	}

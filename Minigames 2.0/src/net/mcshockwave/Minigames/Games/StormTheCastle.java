@@ -113,7 +113,7 @@ public class StormTheCastle implements IMinigame {
 		}
 	}
 
-	private void giveItems(Player p) {
+	public void giveItems(Player p) {
 		Minigames.clearInv(p);
 		Minigames.milkPlayer(p);
 
