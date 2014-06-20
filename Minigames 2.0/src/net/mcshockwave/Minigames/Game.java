@@ -38,9 +38,9 @@ public enum Game {
 		8,
 		false,
 		true,
-		new Vector(0, 90, -400),
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN, new Vector(0, 110, -393)),
-				new GameTeam("Yellow", ChatColor.YELLOW, new Vector(0, 110, -407)) }),
+		new Vector(0, 101, 0),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN, new Vector(0, 125, -7)),
+				new GameTeam("Yellow", ChatColor.YELLOW, new Vector(0, 125, 7)) }),
 	Brawl(
 		new Brawl(),
 		Material.STICK,
@@ -118,9 +118,9 @@ public enum Game {
 		10,
 		true,
 		true,
-		new Vector(-770, 151, 11),
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN, new Vector(-784, 107, -15)),
-				new GameTeam("Yellow", ChatColor.YELLOW, new Vector(-751, 107, 41)) }),
+		new Vector(-19, 151, -3),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN, new Vector(-32, 107, -29)),
+				new GameTeam("Yellow", ChatColor.YELLOW, new Vector(-1, 107, 27)) }),
 	Village_Battle(
 		new VillageBattle(),
 		Material.MONSTER_EGG,
@@ -257,7 +257,7 @@ public enum Game {
 	public boolean			canRespawn, allowPVP;
 	public ItemStack		icon	= null;
 
-	public static Game[]	enabled	= { Game.Core, Game.Dodgeball };
+	public static Game[]	enabled	= { Game.Core, Game.Dodgeball, Game.Gladiators, Game.Airships, Game.Boarding };
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, Vector lobby,
 			GameTeam[] teams) {
