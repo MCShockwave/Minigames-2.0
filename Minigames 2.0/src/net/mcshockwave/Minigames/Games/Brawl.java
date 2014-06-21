@@ -27,7 +27,8 @@ import org.bukkit.util.Vector;
 public class Brawl implements IMinigame {
 
 	public Player	b1		= null, b2 = null;
-
+	public String   s1      = "",   s2 = ""; 
+	
 	Location		l1		= new Location(Minigames.getDefaultWorld(), 301.5, 134, -780, 270, 0);
 	Location		l2		= new Location(Minigames.getDefaultWorld(), 306.5, 134, -780, 90, 0);
 
@@ -50,9 +51,9 @@ public class Brawl implements IMinigame {
 
 	@Override
 	public void onPlayerDeath(DeathEvent e) {
-		if (b1 == e.p || b2 == e.p) {
+		if (s1 == e.p.getName() || s2 == e.p.getName()) {
 			Minigames.broadcastDeath(e.p, e.k, "%s fell off the tower", "%s was knocked off the tower by %s");
-			if (e.p == b1) {
+			if (e.p.getName() == s1) {
 				b2.teleport(Game.Brawl.spawn);
 			} else {
 				b1.teleport(Game.Brawl.spawn);
@@ -103,6 +104,9 @@ public class Brawl implements IMinigame {
 
 		b1 = null;
 		b2 = null;
+		
+		s1 = "";
+		s2 = "";
 
 		b1 = getRandom();
 		b2 = getRandom();
@@ -111,6 +115,9 @@ public class Brawl implements IMinigame {
 			return;
 		}
 
+		s1 = b1.getName();
+		s2 = b2.getName();
+		
 		invin = System.currentTimeMillis() + 3000;
 
 		b1.teleport(l1);

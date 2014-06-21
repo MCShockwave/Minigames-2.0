@@ -11,6 +11,7 @@ import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Commands.Force;
 import net.mcshockwave.Minigames.Commands.MgInfo;
+import net.mcshockwave.Minigames.Games.Brawl;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
