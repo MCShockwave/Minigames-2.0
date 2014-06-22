@@ -204,4 +204,3 @@ public class Brawl implements IMinigame {
 		}
 	}
 
-}
