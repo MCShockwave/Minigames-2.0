@@ -192,10 +192,11 @@ public class Brawl implements IMinigame {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		String s =  e.getPlayer().getName();
-		if (Minigames.alivePlayers.contains(e.getPlayer().getName()) && !SQLTable.hasRank(s, Rank.JR_MOD)); {
-			if (e.getTo().getY() >= 140) {
+		Player p = e.getPlayer();
+		if (Minigames.alivePlayers.contains(p.getName()) 
+				&& !SQLTable.hasRank(s, Rank.JR_MOD) 
+				&& e.getTo().getY() >= 142) {
 
-				Player p = e.getPlayer();
 				p.setHealth(0);
 				MCShockwave.send(e.getPlayer(), "Do not abuse the %s!",
 						"Panther perk");
