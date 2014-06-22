@@ -39,8 +39,8 @@ public class TeamSelect implements CommandExecutor {
 
 			if (Minigames.canOpenShop && Minigames.currentGame.isTeamGame() && Minigames.currentGame != Game.Infection) {
 				if (args.length > 0) {
-					if (Game.getTeam(Minigames.currentGame, args[0].replace('_', ' ')) != null) {
-						GameTeam gt = Game.getTeam(Minigames.currentGame, args[0].replace('_', ' '));
+					if (Minigames.currentGame.getTeam(args[0].replace('_', ' ')) != null) {
+						GameTeam gt = Minigames.currentGame.getTeam(args[0].replace('_', ' '));
 						boolean allow = true;
 						int num = 0;
 						HashMap<GameTeam, Integer> numO = new HashMap<>();

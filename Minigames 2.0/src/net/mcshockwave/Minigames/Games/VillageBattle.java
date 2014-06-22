@@ -158,7 +158,7 @@ public class VillageBattle implements IMinigame {
 		(isGreen ? greVil : yelVil).add(v);
 
 		if (update) {
-			GameTeam gt = Game.getTeam(Game.Village_Battle, isGreen ? "Green" : "Yellow");
+			GameTeam gt = Game.Village_Battle.getTeam(isGreen ? "Green" : "Yellow");
 			setCount(gt, getTotalCountOnTeam(gt));
 		}
 		return v;
@@ -548,8 +548,8 @@ public class VillageBattle implements IMinigame {
 
 			if (it.getType() == Material.NETHER_STAR && Minigames.hasItem(p, ShopItem.Disruptor)) {
 				if (!CooldownUtils.isOnCooldown("PlayerDisrupt", p.getName())) {
-					final GameTeam oppo = Game.getTeam(Game.Village_Battle,
-							Game.getTeam(p).color == ChatColor.GREEN ? "Yellow" : "Green");
+					final GameTeam oppo = Game.Village_Battle
+							.getTeam(Game.getTeam(p).color == ChatColor.GREEN ? "Yellow" : "Green");
 
 					CooldownUtils.addCooldown("Disruptor", oppo.name, 200, new Runnable() {
 						public void run() {

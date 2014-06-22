@@ -53,26 +53,22 @@ public class Minotaur implements IMinigame {
 		}
 	}
 
-/*	public void sendToRandom(Player p) {
-		int minX = Math.min(startArea.getBlockX(), endArea.getBlockX()), minZ = Math.min(startArea.getBlockZ(),
-				endArea.getBlockZ());
-		int maxX = Math.max(startArea.getBlockX(), endArea.getBlockX()), maxZ = Math.max(startArea.getBlockZ(),
-				endArea.getBlockZ());
-		while (true) {
-			int x = rand.nextInt(maxX - minX) + minX;
-			int z = rand.nextInt(maxZ - minZ) + minZ;
-			Location l = new Location(w, x, 112, z);
-
-			if (l.getBlock().getType() == Material.AIR && l.add(0, -1, 0).getBlock().getType() == Material.AIR
-					&& l.add(0, -2, 0).getBlock().getType() != Material.AIR) {
-				p.teleport(l);
-				break;
-			}
-		}
-	} */
+	/*
+	 * public void sendToRandom(Player p) { int minX =
+	 * Math.min(startArea.getBlockX(), endArea.getBlockX()), minZ =
+	 * Math.min(startArea.getBlockZ(), endArea.getBlockZ()); int maxX =
+	 * Math.max(startArea.getBlockX(), endArea.getBlockX()), maxZ =
+	 * Math.max(startArea.getBlockZ(), endArea.getBlockZ()); while (true) { int
+	 * x = rand.nextInt(maxX - minX) + minX; int z = rand.nextInt(maxZ - minZ) +
+	 * minZ; Location l = new Location(w, x, 112, z);
+	 * 
+	 * if (l.getBlock().getType() == Material.AIR && l.add(0, -1,
+	 * 0).getBlock().getType() == Material.AIR && l.add(0, -2,
+	 * 0).getBlock().getType() != Material.AIR) { p.teleport(l); break; } } }
+	 */
 
 	public Player getMino() {
-		for (OfflinePlayer op : Game.getTeam(Game.Minotaur, "The Minotaur").team.getPlayers()) {
+		for (OfflinePlayer op : Game.Minotaur.getTeam("The Minotaur").team.getPlayers()) {
 			if (op.isOnline()) {
 				return (Player) op;
 			}

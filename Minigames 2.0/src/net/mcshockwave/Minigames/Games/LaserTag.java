@@ -1,5 +1,6 @@
 package net.mcshockwave.Minigames.Games;
 
+import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.LocUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
@@ -261,9 +262,9 @@ public class LaserTag implements IMinigame {
 		}
 	}
 
-	private void giveItems(Player p) {
+	public void giveItems(Player p) {
 		p.getInventory().clear();
-		p.getInventory().addItem(new ItemStack(Material.DIAMOND_HOE));
+		p.getInventory().addItem(ItemMetaUtils.setItemName(new ItemStack(Material.DIAMOND_HOE), "Laser Gun"));
 	}
 
 	private void addLives(GameTeam gt, int add) {

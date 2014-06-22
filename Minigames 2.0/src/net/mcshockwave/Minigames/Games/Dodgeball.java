@@ -38,13 +38,13 @@ import org.bukkit.util.Vector;
 
 public class Dodgeball implements IMinigame {
 
-	Vector[]			drop		= { new Vector(-16, 116, -201), new Vector(-11, 116, -201),
+	Vector[]					drop		= { new Vector(-16, 116, -201), new Vector(-11, 116, -201),
 			new Vector(-7, 116, -201), new Vector(-2, 116, -201), new Vector(2, 116, -201), new Vector(7, 116, -201),
 			new Vector(11, 116, -201), new Vector(16, 116, -201) };
 
-	BukkitTask			sn			= null;
+	BukkitTask					sn			= null;
 
-	ArrayList<Player>	canBeHit	= new ArrayList<>();
+	public ArrayList<Player>	canBeHit	= new ArrayList<>();
 
 	public void onGameStart() {
 		for (Player p : Minigames.getOptedIn()) {
@@ -179,7 +179,7 @@ public class Dodgeball implements IMinigame {
 							e.remove();
 						}
 					}
-					
+
 					p.getWorld().playSound(p.getLocation(), Sound.PORTAL_TRIGGER, 5, 2);
 				}
 

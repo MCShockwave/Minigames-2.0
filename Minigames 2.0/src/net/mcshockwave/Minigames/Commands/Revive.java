@@ -38,7 +38,7 @@ public class Revive implements CommandExecutor {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender s, Command c, String l, String[] a) {
-		if (s instanceof Player && SQLTable.hasRank(((Player)s).getName(), Rank.MOD)) {
+		if (s instanceof Player && SQLTable.hasRank(((Player) s).getName(), Rank.MOD)) {
 			if (a.length < 1) {
 				s.sendMessage(ChatColor.RED + "Improper Syntax");
 				return true;
@@ -49,8 +49,8 @@ public class Revive implements CommandExecutor {
 				GameTeam team = getTeamFromString(a[1], cg);
 				boolean valid = checkTeam(team, cg);
 				if (!valid) {
-					s.sendMessage(ChatColor.RED + "The team " + a[1] + " is not valid!"); 
-					return true; 
+					s.sendMessage(ChatColor.RED + "The team " + a[1] + " is not valid!");
+					return true;
 				}
 				Minigames.resetPlayer(p);
 				Minigames.deadPlayers.remove(p.getName());
@@ -58,7 +58,8 @@ public class Revive implements CommandExecutor {
 				team.team.addPlayer(p);
 				p.teleport(team.spawn);
 				if (cg == Game.Airships) {
-					p.getInventory().addItem(ItemMetaUtils.addEnchantment(new ItemStack(Material.BOW), Enchantment.ARROW_INFINITE, 1));
+					p.getInventory().addItem(
+							ItemMetaUtils.addEnchantment(new ItemStack(Material.BOW), Enchantment.ARROW_INFINITE, 1));
 					p.getInventory().addItem(new ItemStack(Material.ARROW));
 					p.setAllowFlight(true);
 					p.setFlying(true);
@@ -72,7 +73,8 @@ public class Revive implements CommandExecutor {
 				} else if (cg == Game.Boarding) {
 					Minigames.clearInv(p);
 					PlayerInventory pi = p.getInventory();
-					pi.addItem(ItemMetaUtils.setItemName(new ItemStack(Material.IRON_SWORD), ChatColor.RESET + "Steel Sword"));
+					pi.addItem(ItemMetaUtils.setItemName(new ItemStack(Material.IRON_SWORD), ChatColor.RESET
+							+ "Steel Sword"));
 					pi.addItem(ItemMetaUtils.setItemName(new ItemStack(Material.IRON_AXE), ChatColor.RESET + "Musket"));
 					pi.setItem(8, new ItemStack(Material.SULPHUR, 2));
 					if (Minigames.hasItem(p, ShopItem.Buccaneer)) {
@@ -154,7 +156,7 @@ public class Revive implements CommandExecutor {
 		}
 		return false;
 	}
-	
+
 	private GameTeam getTeamFromString(String s, Game g) {
 		for (GameTeam gteam : g.teams) {
 			if (s.equalsIgnoreCase(gteam.name)) {
@@ -163,7 +165,7 @@ public class Revive implements CommandExecutor {
 		}
 		return null;
 	}
-	
+
 	private boolean checkTeam(GameTeam t, Game g) {
 		for (GameTeam gt : g.teams) {
 			if (gt == t) {
