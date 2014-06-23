@@ -36,7 +36,7 @@ public class ShockwaveUtils {
 			Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 				public void run() {
 					for (Block b : bir) {
-						if (b.getLocation().distance(l) <= i2 && !bor.contains(b)) {
+						if (b.getLocation().distanceSquared(l) <= i2 * i2 && !bor.contains(b)) {
 							if (rand.nextInt(3) == 1) {
 								PacketUtils.playParticleEffect(ParticleEffect.EXPLODE, b.getLocation(), 1, 1, 1);
 								b.getWorld().playSound(b.getLocation(), Sound.EXPLODE, 1, 1);
