@@ -12,7 +12,7 @@ public interface IMinigame extends Listener {
 	
 	public World w = Minigames.getDefaultWorld();
 	public Random rand = new Random();
-	public Minigames plugin = Minigames.ins;
+	public Minigames	plugin	= Minigames.ins;
 	
 	public abstract void onGameStart();
 	public abstract void onGameEnd();

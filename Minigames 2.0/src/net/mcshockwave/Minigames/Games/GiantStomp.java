@@ -1,116 +1,97 @@
 package net.mcshockwave.Minigames.Games;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Giant;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
-
+import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Utils.LocUtils;
+import net.mcshockwave.Minigames.Utils.ShockwaveUtils;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Giant;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 public class GiantStomp implements IMinigame {
 
-	public Entity g = null;
+	public Giant		giant		= null;
 
-	@SuppressWarnings("deprecation")
+	public BukkitTask	giantTask;
+
+	boolean				stomping	= false;
+
 	@Override
 	public void onGameStart() {
 		for (Player p : Minigames.getOptedIn()) {
 			giveItems(p);
-
-			Location giantspawn = new Location(Minigames.getDefaultWorld(),
-					1300, 106, -200);
-
-			Minigames.getDefaultWorld().spawnCreature(giantspawn,
-					EntityType.GIANT);
-			for (LivingEntity ent : Minigames.getDefaultWorld()
-					.getLivingEntities()) {
-				if (ent.getType().equals(EntityType.GIANT)) {
-					g = ent;
-				}
-				((Giant) g).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20000, 255), true);
-				((Giant) g).addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20000, 255), true);
-
-			}
-			{
-
-				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-					public void run() {
-						jump();
-					}
-				}, 6 * 20);
-			}
 		}
+
+		// TODO set to giantstomp game object
+		final Location spawn = Game.Airships.lobby;
+
+		giant = (Giant) spawn.getWorld().spawnEntity(spawn, EntityType.GIANT);
+		giant.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 10));
+
+		// Yet another Minigames 1.0 port
+		giantTask = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			public void run() {
+				if (giant.getLocation().getBlockX() != spawn.getBlockX()
+						&& giant.getLocation().getBlockZ() != spawn.getBlockZ()) {
+					Location tp = spawn.clone();
+					tp.setY(giant.getLocation().getY());
+					giant.teleport(tp);
+				}
+				if (rand.nextInt(10) == 1 && !stomping) {
+					stomping = true;
+					giant.setVelocity(new Vector(0, 2, 0));
+				}
+			}
+		}, 0L, 2L);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void giveItems(Player p) {
-		p.getInventory().clear();
+		Minigames.clearInv(p);
+		Minigames.milkPlayer(p);
 		p.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
-		p.updateInventory();
-
 	}
 
 	@Override
 	public void onGameEnd() {
-		((Giant) g).setHealth(0);
-
+		giant.remove();
+		giantTask.cancel();
 	}
 
 	@Override
 	public void onPlayerDeath(DeathEvent e) {
-
-		e.p.setVelocity(new Vector(0, 0, 0));
-
-		Minigames.broadcastDeath(e.p, e.k, "%s was stomped out",
-				"%s was murdered by %s");
+		Minigames.broadcastDeath(e.p, e.k, "%s was stomped out", "%s was murdered by %s");
 	}
 
-	public void jump() {
-		if (Minigames.alivePlayers.size() > 1) {
-			g.setVelocity(new Vector(0, 0, 0));
-			Vector d = ((Giant) g).getLocation().toVector().setY(4.0D)
-					.normalize();
-			g.setVelocity(d);
-			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-				public void run() {
-					for (String s : Minigames.alivePlayers) {
-						Bukkit.getPlayer(s).setVelocity(
-								LocUtils.getVelocity(null,
-										Bukkit.getPlayer(s).getLocation())
-										.multiply(0.5));
-					}
-				}
-			}, 3 * 20);
-			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-				public void run() {
-					jump();
-				}
-			}, 8 * 20);
-
+	@EventHandler
+	public void onEntityDamage(EntityDamageEvent event) {
+		if (event.getEntityType() == EntityType.GIANT) {
+			event.setCancelled(true);
+			if (event.getCause() == DamageCause.FALL && stomping) {
+				stomping = false;
+				ShockwaveUtils.makeShockwave(giant.getLocation(), 25);
+			}
 		}
 	}
 
 	@EventHandler
-	public void onPlayerDamageEvent(EntityDamageByEntityEvent e) {
-		if (e.getDamager() instanceof Player) {
-
-		} else {
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
+		if (e.getDamager() instanceof Giant || e.getEntity() instanceof Giant) {
 			e.setCancelled(true);
 		}
 	}
-
 
 }
