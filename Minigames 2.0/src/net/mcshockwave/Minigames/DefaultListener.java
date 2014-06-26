@@ -345,7 +345,7 @@ public class DefaultListener implements Listener {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
 
-		if (event.getTo().getY() < 85) {
+		if (event.getTo().getY() < 80) {
 			if (Minigames.optedOut.contains(p.getName())) {
 				p.teleport(p.getWorld().getSpawnLocation());
 			} else
