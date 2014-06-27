@@ -43,7 +43,7 @@ public class Force implements CommandExecutor {
 
 	public static Inventory getForceGame(Player p) {
 		Inventory i = Bukkit.createInventory(p, (Game.values().length + (9 - Game.values().length % 9)), "Force Games");
-		for (Game g : Game.values()) {
+		for (Game g : Game.enabled) {
 			i.addItem(ItemMetaUtils.setLore(
 					ItemMetaUtils.setItemName(g.icon.clone(), ChatColor.GRAY + "Force: " + ChatColor.GOLD + g.name),
 					"", "Cost: " + getCost(g) + " points"));

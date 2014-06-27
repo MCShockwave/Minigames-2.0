@@ -228,7 +228,8 @@ public enum Game {
 	public boolean			canRespawn, allowPVP;
 	public ItemStack		icon	= null;
 
-	public static Game[]	enabled	= { Game.Build_and_Fight, Game.Hot_Potato, Game.Laser_Tag };
+	public static Game[]	enabled	= { Game.Build_and_Fight, Game.Hot_Potato, Game.Laser_Tag, Game.Core,
+			Game.Boarding, Game.Tiers };
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, GameTeam[] teams) {
 		this.teams = teams;

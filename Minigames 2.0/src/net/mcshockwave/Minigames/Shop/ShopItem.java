@@ -113,6 +113,7 @@ public enum ShopItem {
 		1,
 		false,
 		2500,
+		"§c§lCurrently Broken",
 		"Right click your ender eye to get a full",
 		"heal and teleport to a treehouse within the map.",
 		"One-time use per life"),

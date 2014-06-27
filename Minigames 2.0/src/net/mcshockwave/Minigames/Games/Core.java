@@ -13,7 +13,6 @@ import net.mcshockwave.Minigames.worlds.Multiworld;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -28,7 +27,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
-import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 
@@ -36,26 +34,26 @@ public class Core implements IMinigame {
 
 	public Team				coreTeam	= null;
 
-	public Vector			c			= new Vector(0, 109, 0);
+	public Block			core;
 
-	public Vector			rad			= new Vector(0, 102, 0);
+	public int				rad;
 
 	public boolean			canGoIn		= false;
 
 	HashMap<Player, Long>	cooldown	= new HashMap<Player, Long>();
 
-	Location[]				tree		= { new Location(Multiworld.getGame(), 0.5, 101, 37.5, 180, 0),
-			new Location(Multiworld.getGame(), 36.5, 101, 00.5, 270, 0),
-			new Location(Multiworld.getGame(), 0.5, 101, -36.5, 180, 0) };
+	// Location[] tree = { new Location(Multiworld.getGame(), 0.5, 101, 37.5,
+	// 180, 0),
+	// new Location(Multiworld.getGame(), 36.5, 101, 00.5, 270, 0),
+	// new Location(Multiworld.getGame(), 0.5, 101, -36.5, 180, 0) };
 
 	public void onGameStart() {
+		core = Game.getBlock("Core");
+		rad = Game.getInt("core-radius");
+
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
 		}
-	}
-
-	public Location getLoc(Vector v) {
-		return new Location(Multiworld.getGame(), v.getX(), v.getY(), v.getZ());
 	}
 
 	public void giveKit(Player p) {
@@ -75,11 +73,8 @@ public class Core implements IMinigame {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public void onGameEnd() {
 		coreTeam = null;
-		getLoc(c).getBlock().setData((byte) 0);
-		doEffect((byte) 0, 0);
 		canGoIn = false;
 	}
 
@@ -119,8 +114,8 @@ public class Core implements IMinigame {
 
 			p.getWorld().playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 0);
 			p.getWorld().playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);
-			Location loc = tree[rand.nextInt(tree.length)];
-			p.teleport(loc);
+			// Location loc = tree[rand.nextInt(tree.length)];
+			// p.teleport(loc);
 			p.getWorld().playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 0);
 			p.getWorld().playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);
 			p.setHealth(20);
@@ -129,7 +124,7 @@ public class Core implements IMinigame {
 		if (a == Action.RIGHT_CLICK_BLOCK) {
 			Block b = event.getClickedBlock();
 
-			if (LocUtils.isSame(b.getLocation(), getLoc(c))
+			if (LocUtils.isSame(b.getLocation(), core.getLocation())
 					&& p.getLocation().distanceSquared(b.getLocation()) <= 4 * 4) {
 				GameTeam gt = Game.getTeam(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
 				p.teleport(Game.getSpawn(gt));
@@ -137,7 +132,7 @@ public class Core implements IMinigame {
 				if (gt.team == coreTeam)
 					return;
 
-				getLoc(c).getBlock().setData(getTeamData(gt));
+				core.setData(getTeamData(gt));
 				doEffect(getTeamData(gt), 2);
 
 				Minigames.broadcastAll(
@@ -202,8 +197,8 @@ public class Core implements IMinigame {
 			return;
 		}
 		if (Minigames.getTeamsLeft().size() > 2 && coreTeam != null && gt.team == coreTeam) {
-			if (p.getLocation().distanceSquared(getLoc(rad)) <= 12 * 12) {
-				p.setVelocity(LocUtils.getVelocity(getLoc(rad), p.getLocation()).multiply(0.5));
+			if (p.getLocation().distanceSquared(Game.getLocation("lobby")) <= rad * rad) {
+				p.setVelocity(LocUtils.getVelocity(Game.getLocation("lobby"), p.getLocation()).multiply(0.5));
 				Minigames.send(p, "You can't enter your %s until there are 2 teams left!", "Core");
 			}
 		}
