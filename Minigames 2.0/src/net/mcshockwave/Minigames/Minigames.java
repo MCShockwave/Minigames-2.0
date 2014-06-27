@@ -177,13 +177,13 @@ public class Minigames extends JavaPlugin {
 								}
 								canOpenShop = true;
 
-								currentGame.lobby.getChunk().load();
+								Game.getLocation("lobby").getChunk().load();
 								if (currentGame.isTeamGame()) {
 									for (GameTeam gt : currentGame.teams) {
-										gt.spawn.getChunk().load();
+										Game.getSpawn(gt).getChunk().load();
 									}
 								} else
-									currentGame.spawn.getChunk().load();
+									Game.getFFASpawn().getChunk().load();
 
 								resetGameWorld(currentGame);
 							}
@@ -502,7 +502,7 @@ public class Minigames extends JavaPlugin {
 				noteam.remove(p);
 				for (GameTeam gt : currentGame.teams) {
 					if (gt.name.equalsIgnoreCase(t.getName())) {
-						p.teleport(gt.spawn);
+						p.teleport(Game.getSpawn(gt));
 						send(gt.color, p, "You are on %s!", gt.name);
 						break;
 					}
@@ -531,7 +531,7 @@ public class Minigames extends JavaPlugin {
 				// }
 			}
 		} else {
-			TeleportUtils.spread(currentGame.spawn, currentGame.radius, getOptedIn().toArray(new Player[0]));
+			TeleportUtils.spread(Game.getFFASpawn(), Game.getInt("radius"), getOptedIn().toArray(new Player[0]));
 
 			for (Player p : getOptedIn()) {
 				if (!p.getLocation().getChunk().isLoaded()) {
@@ -732,7 +732,7 @@ public class Minigames extends JavaPlugin {
 
 			if (!Minigames.optedOut.contains(p.getName())) {
 				if (currentGame != null) {
-					p.teleport(Minigames.currentGame.lobby);
+					p.teleport(Game.getLocation("lobby"));
 					spectate(p);
 				} else {
 					p.teleport(new Location(Multiworld.getLobby(), 0, 102, 0));

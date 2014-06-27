@@ -127,7 +127,7 @@ public class VillageBattle implements IMinigame {
 		Minigames.milkPlayer(p);
 		Minigames.clearInv(p);
 		types.remove(p);
-		p.teleport(gt.spawn);
+		p.teleport(Game.getSpawn(gt));
 		p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100000, 0));
 	}
 

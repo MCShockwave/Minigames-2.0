@@ -3,6 +3,7 @@ package net.mcshockwave.Minigames.Commands;
 import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.SQLTable.Rank;
+import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 
 import org.bukkit.Bukkit;
@@ -33,7 +34,7 @@ public class Opt implements CommandExecutor {
 				Minigames.optedOut.remove(p.getName());
 
 				if (Minigames.started) {
-					p.teleport(Minigames.currentGame.lobby);
+					p.teleport(Game.getLocation("lobby"));
 					Minigames.spectate(p);
 				} else {
 					p.teleport(new Location(p.getWorld(), 0, 103, 0));

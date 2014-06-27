@@ -132,7 +132,7 @@ public class Core implements IMinigame {
 			if (LocUtils.isSame(b.getLocation(), getLoc(c))
 					&& p.getLocation().distanceSquared(b.getLocation()) <= 4 * 4) {
 				GameTeam gt = Game.getTeam(Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p));
-				p.teleport(gt.spawn);
+				p.teleport(Game.getSpawn(gt));
 
 				if (gt.team == coreTeam)
 					return;

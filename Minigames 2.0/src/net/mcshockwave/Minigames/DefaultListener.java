@@ -71,7 +71,7 @@ public class DefaultListener implements Listener {
 		if (!Minigames.started) {
 			p.teleport(new Location(Multiworld.getLobby(), 0, 102, 0));
 		} else {
-			p.teleport(Minigames.currentGame.lobby);
+			p.teleport(Game.getLocation("lobby"));
 			String name = p.getName();
 			name = name.substring(0, name.length() > 14 ? 13 : name.length());
 			p.setPlayerListName(ChatColor.GRAY + name);
@@ -239,7 +239,7 @@ public class DefaultListener implements Listener {
 			event.setRespawnLocation(new Location(Multiworld.getLobby(), 0, 103, 0));
 		} else {
 			if (!Minigames.alivePlayers.contains(p.getName())) {
-				event.setRespawnLocation(Minigames.currentGame.lobby);
+				event.setRespawnLocation(Game.getLocation("lobby"));
 				return;
 			}
 
@@ -250,18 +250,18 @@ public class DefaultListener implements Listener {
 						if (t.hasPlayer(p)) {
 							GameTeam gt = Game.getTeam(t);
 
-							event.setRespawnLocation(gt.spawn);
+							event.setRespawnLocation(Game.getSpawn(gt));
 							return;
 						}
 					}
 
-					event.setRespawnLocation(Minigames.currentGame.spawn);
+					event.setRespawnLocation(Game.getFFASpawn());
 
 				} else {
-					event.setRespawnLocation(Minigames.currentGame.spawn);
+					event.setRespawnLocation(Game.getFFASpawn());
 				}
 			} else {
-				event.setRespawnLocation(Minigames.currentGame.lobby);
+				event.setRespawnLocation(Game.getLocation("lobby"));
 			}
 		}
 

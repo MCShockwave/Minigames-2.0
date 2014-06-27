@@ -101,7 +101,7 @@ public class LaserTag implements IMinigame {
 			if (cooldown.contains(e.getPlayer().getName())) {
 				return;
 			}
-			if (Game.getTeam(e.getPlayer()).spawn.distance(e.getPlayer().getLocation()) < 5) {
+			if (Game.getSpawn(Game.getTeam(e.getPlayer())).distanceSquared(e.getPlayer().getLocation()) < 5 * 5) {
 				Minigames.send(e.getPlayer(), "You can not %s while in your base!", ChatColor.RED + "shoot");
 				return;
 			}
@@ -128,7 +128,7 @@ public class LaserTag implements IMinigame {
 						Location end_loc = ent.getLocation();
 						double distance = bl.getLocation().distanceSquared(end_loc);
 						if (distance <= 4 && Minigames.alivePlayers.contains(pla.getName())
-								&& Game.getTeam(pla).spawn.distanceSquared(pla.getLocation()) > 5 * 5) {
+								&& Game.getSpawn(Game.getTeam(pla)).distanceSquared(pla.getLocation()) > 5 * 5) {
 							bool = false;
 							if (Game.getTeam(p) == Game.getTeam(pla)) {
 								break;
@@ -156,7 +156,7 @@ public class LaserTag implements IMinigame {
 							Player pla = (Player) ent;
 							double distance = block.getLocation().distanceSquared(ent.getLocation());
 							if (distance <= 4 && Minigames.alivePlayers.contains(pla.getName())
-									&& Game.getTeam(pla).spawn.distanceSquared(pla.getLocation()) > 5 * 5) {
+									&& Game.getSpawn(Game.getTeam(pla)).distanceSquared(pla.getLocation()) > 5 * 5) {
 								bool1 = false;
 								GameTeam gt = Game.getTeam(pla);
 								if (Game.getTeam(p) != gt) {

@@ -54,9 +54,9 @@ public class Brawl implements IMinigame {
 		if (b1 == e.p || b2 == e.p) {
 			Minigames.broadcastDeath(e.p, e.k, "%s fell off the tower", "%s was knocked off the tower by %s");
 			if (e.p == b1) {
-				b2.teleport(Game.Brawl.spawn);
+				b2.teleport(Game.getFFASpawn());
 			} else {
-				b1.teleport(Game.Brawl.spawn);
+				b1.teleport(Game.getFFASpawn());
 			}
 			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 				public void run() {
