@@ -52,8 +52,11 @@ public class Force implements CommandExecutor {
 	}
 
 	public static int getCost(Game g) {
-		int cost = 2500;
-		return cost;
+		if (!SQLTable.ForceCosts.has("Minigame", g.name())) {
+			SQLTable.ForceCosts.add("Minigame", g.name());
+		}
+
+		return SQLTable.ForceCosts.getInt("Minigame", g.name(), "Cost");
 	}
 
 	public static long getForceTime(Player p) {
@@ -127,6 +130,8 @@ public class Force implements CommandExecutor {
 				PointsUtils.addPoints(p2, -getCost(g), "forcing " + g.name, false);
 
 				setForceTime(p2, translateLong(System.currentTimeMillis(), true) + 20);
+
+				SQLTable.ForceCosts.set("Cost", (getCost(g) + 10) + "", "Minigame", g.name());
 			}
 		}
 	}
