@@ -203,21 +203,27 @@ public class BuildAndFight implements IMinigame {
 			}
 		}
 		for (Block hitBlock : aff) {
-			if (hitBlock.getType() == Material.WOOL) {
-				PacketUtils.sendPacketGlobally(hitBlock.getLocation(), 50,
-						PacketUtils.generateBlockParticles(Material.WOOL, hitBlock.getData(), hitBlock.getLocation()));
+			if (hitBlock.getType() != Material.STAINED_CLAY) {
+				PacketUtils.sendPacketGlobally(
+						hitBlock.getLocation(),
+						50,
+						PacketUtils.generateBlockParticles(hitBlock.getType(), hitBlock.getData(),
+								hitBlock.getLocation()));
 				hitBlock.getWorld().playSound(hitBlock.getLocation(), Sound.DIG_WOOL, 1, 1);
 				hitBlock.setType(Material.AIR);
 				blocks.remove(hitBlock);
 			}
-			if (hitBlock.getType() == Material.STAINED_CLAY && (hitBlock.getData() == 13 || hitBlock.getData() == 4)) {
-				PacketUtils.sendPacketGlobally(hitBlock.getLocation(), 50,
-						PacketUtils.generateBlockParticles(Material.WOOL, hitBlock.getData(), hitBlock.getLocation()));
-				hitBlock.getWorld().playSound(hitBlock.getLocation(), Sound.DIG_STONE, 1, 1);
-				byte da = hitBlock.getData();
-				hitBlock.setType(Material.WOOL);
-				hitBlock.setData(da);
-			}
+			// if (hitBlock.getType() == Material.STAINED_CLAY &&
+			// (hitBlock.getData() == 13 || hitBlock.getData() == 4)) {
+			// PacketUtils.sendPacketGlobally(hitBlock.getLocation(), 50,
+			// PacketUtils.generateBlockParticles(Material.WOOL,
+			// hitBlock.getData(), hitBlock.getLocation()));
+			// hitBlock.getWorld().playSound(hitBlock.getLocation(),
+			// Sound.DIG_STONE, 1, 1);
+			// byte da = hitBlock.getData();
+			// hitBlock.setType(Material.WOOL);
+			// hitBlock.setData(da);
+			// }
 		}
 		e.remove();
 	}
