@@ -1,5 +1,7 @@
 package net.mcshockwave.Minigames.worlds;
 
+import net.mcshockwave.MCS.Utils.MiscUtils;
+
 import org.bukkit.World;
 
 import java.io.BufferedReader;
@@ -27,7 +29,7 @@ public class WorldFileUtils {
 			br.close();
 			fr.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MiscUtils.printStackTrace(e);
 		}
 		return ret.toArray(new String[0]);
 	}
@@ -72,6 +74,7 @@ public class WorldFileUtils {
 			out.write(set.getBytes());
 			out.close();
 		} catch (Exception e) {
+			MiscUtils.printStackTrace(e);
 		}
 	}
 
@@ -82,14 +85,14 @@ public class WorldFileUtils {
 	public static void set(World w, String[] setTo) {
 		set(w.getName(), setTo);
 	}
-	
+
 	public static ArrayList<String> fromArray(String[] ar) {
 		ArrayList<String> ret = new ArrayList<>();
-		
+
 		for (String s : ar) {
 			ret.add(s);
 		}
-		
+
 		return ret;
 	}
 

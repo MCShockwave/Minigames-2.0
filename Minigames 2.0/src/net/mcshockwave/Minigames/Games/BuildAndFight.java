@@ -1,22 +1,17 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.BlockUtils;
-import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -34,16 +29,19 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BuildAndFight implements IMinigame {
 
-	Location			bSt			= new Location(Multiworld.getGame(), -603, 100, 8);
-	Location			bEn			= new Location(Multiworld.getGame(), -600, 100, -6);
 	boolean				building	= true;
 
 	ArrayList<Block>	blocks		= new ArrayList<Block>();
 
 	@Override
 	public void onGameStart() {
+		BlockUtils.save(Game.getLocation("bridge-corner-1"), Game.getLocation("bridge-corner-2"), "baf-bridge", true);
+
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				for (OfflinePlayer op : Game.Build_and_Fight.teams[0].team.getPlayers()) {
@@ -80,7 +78,7 @@ public class BuildAndFight implements IMinigame {
 						giveKit(p, 4);
 					}
 				}
-				BlockUtils.setBlocks(bSt, bEn, Material.WOOD, 0);
+				BlockUtils.load(Game.getLocation("bridge-corner-1"), "baf-bridge", 0.1);
 			}
 		}, 1200);
 	}
@@ -103,7 +101,6 @@ public class BuildAndFight implements IMinigame {
 	@Override
 	public void onGameEnd() {
 		building = true;
-		BlockUtils.setBlocks(bSt, bEn, Material.AIR, 0);
 		for (Block b : blocks) {
 			if (b.getType() == Material.WOOL || b.getType() == Material.STAINED_CLAY) {
 				b.setType(Material.AIR);
@@ -213,7 +210,7 @@ public class BuildAndFight implements IMinigame {
 				hitBlock.setType(Material.AIR);
 				blocks.remove(hitBlock);
 			}
-			if (hitBlock.getType() == Material.STAINED_CLAY) {
+			if (hitBlock.getType() == Material.STAINED_CLAY && (hitBlock.getData() == 13 || hitBlock.getData() == 4)) {
 				PacketUtils.sendPacketGlobally(hitBlock.getLocation(), 50,
 						PacketUtils.generateBlockParticles(Material.WOOL, hitBlock.getData(), hitBlock.getLocation()));
 				hitBlock.getWorld().playSound(hitBlock.getLocation(), Sound.DIG_STONE, 1, 1);

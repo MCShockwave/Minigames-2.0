@@ -8,8 +8,71 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class BlockUtils {
+
+	public static HashMap<String, List<BlockState>>	saved	= new HashMap<>();
+
+	public static void save(Location c1, Location c2, String saveTo, boolean delete) {
+		int x1 = c1.getBlockX();
+		int y1 = c1.getBlockY();
+		int z1 = c1.getBlockZ();
+
+		int x2 = c2.getBlockX();
+		int y2 = c2.getBlockY();
+		int z2 = c2.getBlockZ();
+
+		List<BlockState> sa = new ArrayList<>();
+		for (int x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
+			for (int y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
+				for (int z = Math.min(z1, z2); z <= Math.max(z1, z2); z++) {
+					Location loc = new Location(c1.getWorld(), x, y, z);
+					Block b = loc.getBlock();
+
+					if (!b.getChunk().isLoaded()) {
+						b.getChunk().load(true);
+					}
+
+					sa.add(b.getState());
+
+					if (delete) {
+						b.setType(Material.AIR);
+					}
+				}
+			}
+		}
+		Collections.shuffle(sa);
+
+		saved.remove(saveTo);
+		saved.put(saveTo, sa);
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void load(Location c1, String savedTo, final double delay) {
+		List<BlockState> states = saved.get(savedTo);
+		double del = 0;
+
+		for (final BlockState bs : states) {
+			Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
+				public void run() {
+					Block b = bs.getLocation().getBlock();
+
+					b.setType(bs.getType());
+					b.setData(bs.getRawData());
+
+					if (delay > 0) {
+						b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, b.getType());
+					}
+				}
+			}, (long) (del += delay));
+		}
+	}
 
 	public static void setBlocks(final Location s, Location e, final Material m, final DyeColor color) {
 		int x = s.getBlockX();
@@ -39,12 +102,14 @@ public class BlockUtils {
 	@SuppressWarnings("deprecation")
 	public static void setBlock(Block b, Material m, DyeColor color) {
 		if (m.getId() == 0) {
-//			PacketUtils.sendPacketGlobally(b.getLocation(), 50,
-//					PacketUtils.generateBlockParticles(b.getType(), b.getData(), b.getLocation()));
+			// PacketUtils.sendPacketGlobally(b.getLocation(), 50,
+			// PacketUtils.generateBlockParticles(b.getType(), b.getData(),
+			// b.getLocation()));
 			b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, b.getType().getId());
 		} else {
-//			PacketUtils.sendPacketGlobally(b.getLocation(), 50,
-//					PacketUtils.generateBlockParticles(m, color.getData(), b.getLocation()));
+			// PacketUtils.sendPacketGlobally(b.getLocation(), 50,
+			// PacketUtils.generateBlockParticles(m, color.getData(),
+			// b.getLocation()));
 			b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, m.getId());
 		}
 		b.setType(m);

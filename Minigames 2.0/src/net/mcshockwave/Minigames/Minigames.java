@@ -23,6 +23,7 @@ import net.mcshockwave.Minigames.Utils.PointsUtils;
 import net.mcshockwave.Minigames.Utils.SoundUtils;
 import net.mcshockwave.Minigames.Utils.TeleportUtils;
 import net.mcshockwave.Minigames.worlds.Multiworld;
+import net.mcshockwave.Minigames.worlds.WorldFileUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -137,7 +138,7 @@ public class Minigames extends JavaPlugin {
 		// TODO temp
 		// currentGame = Game.values()[rand.nextInt(Game.values().length)];
 		currentGame = Game.enabled[rand.nextInt(Game.enabled.length)];
-		if (currentGame == gameBefore) {
+		if (currentGame == gameBefore && Game.enabled.length > 1) {
 			startCount();
 			return;
 		}
@@ -177,6 +178,8 @@ public class Minigames extends JavaPlugin {
 								}
 								canOpenShop = true;
 
+								resetGameWorld(currentGame);
+
 								Game.getLocation("lobby").getChunk().load();
 								if (currentGame.isTeamGame()) {
 									for (GameTeam gt : currentGame.teams) {
@@ -185,7 +188,6 @@ public class Minigames extends JavaPlugin {
 								} else
 									Game.getFFASpawn().getChunk().load();
 
-								resetGameWorld(currentGame);
 							}
 							if (b == 15) {
 								for (Method m : currentGame.mclass.getClass().getMethods()) {
@@ -393,7 +395,7 @@ public class Minigames extends JavaPlugin {
 				System.out.println("Setting gamerules...");
 
 				String[] gmrls = { "doDaylightCycle:false", "doMobSpawning:false", "doMobLoot:false",
-						"keepInventory:true" };
+						"keepInventory:true", "doTileDrops:false" };
 				w.setTime(5000);
 				for (String s : gmrls) {
 					String[] spl = s.split(":");
@@ -407,6 +409,10 @@ public class Minigames extends JavaPlugin {
 						e.remove();
 					}
 				}
+
+				System.out.println("Copying text file...");
+
+				WorldFileUtils.set("Game", WorldFileUtils.get(map.name()));
 
 				System.out.println("Done resetting world!");
 			}
