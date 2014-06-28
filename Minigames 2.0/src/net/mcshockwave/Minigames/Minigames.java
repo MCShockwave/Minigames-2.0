@@ -5,7 +5,9 @@ import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.SQLTable.Rank;
 import net.mcshockwave.MCS.Commands.VanishCommand;
 import net.mcshockwave.MCS.Stats.Statistics;
+import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.SchedulerUtils;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Commands.Force;
 import net.mcshockwave.Minigames.Commands.MGC;
@@ -178,8 +180,6 @@ public class Minigames extends JavaPlugin {
 								}
 								canOpenShop = true;
 
-								resetGameWorld(currentGame);
-
 								Game.getLocation("lobby").getChunk().load();
 								if (currentGame.isTeamGame()) {
 									for (GameTeam gt : currentGame.teams) {
@@ -199,6 +199,9 @@ public class Minigames extends JavaPlugin {
 									}
 								}
 							}
+							if (b == 10) {
+								resetGameWorld(currentGame);
+							}
 							if (b <= 5) {
 								SoundUtils.playSoundToAll(Sound.ORB_PICKUP, 1, (b * 2) / 5);
 							}
@@ -217,12 +220,34 @@ public class Minigames extends JavaPlugin {
 
 	}
 
-	public static void stop(Object winner) {
+	public static Color chatColorToColor(ChatColor cc) {
+		switch (cc) {
+			case RED:
+				return Color.RED;
+			case BLUE:
+				return Color.BLUE;
+			case GREEN:
+				return Color.GREEN;
+			case YELLOW:
+				return Color.YELLOW;
+			case WHITE:
+				return Color.WHITE;
+			case BLACK:
+				return Color.BLACK;
+			case AQUA:
+				return Color.AQUA;
+			default:
+				return Color.GRAY;
+		}
+	}
+
+	public static boolean	explode	= false;
+
+	public static void stop(final Object winner) {
 		for (BukkitTask bt : timer) {
 			bt.cancel();
 		}
 		Bukkit.getScheduler().cancelTasks(ins);
-		Bukkit.getScheduler().cancelAllTasks();
 
 		if (currentGame != null) {
 			HandlerList.unregisterAll(currentGame.mclass);
@@ -231,141 +256,173 @@ public class Minigames extends JavaPlugin {
 
 		used.clear();
 
-		TeleportUtils.spread(new Location(Multiworld.getLobby(), 0, 103, 0), 5, getOptedIn().toArray(new Player[0]));
-
-		for (Player p : getOptedIn()) {
-			Minigames.milkPlayer(p);
-			p.setFlying(false);
-			p.setAllowFlight(false);
+		explode = true;
+		SchedulerUtils util = SchedulerUtils.getNew();
+		util.add(20);
+		for (final Player p : getOptedIn()) {
+			util.add(1);
+			util.add(new Runnable() {
+				public void run() {
+					p.getWorld().createExplosion(p.getLocation(), 8f);
+				}
+			});
 		}
-
-		if (winner != null) {
-			String winName = null;
-			ChatColor winColor = ChatColor.GOLD;
-			if (winner instanceof Player) {
-				final Player win = (Player) winner;
-				winName = win.getName();
-
-				final String name = currentGame.name;
-				final int points = pointsOnWin;
-
-				Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-					public void run() {
-						PointsUtils.addPoints(win, points, "winning " + name, true);
-						win.playSound(win.getLocation(), Sound.LEVEL_UP, 1, 1);
-						Statistics.incrWins(win.getName(), true);
-					}
-				}, 20);
-				for (Player p2 : getOptedIn()) {
-					final Player p3 = p2;
-					Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-						public void run() {
-							if (p3 != win) {
-								p3.playSound(p3.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
-							}
-						}
-					}, 20l);
+		util.add(50);
+		util.add(new Runnable() {
+			public void run() {
+				Color c = Color.BLACK;
+				if (winner instanceof Team) {
+					GameTeam gt = Game.getTeam((Team) winner);
+					c = chatColorToColor(gt.color);
+				}
+				for (Player p : getOptedIn()) {
+					FireworkLaunchUtils.playFirework(p.getEyeLocation(), c);
 				}
 			}
-			if (winner instanceof Team) {
-				final Team win = (Team) winner;
-				winName = ChatColor.stripColor(win.getDisplayName());
+		});
+		util.add(40);
+		util.add(new Runnable() {
+			public void run() {
+				explode = false;
+				TeleportUtils.spread(new Location(Multiworld.getLobby(), 0, 103, 0), 5,
+						getOptedIn().toArray(new Player[0]));
 
-				if (Game.getTeam(win) != null) {
-					winColor = Game.getTeam(win).color;
+				for (Player p : getOptedIn()) {
+					Minigames.milkPlayer(p);
+					p.setFlying(false);
+					p.setAllowFlight(false);
 				}
 
-				for (OfflinePlayer op : win.getPlayers()) {
-					if (op instanceof Player) {
-						final Player w = (Player) op;
+				if (winner != null) {
+					String winName = null;
+					ChatColor winColor = ChatColor.GOLD;
+					if (winner instanceof Player) {
+						final Player win = (Player) winner;
+						winName = win.getName();
 
 						final String name = currentGame.name;
 						final int points = pointsOnWin;
 
 						Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 							public void run() {
-								PointsUtils.addPoints(w, points, "winning " + name, true);
-								w.playSound(w.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
-								Statistics.incrWins(w.getName(), false);
+								PointsUtils.addPoints(win, points, "winning " + name, true);
+								win.playSound(win.getLocation(), Sound.LEVEL_UP, 1, 1);
+								Statistics.incrWins(win.getName(), true);
 							}
 						}, 20);
+						for (Player p2 : getOptedIn()) {
+							final Player p3 = p2;
+							Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+								public void run() {
+									if (p3 != win) {
+										p3.playSound(p3.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
+									}
+								}
+							}, 20l);
+						}
 					}
-				}
-				for (Player p : getOptedIn()) {
-					final Player p2 = p;
-					Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-						public void run() {
-							if (!win.hasPlayer(p2)) {
-								p2.playSound(p2.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
+					if (winner instanceof Team) {
+						final Team win = (Team) winner;
+						winName = ChatColor.stripColor(win.getDisplayName());
+
+						if (Game.getTeam(win) != null) {
+							winColor = Game.getTeam(win).color;
+						}
+
+						for (OfflinePlayer op : win.getPlayers()) {
+							if (op instanceof Player) {
+								final Player w = (Player) op;
+
+								final String name = currentGame.name;
+								final int points = pointsOnWin;
+
+								Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+									public void run() {
+										PointsUtils.addPoints(w, points, "winning " + name, true);
+										w.playSound(w.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
+										Statistics.incrWins(w.getName(), false);
+									}
+								}, 20);
 							}
 						}
-					}, 20l);
+						for (Player p : getOptedIn()) {
+							final Player p2 = p;
+							Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+								public void run() {
+									if (!win.hasPlayer(p2)) {
+										p2.playSound(p2.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
+									}
+								}
+							}, 20l);
+						}
+					}
+					if (winName != null) {
+						String has = winName.endsWith("s") ? "have" : "has";
+						broadcast(winColor, "%s " + has + " won %s!", winName, currentGame.name);
+					} else {
+						broadcast("%s has ended!", currentGame.name);
+					}
+				} else {
+					refundAll();
+					broadcast("%s has ended!", currentGame.name);
 				}
-			}
-			if (winName != null) {
-				String has = winName.endsWith("s") ? "have" : "has";
-				broadcast(winColor, "%s " + has + " won %s!", winName, currentGame.name);
-			} else {
-				broadcast("%s has ended!", currentGame.name);
-			}
-		} else {
-			refundAll();
-			broadcast("%s has ended!", currentGame.name);
-		}
-		if (currentGame.isTeamGame()) {
-			for (GameTeam gt : currentGame.teams) {
-				if (gt.team == null)
-					continue;
-				gt.team.unregister();
-				gt.team = null;
-			}
-		}
-		Team[] ts = Bukkit.getScoreboardManager().getMainScoreboard().getTeams().toArray(new Team[0]);
-		for (Team t : ts) {
-			t.unregister();
-		}
-		clearInv(getOptedIn().toArray(new Player[0]));
-		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-			public void run() {
-				for (Player p : getOptedIn()) {
-					resetPlayer(p);
+				if (currentGame.isTeamGame()) {
+					for (GameTeam gt : currentGame.teams) {
+						if (gt.team == null)
+							continue;
+						gt.team.unregister();
+						gt.team = null;
+					}
 				}
-			}
-		}, 1);
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			for (Player p2 : Bukkit.getOnlinePlayers()) {
-				if (!VanishCommand.vanished.containsKey(p.getName())) {
-					p2.showPlayer(p);
+				Team[] ts = Bukkit.getScoreboardManager().getMainScoreboard().getTeams().toArray(new Team[0]);
+				for (Team t : ts) {
+					t.unregister();
 				}
-				if (!VanishCommand.vanished.containsKey(p2.getName())) {
-					p.showPlayer(p2);
-				}
-			}
+				clearInv(getOptedIn().toArray(new Player[0]));
+				Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+					public void run() {
+						for (Player p : getOptedIn()) {
+							resetPlayer(p);
+						}
+					}
+				}, 1);
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					for (Player p2 : Bukkit.getOnlinePlayers()) {
+						if (!VanishCommand.vanished.containsKey(p.getName())) {
+							p2.showPlayer(p);
+						}
+						if (!VanishCommand.vanished.containsKey(p2.getName())) {
+							p.showPlayer(p2);
+						}
+					}
 
-			if (SQLTable.hasRank(p.getName(), Rank.IRON)) {
-				giveHelm(p);
+					if (SQLTable.hasRank(p.getName(), Rank.IRON)) {
+						giveHelm(p);
+					}
+				}
+				for (Entity e : Multiworld.getGame().getEntities()) {
+					if (e instanceof Item || e instanceof Slime) {
+						e.remove();
+					}
+				}
+				alivePlayers.clear();
+				deadPlayers.clear();
+				gameBefore = currentGame;
+				currentGame = null;
+				countingDown = false;
+				started = false;
+				if (getOptedIn().size() <= 2 || Minigames.countingDown) {
+					return;
+				}
+				Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+					public void run() {
+						startCount();
+					}
+				}, 100);
+				resetScoreboard();
 			}
-		}
-		for (Entity e : Multiworld.getGame().getEntities()) {
-			if (e instanceof Item || e instanceof Slime) {
-				e.remove();
-			}
-		}
-		alivePlayers.clear();
-		deadPlayers.clear();
-		gameBefore = currentGame;
-		currentGame = null;
-		countingDown = false;
-		started = false;
-		if (getOptedIn().size() <= 2 || Minigames.countingDown) {
-			return;
-		}
-		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-			public void run() {
-				startCount();
-			}
-		}, 100);
-		resetScoreboard();
+		});
+		util.execute();
 	}
 
 	public static void resetGameWorld(final Game map) {

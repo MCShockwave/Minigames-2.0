@@ -39,9 +39,7 @@ import org.bukkit.util.Vector;
 
 public class Dodgeball implements IMinigame {
 
-	Vector[]			drop		= { new Vector(-16, 116, 0), new Vector(-11, 116, 0), new Vector(-7, 116, 0),
-			new Vector(-2, 116, 0), new Vector(2, 116, 0), new Vector(7, 116, 0), new Vector(11, 116, 0),
-			new Vector(16, 116, 0)	};
+	static final int	dropCount	= 8;
 
 	BukkitTask			sn			= null;
 
@@ -74,10 +72,9 @@ public class Dodgeball implements IMinigame {
 	}
 
 	public void dropDodgeballs() {
-		for (Vector v : drop) {
-			Item i = Multiworld.getGame().dropItem(
-					new Location(Multiworld.getGame(), v.getBlockX() + 0.5, v.getY(), v.getBlockZ() + 0.5),
-					new ItemStack(Material.SNOW_BALL));
+		for (int index = 1; index <= dropCount; index++) {
+			Location l = Game.getLocation("dodgeball-" + index);
+			Item i = Multiworld.getGame().dropItem(l, new ItemStack(Material.SNOW_BALL));
 			i.setVelocity(new Vector());
 		}
 		Minigames.broadcast("%s have been dropped!", "Dodgeballs");
@@ -116,10 +113,10 @@ public class Dodgeball implements IMinigame {
 		Location l = p.getLocation();
 		GameTeam gt = Game.getTeam(p);
 		if (gt != null) {
-			if (gt.color == ChatColor.GREEN && l.getZ() <= 0.5) {
+			if (gt.color == ChatColor.GREEN && l.getZ() <= Game.getDouble("border-z")) {
 				p.setVelocity(p.getVelocity().add(new Vector(0, -0.25, 1)));
 			}
-			if (gt.color == ChatColor.YELLOW && l.getZ() >= 0.5) {
+			if (gt.color == ChatColor.YELLOW && l.getZ() >= Game.getDouble("border-z")) {
 				p.setVelocity(p.getVelocity().add(new Vector(0, -0.25, -1)));
 			}
 		}

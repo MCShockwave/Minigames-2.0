@@ -229,7 +229,7 @@ public enum Game {
 	public ItemStack		icon	= null;
 
 	public static Game[]	enabled	= { Game.Build_and_Fight, Game.Hot_Potato, Game.Laser_Tag, Game.Core,
-			Game.Boarding, Game.Tiers };
+			Game.Boarding, Game.Tiers, Game.Dodgeball };
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, GameTeam[] teams) {
 		this.teams = teams;
@@ -356,6 +356,10 @@ public enum Game {
 
 	public static int getInt(String element) {
 		return Integer.parseInt(getString(element));
+	}
+
+	public static double getDouble(String element) {
+		return Double.parseDouble(getString(element));
 	}
 
 	public static Location getSpawn(GameTeam gt) {

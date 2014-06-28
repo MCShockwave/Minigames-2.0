@@ -295,6 +295,10 @@ public class DefaultListener implements Listener {
 					event.setCancelled(true);
 			}
 		}
+
+		if (Minigames.explode) {
+			event.setCancelled(true);
+		}
 	}
 
 	@EventHandler
@@ -348,7 +352,7 @@ public class DefaultListener implements Listener {
 		Player p = event.getPlayer();
 
 		if (event.getTo().getY() < 80) {
-			if (Minigames.optedOut.contains(p.getName())) {
+			if (Minigames.optedOut.contains(p.getName()) || Minigames.explode) {
 				p.teleport(p.getWorld().getSpawnLocation());
 			} else
 				p.damage(20);
@@ -357,7 +361,7 @@ public class DefaultListener implements Listener {
 
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (!Minigames.started || Minigames.started) {
+		if (!Minigames.started) {
 			event.blockList().clear();
 		}
 	}
