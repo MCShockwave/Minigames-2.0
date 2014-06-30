@@ -48,6 +48,8 @@ public class Core implements IMinigame {
 	// new Location(Multiworld.getGame(), 0.5, 101, -36.5, 180, 0) };
 
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		core = Game.getBlock("Core");
 		rad = Game.getInt("core-radius");
 

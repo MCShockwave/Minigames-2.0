@@ -145,7 +145,7 @@ public enum ShopItem {
 		Game.Dodgeball,
 		2,
 		true,
-		1750,
+		1250,
 		"You can absorb one dodgeball hit.",
 		"However, you have terrible accuracy."),
 	// Dogtag

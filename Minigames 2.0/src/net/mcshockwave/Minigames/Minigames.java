@@ -636,8 +636,8 @@ public class Minigames extends JavaPlugin {
 		}
 
 		sidebar = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("Sidebar", "dummy");
-		sidebar.setDisplayName("§7§l" + currentGame.name);
 		sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+		Sidebar.setDisplayName(currentGame.name);
 
 		SoundUtils.playSoundToAll(Sound.AMBIENCE_THUNDER, 1, 0.75f);
 

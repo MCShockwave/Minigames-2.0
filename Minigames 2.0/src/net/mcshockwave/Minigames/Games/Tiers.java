@@ -6,45 +6,31 @@ import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.HashMap;
 
 public class Tiers implements IMinigame {
 
-	private static final int			KILLS_NEEDED	= 2;
+	private static final int			KILLS_NEEDED	= 1;
 
-	public HashMap<GameTeam, Integer>	tier			= new HashMap<>(), buffer = new HashMap<>();
-
-	public Scoreboard					sc				= Bukkit.getScoreboardManager().getMainScoreboard();
-	public Objective					tis				= null;
+	public HashMap<GameTeam, GameScore>	tiers			= new HashMap<>();
+	public HashMap<GameTeam, Integer>	buffer			= new HashMap<>();
 
 	@Override
 	public void onGameStart() {
-		tis = sc.registerNewObjective("Tiers", "dummy");
-		tis.setDisplaySlot(DisplaySlot.SIDEBAR);
-		tis.setDisplayName("§7§lTiers");
-
 		for (GameTeam gt : Game.Tiers.teams) {
-			tier.put(gt, 0);
+			tiers.put(gt, Sidebar.getNewScore(gt.color + gt.name, 1));
 			buffer.put(gt, 0);
 			giveKit(gt);
-			getScoreFor(gt).setScore(1);
 		}
-	}
-
-	@SuppressWarnings("deprecation")
-	public Score getScoreFor(GameTeam gt) {
-		return tis.getScore(Bukkit.getOfflinePlayer(gt.color + gt.name + ":"));
 	}
 
 	public void giveKit(GameTeam t) {
@@ -63,7 +49,7 @@ public class Tiers implements IMinigame {
 			return;
 		}
 
-		Tier t = Tier.getFromId(tier.get(gt));
+		Tier t = Tier.getFromId(tiers.get(gt).getVal() - 1);
 		p.getInventory().setArmorContents(t.acons);
 		for (ItemStack it : t.cons) {
 			p.getInventory().addItem(it);
@@ -73,11 +59,7 @@ public class Tiers implements IMinigame {
 	@Override
 	public void onGameEnd() {
 		buffer.clear();
-		tier.clear();
-
-		if (tis != null) {
-			tis.unregister();
-		}
+		tiers.clear();
 	}
 
 	@Override
@@ -86,12 +68,12 @@ public class Tiers implements IMinigame {
 		GameTeam gt = e.gt;
 
 		if (gt != null) {
-			Tier t = Tier.getFromId(tier.get(gt));
+			Tier t = Tier.getFromId(tiers.get(gt).getVal() - 1);
 
 			GameTeam kgt = Game.getTeam(e.k);
 
 			Minigames.broadcastDeath(p, e.k, "%s [" + t.getId() + "] was killed", "%s [" + t.getId()
-					+ "] was killed by %s [" + Tier.getFromId(tier.get(kgt)).getId() + "]");
+					+ "] was killed by %s [" + Tier.getFromId(tiers.get(kgt).getVal() - 1).getId() + "]");
 
 			if (e.k != null) {
 				addKill(kgt);
@@ -107,10 +89,9 @@ public class Tiers implements IMinigame {
 		if (bf >= KILLS_NEEDED) {
 			bf = 0;
 
-			int ti = tier.get(gt);
+			int ti = tiers.get(gt).getVal();
 			ti++;
-			tier.remove(gt);
-			tier.put(gt, ti);
+			tiers.get(gt).setVal(ti);
 			if (ti >= Tier.values().length) {
 				Minigames.stop(gt.team);
 				return;
@@ -118,7 +99,6 @@ public class Tiers implements IMinigame {
 
 			Minigames.broadcast(gt.color, "Team %s was upgraded to Tier %s", gt.name, Tier.getFromId(ti).getId());
 			giveKit(gt);
-			getScoreFor(gt).setScore(Tier.getFromId(ti).getId());
 		}
 		buffer.remove(gt);
 		buffer.put(gt, bf);

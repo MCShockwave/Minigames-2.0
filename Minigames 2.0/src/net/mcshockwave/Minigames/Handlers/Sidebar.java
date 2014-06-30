@@ -83,6 +83,10 @@ public class Sidebar {
 		return ret;
 	}
 
+	public static void setDisplayName(String name) {
+		Minigames.sidebar.setDisplayName("§7§l" + name);
+	}
+
 	public static class GameScore {
 		String		name;
 		int			val;
@@ -151,7 +155,7 @@ public class Sidebar {
 		private Score getScore() {
 			return obj.getScore(Bukkit.getOfflinePlayer(getName()));
 		}
-		
+
 		public void remove() {
 			scores.remove(this);
 			setDisplayed(false);
