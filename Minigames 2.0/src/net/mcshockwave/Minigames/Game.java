@@ -79,7 +79,8 @@ public enum Game {
 		6,
 		false,
 		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
+		"Snowfort"),
 	Four_Corners(
 		new FourCorners(),
 		Material.STAINED_CLAY,
@@ -228,22 +229,26 @@ public enum Game {
 	public boolean			canRespawn, allowPVP;
 	public ItemStack		icon	= null;
 
+	public List<String>		maps	= new ArrayList<>();
+
 	public static Game[]	enabled	= { Game.Build_and_Fight, Game.Hot_Potato, Game.Laser_Tag, Game.Core,
 			Game.Boarding, Game.Tiers, Game.Dodgeball };
 
-	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, GameTeam[] teams) {
+	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP,
+			GameTeam[] teams, String... maps) {
 		this.teams = teams;
-		init(mclass, icon, iconData, time, canRespawn, allowPVP);
+		init(mclass, icon, iconData, time, canRespawn, allowPVP, maps);
 	}
 
-	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP) {
+	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, String... maps) {
 		// this.spawn = new Location(Multiworld.getGame(), spawn.getX() + 0.5,
 		// spawn.getY() + 0.5, spawn.getZ() + 0.5);
 		// this.radius = radius;
-		init(mclass, icon, iconData, time, canRespawn, allowPVP);
+		init(mclass, icon, iconData, time, canRespawn, allowPVP, maps);
 	}
 
-	public void init(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP) {
+	public void init(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP,
+			String... maps) {
 		name = name().replace('_', ' ');
 		this.mclass = mclass;
 		this.canRespawn = canRespawn;
@@ -252,6 +257,10 @@ public enum Game {
 		this.icon = new ItemStack(icon, 1, (byte) iconData);
 		this.allowPVP = allowPVP;
 		this.time = time;
+		this.maps.add("Default");
+		for (String s : maps) {
+			this.maps.add(s);
+		}
 	}
 
 	public boolean isTeamGame() {

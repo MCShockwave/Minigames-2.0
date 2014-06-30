@@ -1,16 +1,15 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.ItemUtils;
 
@@ -21,9 +20,13 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -31,39 +34,34 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.material.Button;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class Boarding implements IMinigame {
 
 	int						gr				= 50, yr = 50;
 
-	Score					gs, ys;
-	Objective				o;
+	GameScore				gs, ys;
 
 	HashMap<Player, Long>	lastFireTime	= new HashMap<Player, Long>();
 	private final int		reloadTime		= 10;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
 		Game g = Game.getInstance(this);
-		gr = g.teams[1].team.getSize() * 5;
-		yr = g.teams[0].team.getSize() * 5;
+		int rein = Math.min(g.teams[0].team.getSize() * 5, g.teams[1].team.getSize() * 5);
+		gr = rein;
+		yr = rein;
 
-		Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
-		o = s.registerNewObjective("Reinforcements", "dummy");
-		o.setDisplayName(ChatColor.AQUA + "Reinforcements");
-		gs = o.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Green"));
-		gs.setScore(gr);
-		ys = o.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + "Yellow"));
-		ys.setScore(yr);
-		o.setDisplaySlot(DisplaySlot.SIDEBAR);
+		gs = Sidebar.getNewScore("§aReinforcements", gr);
+		ys = Sidebar.getNewScore("§eReinforcements", yr);
 
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
@@ -78,6 +76,7 @@ public class Boarding implements IMinigame {
 		pi.addItem(ItemMetaUtils.setItemName(new ItemStack(Material.IRON_SWORD), ChatColor.RESET + "Steel Sword"));
 		pi.addItem(ItemMetaUtils.setItemName(new ItemStack(Material.IRON_AXE), ChatColor.RESET + "Musket"));
 		pi.setItem(8, new ItemStack(Material.SULPHUR, 2));
+		pi.setItem(7, ItemMetaUtils.setItemName(new ItemStack(Material.BUCKET), "§bFire Extinguisher"));
 		if (Minigames.hasItem(p, ShopItem.Buccaneer)) {
 			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, 0));
 			p.setAllowFlight(true);
@@ -86,7 +85,6 @@ public class Boarding implements IMinigame {
 
 	@Override
 	public void onGameEnd() {
-		o.unregister();
 		lastFireTime.clear();
 	}
 
@@ -173,6 +171,7 @@ public class Boarding implements IMinigame {
 		final Player p = event.getPlayer();
 		Action a = event.getAction();
 		ItemStack it = p.getItemInHand();
+		Block b = event.getClickedBlock();
 
 		if (it != null && it.getType() == Material.IRON_AXE && a.name().contains("RIGHT_CLICK")) {
 			event.setCancelled(true);
@@ -209,16 +208,87 @@ public class Boarding implements IMinigame {
 				p.playSound(p.getLocation(), Sound.CLICK, 1, 1);
 			}
 		}
+
+		if (Minigames.alivePlayers.contains(p.getName()) && a == Action.RIGHT_CLICK_BLOCK && b != null
+				&& b.getType() == Material.STONE_BUTTON) {
+			Button btn = (Button) b.getState().getData();
+			BlockFace rel = btn.getAttachedFace();
+			final Block wl = b.getRelative(rel);
+			if (wl.getType() == Material.WOOL && wl.getData() == 5) {
+				wl.setData((byte) 15);
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+					public void run() {
+						wl.setData((byte) 5);
+					}
+				}, 600);
+
+				Vector vel = new Vector(0, 0.9, rel.getModZ() * 2);
+
+				Location ch = wl.getLocation();
+				ch.add(new Vector(0, 0, rel.getModZ() * 2));
+				int check = 10;
+				for (int i = -check; i <= check; i++) {
+					Location cur = ch.clone().add(i, 0, 0);
+					if (cur.getBlock().getType() == Material.COAL_BLOCK) {
+						TNTPrimed tnt = (TNTPrimed) cur.getWorld().spawnEntity(cur.clone().add(0, 0, rel.getModZ()),
+								EntityType.PRIMED_TNT);
+						tnt.setFuseTicks(40);
+						double spr = 0.2;
+						Vector velSpr = vel.clone().add(
+								new Vector(rand.nextGaussian() * spr, rand.nextGaussian(), rand.nextGaussian() * spr));
+						tnt.setVelocity(velSpr);
+						tnt.setFireTicks(Integer.MAX_VALUE);
+						tnt.setIsIncendiary(true);
+
+						cur.getWorld().playSound(cur, Sound.WITHER_SHOOT, 10, 2);
+					}
+				}
+			}
+		}
+
+		if (Minigames.alivePlayers.contains(p.getName()) && a.name().contains("RIGHT_CLICK") && it != null
+				&& it.getType() == Material.BUCKET) {
+			Location[] bs = rayCast(p.getEyeLocation(), p.getLocation().getDirection(), 500, true);
+			final Location tl = bs[bs.length - 1];
+			int count = 0;
+			for (final Location l : bs) {
+				count++;
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+					public void run() {
+						PacketUtils.playParticleEffect(ParticleEffect.EXPLODE, l, 0, 0.01f, 2);
+					}
+				}, count);
+			}
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				public void run() {
+					int rad = 2;
+					PacketUtils.playParticleEffect(ParticleEffect.DRIP_WATER, tl, rad, 0F, 50);
+					tl.getWorld().playEffect(tl, Effect.EXTINGUISH, 0);
+					for (int x = tl.getBlockX() - rad; x < tl.getBlockX() + rad; x++) {
+						for (int y = tl.getBlockY() - rad; y < tl.getBlockY() + rad; y++) {
+							for (int z = tl.getBlockZ() - rad; z < tl.getBlockZ() + rad; z++) {
+								Block b = tl.getWorld().getBlockAt(x, y, z);
+								if (b.getType() == Material.FIRE) {
+									b.setType(Material.AIR);
+								}
+							}
+						}
+					}
+				}
+			}, count);
+		}
 	}
+
+	public static final Material[]	nobreak	= { Material.IRON_BLOCK, Material.DOUBLE_STEP, Material.IRON_FENCE };
 
 	public void setReinforcements(GameTeam gt, int set) {
 		if (gt.color == ChatColor.YELLOW) {
 			yr = set;
-			ys.setScore(set);
+			ys.setVal(set);
 		}
 		if (gt.color == ChatColor.GREEN) {
 			gr = set;
-			gs.setScore(set);
+			gs.setVal(set);
 		}
 		List<Integer> display = Arrays.asList(new Integer[] { 50, 40, 30, 20, 15, 10, 5, 4, 3, 2, 1, 0 });
 		if (display.contains(set)) {
@@ -257,5 +327,24 @@ public class Boarding implements IMinigame {
 		if (p.getGameMode() != GameMode.CREATIVE && p.isFlying() && Minigames.alivePlayers.contains(p.getName())) {
 			p.setFlying(false);
 		}
+	}
+
+	public Location[] rayCast(Location start, Vector vec, int distance, boolean grav) {
+		ArrayList<Location> cast = new ArrayList<>();
+		Location s = start.clone();
+		Vector v = vec.clone();
+
+		for (int i = 0; i < distance; i++) {
+			s = s.add(v);
+			if (grav) {
+				v.add(new Vector(0, -0.025F, 0));
+			}
+			if (!s.getBlock().getType().isTransparent()) {
+				break;
+			}
+			cast.add(s.clone());
+		}
+
+		return cast.toArray(new Location[0]);
 	}
 }

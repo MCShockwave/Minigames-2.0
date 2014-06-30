@@ -45,7 +45,9 @@ public class MGC implements CommandExecutor {
 				p.teleport(Bukkit.getWorld(args[1]).getSpawnLocation());
 			}
 			if (args[0].equalsIgnoreCase("loadworld")) {
-				Minigames.resetGameWorld(Game.valueOf(args[1]));
+				Game g = Game.valueOf(args[1]);
+				String map = g.maps.get(0);
+				Minigames.resetGameWorld(g, map);
 			}
 		}
 		return false;

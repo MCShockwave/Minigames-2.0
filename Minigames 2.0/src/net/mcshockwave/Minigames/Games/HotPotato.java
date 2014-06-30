@@ -1,13 +1,11 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,17 +16,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class HotPotato implements IMinigame {
 
-	List<Player>			potPl	= new ArrayList<Player>();
+	List<Player>						potPl	= new ArrayList<Player>();
 
-	HashMap<Item, Player>	thrPo	= new HashMap<Item, Player>();
+	HashMap<Item, Player>				thrPo	= new HashMap<Item, Player>();
+
+	public HashMap<String, GameScore>	hp		= new HashMap<>();
 
 	@Override
 	public void onGameStart() {
@@ -40,6 +44,26 @@ public class HotPotato implements IMinigame {
 				selectNewPlayer(p, null);
 			} else {
 				i--;
+			}
+		}
+
+		for (Player p : Minigames.getOptedIn()) {
+			updateHP(p);
+		}
+	}
+
+	public void updateHP(Player p) {
+		if (hp.containsKey(p.getName())) {
+			hp.get(p.getName()).setVal((int) p.getHealth());
+		} else {
+			hp.put(p.getName(), Sidebar.getNewScore("§o" + p.getName(), (int) p.getHealth()));
+		}
+	}
+
+	public void updateHPForAll() {
+		for (String n : hp.keySet()) {
+			if (Minigames.alivePlayers.contains(n) && Bukkit.getPlayer(n) != null) {
+				updateHP(Bukkit.getPlayer(n));
 			}
 		}
 	}
@@ -55,6 +79,8 @@ public class HotPotato implements IMinigame {
 			selectNewPlayer(Game.getRandomPlayer(), e.p);
 			e.p.setFireTicks(0);
 		}
+
+		hp.get(e.p.getName()).remove();
 	}
 
 	public void selectNewPlayer(Player p, Player old) {
@@ -141,11 +167,14 @@ public class HotPotato implements IMinigame {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event.getCause() == DamageCause.FIRE_TICK) {
 			event.setDamage(2f);
+		}
+		if (event.getEntity() instanceof Player) {
+			updateHP((Player) event.getEntity());
 		}
 	}
 }

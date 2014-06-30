@@ -46,6 +46,8 @@ public class Dodgeball implements IMinigame {
 	ArrayList<Player>	canBeHit	= new ArrayList<>();
 
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		for (Player p : Minigames.getOptedIn()) {
 			if (Minigames.hasItem(p, ShopItem.Athlete)) {
 				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10000000, 1));

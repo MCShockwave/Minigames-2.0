@@ -18,6 +18,8 @@ import net.mcshockwave.Minigames.Commands.TeamSelect;
 import net.mcshockwave.Minigames.Commands.UpsiesCommand;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.PreGame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Shop.ShopListener;
 import net.mcshockwave.Minigames.Shop.ShopUtils;
@@ -71,6 +73,7 @@ public class Minigames extends JavaPlugin {
 	public static Game						gameBefore		= null;
 	public static Game						currentGame		= null;
 	public static boolean					gameForced		= false;
+	public static String					currentMap		= null;
 
 	public static boolean					countingDown	= false, started = false, canOpenShop = false;
 
@@ -82,6 +85,8 @@ public class Minigames extends JavaPlugin {
 	public static HashMap<Player, ShopItem>	usedNoPay		= new HashMap<Player, ShopItem>();
 
 	public static HashMap<Player, GameTeam>	selectedTeam	= new HashMap<>();
+
+	public static Objective					sidebar			= null;
 
 	public void onEnable() {
 		ins = this;
@@ -179,15 +184,6 @@ public class Minigames extends JavaPlugin {
 									}
 								}
 								canOpenShop = true;
-
-								Game.getLocation("lobby").getChunk().load();
-								if (currentGame.isTeamGame()) {
-									for (GameTeam gt : currentGame.teams) {
-										Game.getSpawn(gt).getChunk().load();
-									}
-								} else
-									Game.getFFASpawn().getChunk().load();
-
 							}
 							if (b == 15) {
 								for (Method m : currentGame.mclass.getClass().getMethods()) {
@@ -200,7 +196,23 @@ public class Minigames extends JavaPlugin {
 								}
 							}
 							if (b == 10) {
-								resetGameWorld(currentGame);
+								currentMap = currentGame.maps.get(rand.nextInt(currentGame.maps.size()));
+
+								resetGameWorld(currentGame, currentMap);
+
+								broadcast("Map chosen: %s", "§l" + currentMap);
+							}
+							if (b == 5) {
+								try {
+									Game.getLocation("lobby").getChunk().load();
+									if (currentGame.isTeamGame()) {
+										for (GameTeam gt : currentGame.teams) {
+											Game.getSpawn(gt).getChunk().load();
+										}
+									} else
+										Game.getFFASpawn().getChunk().load();
+								} catch (Exception e) {
+								}
 							}
 							if (b <= 5) {
 								SoundUtils.playSoundToAll(Sound.ORB_PICKUP, 1, (b * 2) / 5);
@@ -227,7 +239,7 @@ public class Minigames extends JavaPlugin {
 			case BLUE:
 				return Color.BLUE;
 			case GREEN:
-				return Color.GREEN;
+				return Color.LIME;
 			case YELLOW:
 				return Color.YELLOW;
 			case WHITE:
@@ -254,6 +266,85 @@ public class Minigames extends JavaPlugin {
 			currentGame.mclass.onGameEnd();
 		}
 
+		if (sidebar != null && sidebar.isModifiable()) {
+			sidebar.unregister();
+		}
+		Sidebar.clearScores();
+
+		if (winner != null) {
+			String winName = null;
+			ChatColor winColor = ChatColor.GOLD;
+			if (winner instanceof Player) {
+				final Player win = (Player) winner;
+				winName = win.getName();
+
+				final String name = currentGame.name;
+				final int points = pointsOnWin;
+
+				Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+					public void run() {
+						PointsUtils.addPoints(win, points, "winning " + name, true);
+						win.playSound(win.getLocation(), Sound.LEVEL_UP, 1, 1);
+						Statistics.incrWins(win.getName(), true);
+					}
+				}, 20);
+				for (final Player p2 : getOptedIn()) {
+					Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+						public void run() {
+							if (p2 != win) {
+								p2.playSound(p2.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
+							}
+						}
+					}, 20l);
+				}
+			}
+			if (winner instanceof Team) {
+				final Team win = (Team) winner;
+				winName = ChatColor.stripColor(win.getDisplayName());
+
+				if (Game.getTeam(win) != null) {
+					winColor = Game.getTeam(win).color;
+				}
+
+				for (OfflinePlayer op : win.getPlayers()) {
+					if (op instanceof Player) {
+						final Player w = (Player) op;
+
+						final String name = currentGame.name;
+						final int points = pointsOnWin;
+
+						Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+							public void run() {
+								PointsUtils.addPoints(w, points, "winning " + name, true);
+								w.playSound(w.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
+								Statistics.incrWins(w.getName(), false);
+							}
+						}, 20);
+					}
+				}
+				for (Player p : getOptedIn()) {
+					final Player p2 = p;
+					Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+						public void run() {
+							if (!win.hasPlayer(p2)) {
+								p2.playSound(p2.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
+							}
+						}
+					}, 20l);
+				}
+			}
+			if (winName != null) {
+				String has = winName.endsWith("s") ? "have" : "has";
+				broadcast(winColor, "%s " + has + " won %s!", winName, currentGame.name);
+			} else {
+				refundAll();
+				broadcast("%s has ended!", currentGame.name);
+			}
+		} else {
+			refundAll();
+			broadcast("%s has ended!", currentGame.name);
+		}
+
 		used.clear();
 
 		explode = true;
@@ -261,11 +352,13 @@ public class Minigames extends JavaPlugin {
 		util.add(20);
 		for (final Player p : getOptedIn()) {
 			util.add(1);
-			util.add(new Runnable() {
-				public void run() {
-					p.getWorld().createExplosion(p.getLocation(), 8f);
-				}
-			});
+			if (!p.getWorld().getName().equalsIgnoreCase("Lobby")) {
+				util.add(new Runnable() {
+					public void run() {
+						p.getWorld().createExplosion(p.getLocation(), 8f);
+					}
+				});
+			}
 		}
 		util.add(50);
 		util.add(new Runnable() {
@@ -293,79 +386,6 @@ public class Minigames extends JavaPlugin {
 					p.setAllowFlight(false);
 				}
 
-				if (winner != null) {
-					String winName = null;
-					ChatColor winColor = ChatColor.GOLD;
-					if (winner instanceof Player) {
-						final Player win = (Player) winner;
-						winName = win.getName();
-
-						final String name = currentGame.name;
-						final int points = pointsOnWin;
-
-						Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-							public void run() {
-								PointsUtils.addPoints(win, points, "winning " + name, true);
-								win.playSound(win.getLocation(), Sound.LEVEL_UP, 1, 1);
-								Statistics.incrWins(win.getName(), true);
-							}
-						}, 20);
-						for (Player p2 : getOptedIn()) {
-							final Player p3 = p2;
-							Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-								public void run() {
-									if (p3 != win) {
-										p3.playSound(p3.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
-									}
-								}
-							}, 20l);
-						}
-					}
-					if (winner instanceof Team) {
-						final Team win = (Team) winner;
-						winName = ChatColor.stripColor(win.getDisplayName());
-
-						if (Game.getTeam(win) != null) {
-							winColor = Game.getTeam(win).color;
-						}
-
-						for (OfflinePlayer op : win.getPlayers()) {
-							if (op instanceof Player) {
-								final Player w = (Player) op;
-
-								final String name = currentGame.name;
-								final int points = pointsOnWin;
-
-								Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-									public void run() {
-										PointsUtils.addPoints(w, points, "winning " + name, true);
-										w.playSound(w.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
-										Statistics.incrWins(w.getName(), false);
-									}
-								}, 20);
-							}
-						}
-						for (Player p : getOptedIn()) {
-							final Player p2 = p;
-							Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-								public void run() {
-									if (!win.hasPlayer(p2)) {
-										p2.playSound(p2.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
-									}
-								}
-							}, 20l);
-						}
-					}
-					if (winName != null) {
-						String has = winName.endsWith("s") ? "have" : "has";
-						broadcast(winColor, "%s " + has + " won %s!", winName, currentGame.name);
-					} else {
-						broadcast("%s has ended!", currentGame.name);
-					}
-				} else {
-					refundAll();
-					broadcast("%s has ended!", currentGame.name);
-				}
 				if (currentGame.isTeamGame()) {
 					for (GameTeam gt : currentGame.teams) {
 						if (gt.team == null)
@@ -425,7 +445,14 @@ public class Minigames extends JavaPlugin {
 		util.execute();
 	}
 
-	public static void resetGameWorld(final Game map) {
+	public static void resetGameWorld(final Game g, final String world) {
+		String map = g.name();
+
+		if (!world.equalsIgnoreCase(g.maps.get(0))) {
+			map += "-" + world;
+		}
+		final String mapname = map;
+
 		System.out.println("Deleting game world file...");
 		Multiworld.deleteWorld("Game");
 
@@ -433,7 +460,8 @@ public class Minigames extends JavaPlugin {
 			public void run() {
 				System.out.println("Copying world files...");
 
-				Multiworld.copyWorld(map.name(), "Game");
+				Multiworld.copyWorld(mapname, "Game");
+				System.out.println("Copied world " + mapname + " to Game");
 			}
 		}, 30l);
 
@@ -469,9 +497,9 @@ public class Minigames extends JavaPlugin {
 
 				System.out.println("Copying text file...");
 
-				WorldFileUtils.set("Game", WorldFileUtils.get(map.name()));
+				WorldFileUtils.set("Game", WorldFileUtils.get(mapname));
 
-				System.out.println("Done resetting world!");
+				System.out.println("Done resetting world! (name " + mapname + ")");
 			}
 		}, 80l);
 	}
@@ -602,6 +630,15 @@ public class Minigames extends JavaPlugin {
 				}
 			}
 		}
+
+		if (Bukkit.getScoreboardManager().getMainScoreboard().getObjective("Sidebar") != null) {
+			Bukkit.getScoreboardManager().getMainScoreboard().getObjective("Sidebar").unregister();
+		}
+
+		sidebar = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("Sidebar", "dummy");
+		sidebar.setDisplayName("§7§l" + currentGame.name);
+		sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+
 		SoundUtils.playSoundToAll(Sound.AMBIENCE_THUNDER, 1, 0.75f);
 
 		int time = currentGame.time;
@@ -771,7 +808,7 @@ public class Minigames extends JavaPlugin {
 			}
 		} catch (Exception e) {
 		}
-		if (de != null) {
+		if (de != null && Minigames.currentGame != null) {
 			Minigames.currentGame.mclass.onPlayerDeath(de);
 		}
 	}
@@ -787,6 +824,10 @@ public class Minigames extends JavaPlugin {
 
 			if (currentGame.isTeamGame()) {
 				Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p).removePlayer(p);
+			}
+
+			if (defaultSidebar) {
+				updateDefaultSidebar();
 			}
 
 			clearInv(p);
@@ -908,6 +949,24 @@ public class Minigames extends JavaPlugin {
 		for (Player p : used.keySet()) {
 			ShopItem u = used.get(p);
 			PointsUtils.addPoints(p, u.cost, "refund of " + u.name, false);
+		}
+	}
+
+	public static boolean						defaultSidebar	= false;
+	public static HashMap<GameTeam, GameScore>	sidebar_left	= new HashMap<>();
+
+	public static void showDefaultSidebar() {
+		defaultSidebar = true;
+		updateDefaultSidebar();
+	}
+
+	public static void updateDefaultSidebar() {
+		if (currentGame.isTeamGame()) {
+			for (GameTeam gt : currentGame.teams) {
+				sidebar_left.put(gt, Sidebar.getNewScore(gt.color + gt.name, gt.getPlayers().size()));
+			}
+		} else {
+			sidebar_left.put(null, Sidebar.getNewScore("§oPlayers Left", alivePlayers.size()));
 		}
 	}
 

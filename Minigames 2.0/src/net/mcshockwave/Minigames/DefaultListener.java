@@ -361,7 +361,7 @@ public class DefaultListener implements Listener {
 
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (!Minigames.started) {
+		if (!Minigames.started || event.getEntity().getWorld().getName().equalsIgnoreCase("Lobby")) {
 			event.blockList().clear();
 		}
 	}

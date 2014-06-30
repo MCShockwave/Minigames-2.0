@@ -8,6 +8,8 @@ import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,10 +24,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.BlockIterator;
 
 import java.util.ArrayList;
@@ -38,13 +36,10 @@ public class LaserTag implements IMinigame {
 
 	private int			startp		= 100;
 
-	Scoreboard			s;
-	Score				yscore, gscore;
-	Objective			o;
+	GameScore			yscore, gscore;
 
 	ArrayList<String>	cooldown	= new ArrayList<String>();
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
 		yb1 = Game.getBlock("yellow-base-1");
@@ -57,14 +52,10 @@ public class LaserTag implements IMinigame {
 		yb2.setType(Material.REDSTONE_LAMP_OFF);
 		gb1.setType(Material.REDSTONE_LAMP_OFF);
 		gb2.setType(Material.REDSTONE_LAMP_OFF);
-		s = Bukkit.getScoreboardManager().getMainScoreboard();
-		o = s.registerNewObjective("Points", "dummy");
-		o.setDisplayName(ChatColor.LIGHT_PURPLE + "Points Left");
-		gscore = o.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Green"));
-		yscore = o.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + "Yellow"));
-		gscore.setScore(startp);
-		yscore.setScore(startp);
-		o.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+		yscore = Sidebar.getNewScore("§ePoints Left", startp);
+		gscore = Sidebar.getNewScore("§aPoints Left", startp);
+
 		for (Player p : Minigames.getOptedIn()) {
 			giveItems(p);
 		}
@@ -72,7 +63,6 @@ public class LaserTag implements IMinigame {
 
 	@Override
 	public void onGameEnd() {
-		o.unregister();
 		cooldown.clear();
 	}
 
@@ -270,10 +260,10 @@ public class LaserTag implements IMinigame {
 
 	private void setLives(GameTeam gt, int set) {
 		if (gt.color == ChatColor.YELLOW) {
-			yscore.setScore(set);
+			yscore.setVal(set);
 		}
 		if (gt.color == ChatColor.GREEN) {
-			gscore.setScore(set);
+			gscore.setVal(set);
 		}
 		List<Integer> nums = Arrays.asList(new Integer[] { 150, 100, 75, 50, 25, 10, 5, 4, 3, 2, 1, 0 });
 		if (nums.contains(set)) {
@@ -283,9 +273,9 @@ public class LaserTag implements IMinigame {
 
 	private int getLives(GameTeam gt) {
 		if (gt.color == ChatColor.YELLOW) {
-			return yscore.getScore();
+			return yscore.getVal();
 		} else if (gt.color == ChatColor.GREEN) {
-			return gscore.getScore();
+			return gscore.getVal();
 		}
 		return 0;
 	}
