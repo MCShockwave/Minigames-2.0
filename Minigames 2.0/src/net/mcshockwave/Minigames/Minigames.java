@@ -458,6 +458,11 @@ public class Minigames extends JavaPlugin {
 
 			System.out.println("Deleting game world file...");
 			Multiworld.deleteWorld("Game");
+			
+			if (Multiworld.getGame() != null) {
+				resetGameWorld(g, world);
+				return;
+			}
 
 			Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 				public void run() {

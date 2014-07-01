@@ -351,7 +351,7 @@ public class DefaultListener implements Listener {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
 
-		if (event.getTo().getY() < event.getTo().getWorld().getSpawnLocation().getY() - 40) {
+		if (event.getTo().getY() < 50) {
 			if (Minigames.optedOut.contains(p.getName()) || Minigames.explode) {
 				p.teleport(p.getWorld().getSpawnLocation());
 			} else
@@ -361,7 +361,8 @@ public class DefaultListener implements Listener {
 
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (!Minigames.started || event.getEntity().getWorld().getName().equalsIgnoreCase("Lobby")) {
+		if (!Minigames.started || event.getEntity() != null
+				&& event.getEntity().getWorld().getName().equalsIgnoreCase("Lobby")) {
 			event.blockList().clear();
 		}
 	}

@@ -1,6 +1,8 @@
 package net.mcshockwave.Minigames.Games;
 
 import net.mcshockwave.MCS.MCShockwave;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
 import net.mcshockwave.MCS.Utils.SchedulerUtils;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
@@ -25,9 +27,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -50,6 +52,8 @@ public class Siege implements IMinigame {
 	public GameScore	ghp			= null;
 
 	int					startHealth	= 50;
+
+	public BukkitTask	btc			= null;
 
 	@Override
 	public void onGameStart() {
@@ -90,6 +94,40 @@ public class Siege implements IMinigame {
 			}
 		}, 20l, 10l);
 
+		btc = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			public void run() {
+				for (FallingBlock fb : catapult) {
+					if (fb.isDead() || !fb.isValid()) {
+						continue;
+					}
+
+					fb.getWorld().playSound(fb.getLocation(), Sound.FIZZ, 4, 1);
+
+					PacketUtils.playParticleEffect(ParticleEffect.FLAME, fb.getLocation(), 0, 0.05f, 4);
+					PacketUtils.playParticleEffect(ParticleEffect.FIREWORKS_SPARK, fb.getLocation(), 0, 0.05f, 4);
+
+					if (fb.getTicksLived() < 10) {
+						continue;
+					}
+
+					int[] ch = { -2, -1, 0, 1, 2 };
+
+					for (int x : ch) {
+						for (int y : ch) {
+							for (int z : ch) {
+								Block b = fb.getLocation().getBlock().getRelative(x, y, z);
+								if (b.getType() != Material.AIR) {
+									explode(fb.getLocation().getBlock(), fb);
+									catapult.remove(fb);
+									fb.remove();
+								}
+							}
+						}
+					}
+				}
+			}
+		}, 1, 1);
+
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
 		}
@@ -104,8 +142,15 @@ public class Siege implements IMinigame {
 
 	@Override
 	public void onGameEnd() {
-		yv.remove();
-		gv.remove();
+		try {
+			yv.remove();
+		} catch (Exception e) {
+		}
+		try {
+			gv.remove();
+		} catch (Exception e) {
+		}
+		btc.cancel();
 		bt.cancel();
 	}
 
@@ -233,10 +278,11 @@ public class Siege implements IMinigame {
 						fb.setDropItem(false);
 						fb.setFireTicks(Integer.MAX_VALUE);
 
-						Vector vel = new Vector(-rot.getModX() * 2, 0.8, -rot.getModZ() * 2);
-						double spr = 0.2;
+						Vector vel = new Vector(-rot.getModX() * 2, 1.1, -rot.getModZ() * 2);
+						double spr = 0.4;
 						Vector velSpr = vel.clone().add(
-								new Vector(rand.nextGaussian() * spr, rand.nextGaussian(), rand.nextGaussian() * spr));
+								new Vector(rand.nextGaussian() * spr, rand.nextGaussian() * (spr / 4), rand
+										.nextGaussian() * spr));
 
 						fb.setVelocity(velSpr);
 
@@ -285,24 +331,25 @@ public class Siege implements IMinigame {
 		}
 	}
 
-	ArrayList<FallingBlock>	catapult	= new ArrayList<>();
+	public static ArrayList<FallingBlock>	catapult	= new ArrayList<>();
+
+	public void explode(Block b, FallingBlock cr) {
+		if (!catapult.contains(cr)) {
+			return;
+		}
+
+		Location l = b.getLocation();
+		l.getWorld().createExplosion(l, 6);
+	}
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-		if (event.getTo() == Material.COBBLESTONE && catapult.contains(event.getEntity())) {
-			event.setCancelled(true);
-			Block b = event.getBlock();
-
-			Location l = b.getLocation();
-			l.getWorld().createExplosion(l, 8);
-
-			for (int i = 0; i < 30; i++) {
-				FallingBlock fb = l.getWorld().spawnFallingBlock(l, Material.DIRT, (byte) 0);
-				fb.setVelocity(Vector.getRandom().add(new Vector(0, 1, 0)));
-			}
-
-			event.getEntity().remove();
+	public void onEntityExplode(EntityExplodeEvent event) {
+		for (Block b : event.blockList()) {
+			FallingBlock fb = b.getWorld().spawnFallingBlock(b.getLocation(),
+					b.getType() == Material.GRASS ? Material.DIRT : b.getType(), (byte) 0);
+			fb.setDropItem(false);
+			fb.setVelocity(Vector.getRandom().multiply(2).subtract(Vector.getRandom()).add(new Vector(0, 0.5, 0)));
 		}
 	}
 

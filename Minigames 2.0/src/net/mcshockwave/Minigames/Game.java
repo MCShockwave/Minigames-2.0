@@ -55,8 +55,7 @@ public enum Game {
 		0,
 		8,
 		false,
-		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
+		true),
 	Brawl(
 		new Brawl(),
 		Material.STICK,
@@ -232,7 +231,7 @@ public enum Game {
 	public List<String>		maps	= new ArrayList<>();
 
 	public static Game[]	enabled	= { Game.Build_and_Fight, Game.Hot_Potato, Game.Laser_Tag, Game.Core,
-			Game.Boarding, Game.Tiers, Game.Dodgeball, Game.Siege };
+			Game.Boarding, Game.Tiers, Game.Dodgeball, Game.Siege, Game.Airships };
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP,
 			GameTeam[] teams, String... maps) {
