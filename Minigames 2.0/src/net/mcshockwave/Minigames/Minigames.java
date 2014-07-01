@@ -266,8 +266,11 @@ public class Minigames extends JavaPlugin {
 			currentGame.mclass.onGameEnd();
 		}
 
-		if (sidebar != null && sidebar.isModifiable()) {
-			sidebar.unregister();
+		try {
+			if (sidebar != null) {
+				sidebar.unregister();
+			}
+		} catch (Exception e) {
 		}
 		Sidebar.clearScores();
 
@@ -347,19 +350,14 @@ public class Minigames extends JavaPlugin {
 
 		used.clear();
 
+		for (Player p : getOptedIn()) {
+			p.setAllowFlight(true);
+		}
+
 		explode = true;
 		SchedulerUtils util = SchedulerUtils.getNew();
 		util.add(20);
-		for (final Player p : getOptedIn()) {
-			util.add(1);
-			if (!p.getWorld().getName().equalsIgnoreCase("Lobby")) {
-				util.add(new Runnable() {
-					public void run() {
-						p.getWorld().createExplosion(p.getLocation(), 8f);
-					}
-				});
-			}
-		}
+		Multiworld.getGame().createExplosion(Multiworld.getGame().getSpawnLocation(), 5);
 		util.add(50);
 		util.add(new Runnable() {
 			public void run() {
@@ -376,6 +374,8 @@ public class Minigames extends JavaPlugin {
 		util.add(40);
 		util.add(new Runnable() {
 			public void run() {
+				defaultSidebar = false;
+
 				explode = false;
 				TeleportUtils.spread(new Location(Multiworld.getLobby(), 0, 103, 0), 5,
 						getOptedIn().toArray(new Player[0]));
@@ -445,66 +445,86 @@ public class Minigames extends JavaPlugin {
 		util.execute();
 	}
 
+	public static boolean	gameWorldDone	= false;
+
 	public static void resetGameWorld(final Game g, final String world) {
-		String map = g.name();
+		try {
+			String map = g.name();
 
-		if (!world.equalsIgnoreCase(g.maps.get(0))) {
-			map += "-" + world;
-		}
-		final String mapname = map;
-
-		System.out.println("Deleting game world file...");
-		Multiworld.deleteWorld("Game");
-
-		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-			public void run() {
-				System.out.println("Copying world files...");
-
-				Multiworld.copyWorld(mapname, "Game");
-				System.out.println("Copied world " + mapname + " to Game");
+			if (!world.equalsIgnoreCase(g.maps.get(0))) {
+				map += "-" + world;
 			}
-		}, 30l);
+			final String mapname = map;
 
-		Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-			public void run() {
-				System.out.println("Saving all worlds...");
+			System.out.println("Deleting game world file...");
+			Multiworld.deleteWorld("Game");
 
-				for (World w : Bukkit.getWorlds()) {
-					w.save();
+			Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+				public void run() {
+					System.out.println("Copying world files...");
+
+					Multiworld.copyWorld(mapname, "Game");
+					System.out.println("Copied world " + mapname + " to Game");
 				}
+			}, 30l);
 
-				System.out.println("Loading arena world...");
+			Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+				public void run() {
+					System.out.println("Saving all worlds...");
 
-				World w = new WorldCreator("Game").type(WorldType.FLAT).createWorld();
-
-				System.out.println("Setting gamerules...");
-
-				String[] gmrls = { "doDaylightCycle:false", "doMobSpawning:false", "doMobLoot:false",
-						"keepInventory:true", "doTileDrops:false" };
-				w.setTime(5000);
-				for (String s : gmrls) {
-					String[] spl = s.split(":");
-					w.setGameRuleValue(spl[0], spl[1]);
-				}
-
-				System.out.println("Butchering....");
-
-				for (Entity e : w.getEntities()) {
-					if (e instanceof LivingEntity && !(e instanceof Player)) {
-						e.remove();
+					for (World w : Bukkit.getWorlds()) {
+						w.save();
 					}
+
+					System.out.println("Loading arena world...");
+
+					World w = new WorldCreator("Game").type(WorldType.FLAT).createWorld();
+
+					System.out.println("Setting gamerules...");
+
+					String[] gmrls = { "doDaylightCycle:false", "doMobSpawning:false", "doMobLoot:false",
+							"keepInventory:true", "doTileDrops:false" };
+					w.setTime(5000);
+					for (String s : gmrls) {
+						String[] spl = s.split(":");
+						w.setGameRuleValue(spl[0], spl[1]);
+					}
+
+					System.out.println("Butchering....");
+
+					for (Entity e : w.getEntities()) {
+						if (e instanceof LivingEntity && !(e instanceof Player)) {
+							e.remove();
+						}
+					}
+
+					System.out.println("Copying text file...");
+
+					WorldFileUtils.set("Game", WorldFileUtils.get(mapname));
+
+					System.out.println("Done resetting world! (name " + mapname + ")");
+
+					gameWorldDone = true;
 				}
-
-				System.out.println("Copying text file...");
-
-				WorldFileUtils.set("Game", WorldFileUtils.get(mapname));
-
-				System.out.println("Done resetting world! (name " + mapname + ")");
-			}
-		}, 80l);
+			}, 80l);
+		} catch (Exception e) {
+			gameWorldDone = false;
+			resetGameWorld(g, world);
+		}
 	}
 
 	public static void start() {
+		if (!gameWorldDone) {
+			broadcast("Loading map...");
+			Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+				public void run() {
+					start();
+				}
+			}, 20);
+			return;
+		}
+
+		gameWorldDone = false;
 		resetScoreboard();
 
 		countingDown = false;
@@ -948,7 +968,9 @@ public class Minigames extends JavaPlugin {
 	public static void refundAll() {
 		for (Player p : used.keySet()) {
 			ShopItem u = used.get(p);
-			PointsUtils.addPoints(p, u.cost, "refund of " + u.name, false);
+			if (!ShopUtils.hasPermaItem(p, u)) {
+				PointsUtils.addPoints(p, u.cost, "refund of " + u.name, false);
+			}
 		}
 	}
 

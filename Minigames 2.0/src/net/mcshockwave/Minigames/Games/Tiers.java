@@ -92,12 +92,12 @@ public class Tiers implements IMinigame {
 			int ti = tiers.get(gt).getVal();
 			ti++;
 			tiers.get(gt).setVal(ti);
-			if (ti >= Tier.values().length) {
+			if (ti > Tier.values().length) {
 				Minigames.stop(gt.team);
 				return;
 			}
 
-			Minigames.broadcast(gt.color, "Team %s was upgraded to Tier %s", gt.name, Tier.getFromId(ti).getId());
+			Minigames.broadcast(gt.color, "Team %s was upgraded to Tier %s", gt.name, Tier.getFromId(ti - 1).getId());
 			giveKit(gt);
 		}
 		buffer.remove(gt);

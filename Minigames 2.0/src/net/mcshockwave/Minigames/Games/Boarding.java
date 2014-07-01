@@ -30,6 +30,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
@@ -326,6 +327,15 @@ public class Boarding implements IMinigame {
 
 		if (p.getGameMode() != GameMode.CREATIVE && p.isFlying() && Minigames.alivePlayers.contains(p.getName())) {
 			p.setFlying(false);
+		}
+	}
+	
+	@EventHandler
+	public void onEntityExplode(EntityExplodeEvent event) {
+		for (Block b : event.blockList().toArray(new Block[0])) {
+			if (Arrays.asList(nobreak).contains(b.getType())) {
+				event.blockList().remove(b);
+			}
 		}
 	}
 

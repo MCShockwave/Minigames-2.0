@@ -169,12 +169,16 @@ public class HotPotato implements IMinigame {
 	}
 
 	@EventHandler
-	public void onEntityDamage(EntityDamageEvent event) {
+	public void onEntityDamage(final EntityDamageEvent event) {
 		if (event.getCause() == DamageCause.FIRE_TICK) {
 			event.setDamage(2f);
 		}
 		if (event.getEntity() instanceof Player) {
-			updateHP((Player) event.getEntity());
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				public void run() {
+					updateHP((Player) event.getEntity());					
+				}
+			}, 1);
 		}
 	}
 }

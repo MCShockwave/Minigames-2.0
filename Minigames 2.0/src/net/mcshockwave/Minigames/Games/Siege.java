@@ -1,62 +1,63 @@
 package net.mcshockwave.Minigames.Games;
 
 import net.mcshockwave.MCS.MCShockwave;
+import net.mcshockwave.MCS.Utils.SchedulerUtils;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
 import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Button;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
+import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
 
 public class Siege implements IMinigame {
 
-	Villager	yv			= null;
-	Villager	gv			= null;
+	Villager			yv			= null;
+	Villager			gv			= null;
 
-	Location	yl			= new Location(Multiworld.getGame(), 453.5, 117.5, 195, 90, 0);
-	Location	gl			= new Location(Multiworld.getGame(), 275.5, 117.5, 156, 270, 0);
+	BukkitTask			bt			= null;
 
-	BukkitTask	bt			= null;
+	public GameScore	yhp			= null;
+	public GameScore	ghp			= null;
 
-	Objective	hp			= null;
-	Score		yhealth		= null;
-	Score		ghealth		= null;
+	int					startHealth	= 50;
 
-	int			startHealth	= 50;
-
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
-		hp = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("VillagerHealth", "dummy");
-		hp.setDisplayName("§dKing Health");
-		hp.setDisplaySlot(DisplaySlot.SIDEBAR);
+		yhp = Sidebar.getNewScore("§eYellow King", startHealth);
+		ghp = Sidebar.getNewScore("§aGreen King", startHealth);
 
-		yhealth = hp.getScore(Bukkit.getOfflinePlayer("§eYellow King"));
-		yhealth.setScore(startHealth);
-
-		ghealth = hp.getScore(Bukkit.getOfflinePlayer("§aGreen King"));
-		ghealth.setScore(startHealth);
+		final Location yl = Game.getLocation("yellow-king");
+		final Location gl = Game.getLocation("green-king");
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
@@ -106,8 +107,6 @@ public class Siege implements IMinigame {
 		yv.remove();
 		gv.remove();
 		bt.cancel();
-
-		hp.unregister();
 	}
 
 	@Override
@@ -132,12 +131,12 @@ public class Siege implements IMinigame {
 			if (v == yv) {
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.YELLOW,
 						"The %s Villager has died!\n%s can no longer respawn!", "Yellow", "Yellow"));
-				yhealth.getScoreboard().resetScores(yhealth.getPlayer());
+				yhp.remove();
 			}
 			if (v == gv) {
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.GREEN,
 						"The %s Villager has died!\n%s can no longer respawn!", "Green", "Green"));
-				ghealth.getScoreboard().resetScores(ghealth.getPlayer());
+				ghp.remove();
 			}
 		}
 	}
@@ -151,7 +150,7 @@ public class Siege implements IMinigame {
 			Player d = (Player) de;
 
 			if (ee instanceof Villager) {
-				Villager v = (Villager) ee;
+				final Villager v = (Villager) ee;
 				if (v == yv && Game.getTeam(d) != null && Game.getTeam(d).color == ChatColor.YELLOW) {
 					event.setCancelled(true);
 				}
@@ -159,12 +158,16 @@ public class Siege implements IMinigame {
 					event.setCancelled(true);
 				}
 
-				if (v == yv) {
-					yhealth.setScore((int) yv.getHealth());
-				}
-				if (v == gv) {
-					ghealth.setScore((int) gv.getHealth());
-				}
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+					public void run() {
+						if (v == yv) {
+							yhp.setVal((int) yv.getHealth());
+						}
+						if (v == gv) {
+							ghp.setVal((int) gv.getHealth());
+						}
+					}
+				}, 1);
 			}
 		}
 	}
@@ -184,6 +187,122 @@ public class Siege implements IMinigame {
 				e.setTo(l);
 				MCShockwave.send(e.getPlayer(), "Do not climb the %s!", "mountains");
 			}
+		}
+	}
+
+	public String[][]	cata	= { { "XXXX#", "XXX#X", "XX#XX", "X#XXX", "#XXXX" },
+			{ "XX#XX", "X#XXX", "X#XXX", "X#XXX", "#XXXX" }, { "X#XXX", "X#XXX", "X#XXX", "X#XXX", "X#XXX" } };
+
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		final Player p = event.getPlayer();
+		Action a = event.getAction();
+		final Block b = event.getClickedBlock();
+
+		if (Minigames.alivePlayers.contains(p.getName()) && a == Action.RIGHT_CLICK_BLOCK && b != null
+				&& b.getType() == Material.STONE_BUTTON) {
+			Button btn = (Button) b.getState().getData();
+			final BlockFace rel = btn.getAttachedFace();
+			final BlockFace rot = rotate(rel);
+			final Block wl = b.getRelative(rel);
+			if (wl.getType() == Material.WOOL && wl.getData() == 5) {
+				wl.setData((byte) 15);
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+					public void run() {
+						wl.setData((byte) 5);
+						set(wl, cata[0], rel, rot);
+					}
+				}, 600);
+				wl.getWorld().playSound(wl.getLocation(), Sound.DOOR_OPEN, 10, 0);
+
+				SchedulerUtils util = SchedulerUtils.getNew();
+				for (final String[] c : cata) {
+					util.add(new Runnable() {
+						public void run() {
+							set(wl, c, rel, rot);
+						}
+					});
+					util.add(5);
+				}
+				util.add(new Runnable() {
+					public void run() {
+						Location shoot = wl.getRelative(rel.getModX(), 4, rel.getModZ()).getLocation();
+
+						FallingBlock fb = shoot.getWorld().spawnFallingBlock(shoot, Material.COBBLESTONE, (byte) 0);
+						fb.setDropItem(false);
+						fb.setFireTicks(Integer.MAX_VALUE);
+
+						Vector vel = new Vector(-rot.getModX() * 2, 0.8, -rot.getModZ() * 2);
+						double spr = 0.2;
+						Vector velSpr = vel.clone().add(
+								new Vector(rand.nextGaussian() * spr, rand.nextGaussian(), rand.nextGaussian() * spr));
+
+						fb.setVelocity(velSpr);
+
+						catapult.add(fb);
+					}
+				});
+				util.execute();
+			}
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	public void set(Block origin, String[] setTo, BlockFace rel, BlockFace rot) {
+		int x = origin.getLocation().getBlockX() + rel.getModX();
+		int y = origin.getLocation().getBlockY() + setTo.length;
+		int z = origin.getLocation().getBlockZ() + rel.getModZ();
+
+		for (int i = 0; i < setTo.length; i++) {
+			String s = setTo[i];
+			for (int i2 = 0; i2 < s.length(); i2++) {
+				Block set = origin.getWorld().getBlockAt(x + (rot.getModX() * i2), y - i - 1, z + (rot.getModZ() * i2));
+
+				char bl = s.charAt(i2);
+				if (bl == '#') {
+					set.setType(Material.WOOD);
+					set.setData((byte) 0);
+				} else {
+					set.setType(Material.AIR);
+				}
+			}
+		}
+	}
+
+	public BlockFace rotate(BlockFace bf) {
+		switch (bf) {
+			case NORTH:
+				return BlockFace.EAST;
+			case EAST:
+				return BlockFace.SOUTH;
+			case SOUTH:
+				return BlockFace.WEST;
+			case WEST:
+				return BlockFace.NORTH;
+			default:
+				return null;
+		}
+	}
+
+	ArrayList<FallingBlock>	catapult	= new ArrayList<>();
+
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+		if (event.getTo() == Material.COBBLESTONE && catapult.contains(event.getEntity())) {
+			event.setCancelled(true);
+			Block b = event.getBlock();
+
+			Location l = b.getLocation();
+			l.getWorld().createExplosion(l, 8);
+
+			for (int i = 0; i < 30; i++) {
+				FallingBlock fb = l.getWorld().spawnFallingBlock(l, Material.DIRT, (byte) 0);
+				fb.setVelocity(Vector.getRandom().add(new Vector(0, 1, 0)));
+			}
+
+			event.getEntity().remove();
 		}
 	}
 
