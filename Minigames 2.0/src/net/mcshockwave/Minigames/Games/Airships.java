@@ -78,7 +78,7 @@ public class Airships implements IMinigame {
 							&& p.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() != Material.AIR
 							&& (p.getLocation().getY() % 1) <= 0.2 && !p.isFlying()) {
 
-						p.getWorld().createExplosion(p.getLocation(), 6);
+						p.getWorld().createExplosion(p.getLocation(), 3);
 						for (int i = 0; i < 10; i++) {
 
 							Location l = LocUtils.addRand(p.getLocation(), 8, 4, 8);
