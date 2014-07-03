@@ -451,6 +451,7 @@ public class Minigames extends JavaPlugin {
 	public static void resetGameWorld(final Game g, final String world) {
 		try {
 			final String mapname = g.name() + "-" + world;
+			final String fileName = "Maps" + File.separator + mapname;
 
 			System.out.println("Deleting game world file...");
 			Multiworld.deleteWorld("Game");
@@ -464,8 +465,8 @@ public class Minigames extends JavaPlugin {
 				public void run() {
 					System.out.println("Copying world files...");
 
-					Multiworld.copyWorld("Maps" + File.separator + mapname, "Game");
-					System.out.println("Copied world " + mapname + " to Game");
+					Multiworld.copyWorld(fileName, "Game");
+					System.out.println("Copied world " + mapname + " (" + fileName + ") to Game");
 				}
 			}, 30l);
 
@@ -501,9 +502,9 @@ public class Minigames extends JavaPlugin {
 
 					System.out.println("Copying text file...");
 
-					WorldFileUtils.set("Game", WorldFileUtils.get(mapname));
+					WorldFileUtils.set("Game", WorldFileUtils.get(fileName));
 
-					System.out.println("Done resetting world! (name " + mapname + ")");
+					System.out.println("Done resetting world! (name " + mapname + ") (fileName " + fileName + ")");
 
 					gameWorldDone = true;
 				}

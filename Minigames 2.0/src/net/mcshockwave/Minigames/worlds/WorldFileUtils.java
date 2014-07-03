@@ -29,7 +29,6 @@ public class WorldFileUtils {
 			br.close();
 			fr.close();
 		} catch (Exception e) {
-			MiscUtils.printStackTrace(e);
 		}
 		return ret.toArray(new String[0]);
 	}

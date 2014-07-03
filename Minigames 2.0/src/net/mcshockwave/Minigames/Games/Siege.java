@@ -103,8 +103,8 @@ public class Siege implements IMinigame {
 
 					fb.getWorld().playSound(fb.getLocation(), Sound.FIZZ, 4, 1);
 
-					PacketUtils.playParticleEffect(ParticleEffect.FLAME, fb.getLocation(), 0, 0.05f, 4);
-					PacketUtils.playParticleEffect(ParticleEffect.FIREWORKS_SPARK, fb.getLocation(), 0, 0.05f, 4);
+					PacketUtils.playParticleEffect(ParticleEffect.FLAME, fb.getLocation(), 0.5f, 0.05f, 4);
+					PacketUtils.playParticleEffect(ParticleEffect.FIREWORKS_SPARK, fb.getLocation(), 0.5f, 0.05f, 4);
 
 					if (fb.getTicksLived() < 10) {
 						continue;
