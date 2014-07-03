@@ -64,5 +64,13 @@ public class FileElements {
 
 		return new Location(w, x, y, z, yaw, pit);
 	}
+	
+	public static boolean has(String el, World w) {
+		return has(el, w.getName());
+	}
+	
+	public static boolean has(String el, String w) {
+		return get(el, w) != null;
+	}
 
 }

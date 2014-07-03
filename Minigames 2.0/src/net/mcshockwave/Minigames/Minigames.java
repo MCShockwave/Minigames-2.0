@@ -55,6 +55,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -196,7 +197,7 @@ public class Minigames extends JavaPlugin {
 								}
 							}
 							if (b == 10) {
-								currentMap = currentGame.maps.get(rand.nextInt(currentGame.maps.size()));
+								currentMap = currentGame.maplist.get(rand.nextInt(currentGame.maplist.size()));
 
 								resetGameWorld(currentGame, currentMap);
 
@@ -449,16 +450,11 @@ public class Minigames extends JavaPlugin {
 
 	public static void resetGameWorld(final Game g, final String world) {
 		try {
-			String map = g.name();
-
-			if (!world.equalsIgnoreCase(g.maps.get(0))) {
-				map += "-" + world;
-			}
-			final String mapname = map;
+			final String mapname = g.name() + "-" + world;
 
 			System.out.println("Deleting game world file...");
 			Multiworld.deleteWorld("Game");
-			
+
 			if (Multiworld.getGame() != null) {
 				resetGameWorld(g, world);
 				return;
@@ -468,7 +464,7 @@ public class Minigames extends JavaPlugin {
 				public void run() {
 					System.out.println("Copying world files...");
 
-					Multiworld.copyWorld(mapname, "Game");
+					Multiworld.copyWorld("Maps" + File.separator + mapname, "Game");
 					System.out.println("Copied world " + mapname + " to Game");
 				}
 			}, 30l);

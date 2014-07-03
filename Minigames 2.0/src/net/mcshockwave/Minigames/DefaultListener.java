@@ -9,6 +9,7 @@ import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
 import net.mcshockwave.Minigames.Game.GameTeam;
+import net.mcshockwave.Minigames.worlds.FileElements;
 import net.mcshockwave.Minigames.worlds.Multiworld;
 import net.mcshockwave.Minigames.Commands.Force;
 import net.mcshockwave.Minigames.Commands.MgInfo;
@@ -351,7 +352,7 @@ public class DefaultListener implements Listener {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
 
-		if (event.getTo().getY() < 50) {
+		if (event.getTo().getY() < (FileElements.has("min-y", "Game") ? Game.getDouble("min-y") : 80)) {
 			if (Minigames.optedOut.contains(p.getName()) || Minigames.explode) {
 				p.teleport(p.getWorld().getSpawnLocation());
 			} else

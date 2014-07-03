@@ -46,7 +46,7 @@ public class MGC implements CommandExecutor {
 			}
 			if (args[0].equalsIgnoreCase("loadworld")) {
 				Game g = Game.valueOf(args[1]);
-				String map = g.maps.get(0);
+				String map = g.maplist.get(0);
 				Minigames.resetGameWorld(g, map);
 			}
 		}

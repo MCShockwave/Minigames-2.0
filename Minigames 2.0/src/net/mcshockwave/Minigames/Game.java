@@ -48,21 +48,26 @@ public enum Game {
 		true,
 		true,
 		new GameTeam[] { new GameTeam("Red", ChatColor.RED), new GameTeam("Blue", ChatColor.BLUE),
-				new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
+				new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
+		"Clay"),
 	Airships(
 		new Airships(),
 		Material.BOW,
 		0,
 		8,
 		false,
-		true),
+		true,
+		"Valley"),
 	Brawl(
 		new Brawl(),
 		Material.STICK,
 		0,
 		8,
 		false,
-		true),
+		true,
+		"Classic",
+		"Future",
+		"Mushroom"),
 	Build_and_Fight(
 		new BuildAndFight(),
 		Material.WOOL,
@@ -70,7 +75,8 @@ public enum Game {
 		8,
 		false,
 		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
+		"Medieval"),
 	Dodgeball(
 		new Dodgeball(),
 		Material.SNOW_BALL,
@@ -79,6 +85,7 @@ public enum Game {
 		false,
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
+		"Arena",
 		"Snowfort"),
 	Four_Corners(
 		new FourCorners(),
@@ -117,7 +124,8 @@ public enum Game {
 		10,
 		true,
 		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
+		"Airships"),
 	Village_Battle(
 		new VillageBattle(),
 		Material.MONSTER_EGG,
@@ -141,7 +149,8 @@ public enum Game {
 		0,
 		8,
 		false,
-		true),
+		true,
+		"Hell"),
 	Infection(
 		new Infection(),
 		Material.SKULL_ITEM,
@@ -157,7 +166,8 @@ public enum Game {
 		8,
 		true,
 		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
+		"Valhalla"),
 	Loot(
 		new Loot(),
 		Material.DIAMOND_CHESTPLATE,
@@ -192,7 +202,8 @@ public enum Game {
 		10,
 		true,
 		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
+		"Arena"),
 	Ghostbusters(
 		new Ghostbusters(),
 		Material.SKULL_ITEM,
@@ -209,7 +220,8 @@ public enum Game {
 		true,
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW),
-				new GameTeam("Red", ChatColor.RED), new GameTeam("Blue", ChatColor.BLUE) }),
+				new GameTeam("Red", ChatColor.RED), new GameTeam("Blue", ChatColor.BLUE) },
+		"Sandstone"),
 	Storm_The_Castle(
 		new StormTheCastle(),
 		Material.BEACON,
@@ -228,7 +240,7 @@ public enum Game {
 	public boolean			canRespawn, allowPVP;
 	public ItemStack		icon	= null;
 
-	public List<String>		maps	= new ArrayList<>();
+	public List<String>		maplist	= new ArrayList<>();
 
 	public static Game[]	enabled	= { Game.Build_and_Fight, Game.Hot_Potato, Game.Laser_Tag, Game.Core,
 			Game.Boarding, Game.Tiers, Game.Dodgeball, Game.Siege, Game.Airships };
@@ -256,9 +268,12 @@ public enum Game {
 		this.icon = new ItemStack(icon, 1, (byte) iconData);
 		this.allowPVP = allowPVP;
 		this.time = time;
-		this.maps.add("Default");
-		for (String s : maps) {
-			this.maps.add(s);
+		if (maps.length < 1) {
+			this.maplist.add("Default");
+		} else {
+			for (String s : maps) {
+				this.maplist.add(s);
+			}
 		}
 	}
 
