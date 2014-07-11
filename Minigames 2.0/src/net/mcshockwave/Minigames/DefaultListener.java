@@ -276,6 +276,7 @@ public class DefaultListener implements Listener {
 
 			if (Minigames.optedOut.contains(p.getName())) {
 				event.setCancelled(true);
+				return;
 			}
 
 			if (Minigames.started && !Minigames.alivePlayers.contains(p.getName())
