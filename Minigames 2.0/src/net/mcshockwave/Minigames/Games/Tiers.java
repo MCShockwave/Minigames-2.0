@@ -11,6 +11,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -101,6 +104,16 @@ public class Tiers implements IMinigame {
 		giveKit(p);
 	}
 
+	@EventHandler
+	public void onDamage(EntityDamageEvent e) {
+		if (e.getCause() == DamageCause.FALL && e.getEntity() instanceof Player) {
+			Player p = (Player) e.getEntity();
+			if (Minigames.getOptedIn().contains(p)) {
+				e.setCancelled(true);
+			}
+		}
+	}
+	
 	public void addKill(GameTeam gt) {
 		int bf = buffer.get(gt);
 		bf++;

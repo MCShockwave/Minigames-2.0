@@ -46,8 +46,6 @@ public class Opt implements CommandExecutor {
 			} else {
 				Minigames.send(ChatColor.DARK_AQUA, p, "Opted %s of the minigame!", "out");
 				Minigames.optedOut.add(p.getName());
-
-				p.teleport(new Location(p.getWorld(), 0, 103, 0));
 				Minigames.resetPlayer(p);
 				if (Minigames.started) {
 					Minigames.setDead(p, false);
@@ -64,6 +62,7 @@ public class Opt implements CommandExecutor {
 						MCShockwave.updateTab(p2);
 					}
 				}
+				p.teleport(new Location(p.getWorld(), 0, 103, 0));
 			}
 		}
 

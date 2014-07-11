@@ -15,6 +15,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -109,5 +111,14 @@ public class TRON implements IMinigame {
 		}
 		return 15;
 	}
-
+	
+	@EventHandler
+	public void onDamage(EntityDamageEvent e) {
+		if (e.getCause() == DamageCause.FALL && e.getEntity() instanceof Player) {
+			if (Minigames.alivePlayers.contains(((Player)e.getEntity()).getName())) {
+				e.setCancelled(true);
+			}
+		}
+	}
+	
 }
