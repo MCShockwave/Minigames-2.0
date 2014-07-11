@@ -40,8 +40,6 @@ public class LaserTag implements IMinigame {
 	private Location	gb1			= new Location(Minigames.getDefaultWorld(), -1525, 105, 2);
 	private Location	gb2			= new Location(Minigames.getDefaultWorld(), -1525, 105, -2);
 
-	private int			startp		= 100;
-
 	Scoreboard			s;
 	Score				yscore, gscore;
 	Objective			o;
@@ -51,11 +49,20 @@ public class LaserTag implements IMinigame {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
+		int startp = 0;
 		cooldown.clear();
 		yb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
 		yb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
 		gb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
 		gb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
+		
+		int pint = Minigames.getOptedIn().size() * 5;
+		if (pint > 100) {
+			startp = 100;
+		} else {
+			startp = pint;
+		}
+		
 		s = Bukkit.getScoreboardManager().getMainScoreboard();
 		o = s.registerNewObjective("Points", "dummy");
 		o.setDisplayName(ChatColor.LIGHT_PURPLE + "Points Left");
