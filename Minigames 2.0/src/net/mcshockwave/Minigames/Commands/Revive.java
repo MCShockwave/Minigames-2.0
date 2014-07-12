@@ -34,7 +34,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class Revive implements CommandExecutor {
-
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender s, Command c, String l, String[] a) {
@@ -46,8 +46,14 @@ public class Revive implements CommandExecutor {
 			Player p = Bukkit.getPlayerExact(a[0]);
 			Game cg = Minigames.currentGame;
 			if (cg.isTeamGame() && a.length > 1) {
-				GameTeam team = getTeamFromString(a[1], cg);
-				boolean valid = checkTeam(team, cg);
+				GameTeam team = cg.getTeam(a[1]);
+				boolean valid = false;
+				for (GameTeam t : cg.teams) {
+					if (team.name == t.name) {
+						valid = true;
+						break;
+					}
+				}
 				if (!valid) {
 					s.sendMessage(ChatColor.RED + "The team " + a[1] + " is not valid!");
 					return true;
@@ -152,24 +158,6 @@ public class Revive implements CommandExecutor {
 					p.teleport(Game.Spleef.spawn);
 				}
 				s.sendMessage(ChatColor.GREEN + "Sucess!");
-			}
-		}
-		return false;
-	}
-
-	private GameTeam getTeamFromString(String s, Game g) {
-		for (GameTeam gteam : g.teams) {
-			if (s.equalsIgnoreCase(gteam.name)) {
-				return gteam;
-			}
-		}
-		return null;
-	}
-
-	private boolean checkTeam(GameTeam t, Game g) {
-		for (GameTeam gt : g.teams) {
-			if (gt == t) {
-				return true;
 			}
 		}
 		return false;
