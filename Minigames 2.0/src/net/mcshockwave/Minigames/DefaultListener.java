@@ -35,6 +35,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -225,7 +226,14 @@ public class DefaultListener implements Listener {
 
 		}
 	}
-
+	
+	@EventHandler
+	public void onClick(InventoryClickEvent e) {
+		if (e.getWhoClicked() instanceof Player && e.getSlotType() == SlotType.CRAFTING && e.getCursor().getType() != Material.AIR) {
+			e.setCancelled(true);
+		}
+	}
+	
 	@EventHandler
 	public void onFood(FoodLevelChangeEvent event) {
 		event.setFoodLevel(20);
