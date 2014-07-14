@@ -701,6 +701,7 @@ public class Minigames extends JavaPlugin {
 	}
 
 	public static void spectate(Player p) {
+		Minigames.milkPlayer(p);
 		for (Player p2 : Bukkit.getOnlinePlayers()) {
 			if (p2 != p) {
 				if (alivePlayers.contains(p2.getName())) {

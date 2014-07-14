@@ -286,6 +286,11 @@ public class DefaultListener implements Listener {
 				event.setCancelled(true);
 				return;
 			}
+			
+			if (Minigames.deadPlayers.contains(p.getName())) {
+				event.setCancelled(true);
+				return;
+			}
 
 			if (Minigames.started && !Minigames.alivePlayers.contains(p.getName())
 					&& !Minigames.deadPlayers.contains(p.getName())) {
