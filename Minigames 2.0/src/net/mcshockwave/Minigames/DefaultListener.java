@@ -84,6 +84,7 @@ public class DefaultListener implements Listener {
 			public void run() {
 				Minigames.resetPlayer(p);
 				if (Minigames.started) {
+					Minigames.deadPlayers.add(p.getName());
 					Minigames.spectate(p);
 				}
 			}
