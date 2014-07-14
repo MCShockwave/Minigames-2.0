@@ -227,14 +227,14 @@ public class DefaultListener implements Listener {
 
 		}
 	}
-	
+
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
-		if (e.getWhoClicked() instanceof Player && e.getSlotType() == SlotType.CRAFTING && e.getCursor().getType() != Material.AIR) {
+		if (e.getSlotType() == SlotType.CRAFTING && e.getCursor().getType() != Material.AIR) {
 			e.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler
 	public void onFood(FoodLevelChangeEvent event) {
 		event.setFoodLevel(20);
@@ -287,7 +287,7 @@ public class DefaultListener implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-			
+
 			if (Minigames.deadPlayers.contains(p.getName())) {
 				event.setCancelled(true);
 				return;

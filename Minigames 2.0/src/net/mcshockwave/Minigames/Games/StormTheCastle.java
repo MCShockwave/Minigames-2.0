@@ -179,7 +179,8 @@ public class StormTheCastle implements IMinigame {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		GameTeam t = Game.getTeam(e.getPlayer());
-		if (t == Game.Storm_The_Castle.getTeam("Knights") && beaconPlace.distance(e.getPlayer().getLocation()) <= 1) {//&& e.getTo().add(0, -1, 0).getBlock().getType() == Material.GOLD_BLOCK) {
+		if (t == Game.Storm_The_Castle.getTeam("Knights")
+				&& beaconPlace.distanceSquared(e.getPlayer().getLocation().add(-0.5, -0.5, -0.5)) <= 1.5) {
 			e.setTo(e.getFrom());
 			Minigames.send(e.getPlayer(), "Do not walk over the %s!", "gold block");
 		}

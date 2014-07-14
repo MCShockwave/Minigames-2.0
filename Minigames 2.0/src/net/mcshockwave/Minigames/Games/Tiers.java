@@ -105,15 +105,12 @@ public class Tiers implements IMinigame {
 	}
 
 	@EventHandler
-	public void onDamage(EntityDamageEvent e) {
-		if (e.getCause() == DamageCause.FALL && e.getEntity() instanceof Player) {
-			Player p = (Player) e.getEntity();
-			if (Minigames.getOptedIn().contains(p)) {
-				e.setCancelled(true);
-			}
+	public void onEntityDamage(EntityDamageEvent event) {
+		if (event.getCause() == DamageCause.FALL) {
+			event.setCancelled(true);
 		}
 	}
-	
+
 	public void addKill(GameTeam gt) {
 		int bf = buffer.get(gt);
 		bf++;
