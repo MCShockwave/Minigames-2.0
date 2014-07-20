@@ -61,16 +61,7 @@ public class StormTheCastle implements IMinigame {
 								i.remove();
 							}
 						}, 20l);
-
-						PotionEffectType[] buffs = { PotionEffectType.SPEED, PotionEffectType.DAMAGE_RESISTANCE,
-								PotionEffectType.INCREASE_DAMAGE };
-						for (PotionEffectType pet : buffs) {
-							if (pet == PotionEffectType.SPEED) {
-								p.addPotionEffect(new PotionEffect(pet, 100, 1));
-							} else {
-								p.addPotionEffect(new PotionEffect(pet, 100, 0));
-							}
-						}
+						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5, 1));
 					}
 				}
 			}
@@ -126,10 +117,10 @@ public class StormTheCastle implements IMinigame {
 			pi.setBoots(new ItemStack(Material.IRON_BOOTS));
 			pi.addItem(new ItemStack(Material.IRON_SWORD));
 		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
-			pi.setHelmet(new ItemStack(Material.CHAINMAIL_HELMET));
-			pi.setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
-			pi.setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
-			pi.setBoots(new ItemStack(Material.CHAINMAIL_BOOTS));
+			pi.setHelmet(new ItemStack(Material.LEATHER_HELMET));
+			pi.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
+			pi.setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+			pi.setBoots(new ItemStack(Material.LEATHER_BOOTS));
 			pi.addItem(new ItemStack(Material.STONE_AXE));
 		}
 	}
