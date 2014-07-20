@@ -1,9 +1,5 @@
 package net.mcshockwave.Minigames;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
 import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.Currency.LevelUtils;
@@ -20,7 +16,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -54,8 +49,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
-import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
-import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import java.util.Random;
 
 public class DefaultListener implements Listener {
 
@@ -361,26 +355,7 @@ public class DefaultListener implements Listener {
 			}
 		}
 	}
-	
-	@EventHandler
-	public void onHit(EntityDamageByEntityEvent e) {
-		if (e.getDamager() instanceof Arrow && e.getEntity() instanceof Player) {
-			final Player p = (Player) e.getEntity();
-			
-			final WrapperPlayServerEntityMetadata wm = new WrapperPlayServerEntityMetadata();
-			WrappedWatchableObject ww = new WrappedWatchableObject(9, (byte) 0);
-			List<WrappedWatchableObject> lwo = Arrays.asList(ww);
-			wm.setEntityMetadata(lwo);
-			wm.setEntityId(p.getEntityId());
-			
-			Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
-				public void run() {
-					wm.sendPacket(p);
-				}
-			}, 1L);
-		}
-	}
-	
+
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
