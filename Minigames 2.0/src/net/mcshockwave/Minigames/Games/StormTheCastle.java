@@ -61,7 +61,7 @@ public class StormTheCastle implements IMinigame {
 								i.remove();
 							}
 						}, 20l);
-						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5, 1));
+						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 4, 1));
 					}
 				}
 			}
