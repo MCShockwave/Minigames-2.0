@@ -1,5 +1,6 @@
 package net.mcshockwave.Minigames.Games;
 
+import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.LocUtils;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Game.GameTeam;
@@ -13,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -61,7 +63,8 @@ public class StormTheCastle implements IMinigame {
 								i.remove();
 							}
 						}, 20l);
-						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 4, 1));
+						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10, 1));
+						p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10, 0));
 					}
 				}
 			}
@@ -118,10 +121,10 @@ public class StormTheCastle implements IMinigame {
 			pi.addItem(new ItemStack(Material.IRON_SWORD));
 		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
 			pi.setHelmet(new ItemStack(Material.LEATHER_HELMET));
-			pi.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
-			pi.setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+			pi.setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
+			pi.setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
 			pi.setBoots(new ItemStack(Material.LEATHER_BOOTS));
-			pi.addItem(new ItemStack(Material.STONE_AXE));
+			pi.addItem(ItemMetaUtils.addEnchantment(new ItemStack(Material.STONE_AXE), Enchantment.DAMAGE_ALL, 0));
 		}
 	}
 
