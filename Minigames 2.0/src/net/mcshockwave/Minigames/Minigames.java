@@ -518,7 +518,11 @@ public class Minigames extends JavaPlugin {
 		timer.add(Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 			public void run() {
 				Minigames.broadcast(ChatColor.GREEN, "Times up! Ending %s!", "game");
-				stop(null);
+				if (Minigames.currentGame == Game.Storm_The_Castle) {
+					stop(Game.Storm_The_Castle.getTeam("Knights").team);
+				} else {
+					stop(null);
+				}
 			}
 		}, time * 1200));
 	}
