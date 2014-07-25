@@ -11,6 +11,7 @@ import net.mcshockwave.Minigames.Utils.PointsUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -169,6 +171,12 @@ public class StormTheCastle implements IMinigame {
 			}
 		}
 	}
+	
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent e) {
+		  if(!e.getWhoClicked().getGameMode().equals(GameMode.CREATIVE))
+		   e.setCancelled(true);
+		 }
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
