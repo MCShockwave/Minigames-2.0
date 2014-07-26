@@ -38,14 +38,15 @@ import org.bukkit.util.Vector;
 
 public class StormTheCastle implements IMinigame {
 
-	Location				beaconPlace		= new Location(Minigames.getDefaultWorld(), 2578, 106, -3);
+	Location beaconPlace = new Location(Minigames.getDefaultWorld(), 2578, 106,
+			-3);
 
-	BukkitTask				holders			= null;
+	BukkitTask holders = null;
 
-	public static final int	BEACONS_NEEDED	= 4;
+	public static final int BEACONS_NEEDED = 4;
 
-	public static Objective	neededObj		= null;
-	public static Score		needed			= null;
+	public static Objective neededObj = null;
+	public static Score needed = null;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -55,18 +56,24 @@ public class StormTheCastle implements IMinigame {
 		}
 		holders = new BukkitRunnable() {
 			public void run() {
-				for (Player p : Game.Storm_The_Castle.getTeam("Barbarians").getPlayers()) {
+				for (Player p : Game.Storm_The_Castle.getTeam("Barbarians")
+						.getPlayers()) {
 					if (p.getInventory().contains(Material.BEACON)) {
-						final Item i = p.getWorld().dropItem(p.getEyeLocation(), new ItemStack(Material.BEACON));
+						final Item i = p.getWorld().dropItem(
+								p.getEyeLocation(),
+								new ItemStack(Material.BEACON));
 						i.setPickupDelay(Short.MAX_VALUE);
 						i.setVelocity(new Vector(0, 0.5, 0));
-						Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-							public void run() {
-								i.remove();
-							}
-						}, 20l);
-						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10, 1));
-						p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10, 0));
+						Bukkit.getScheduler().runTaskLater(plugin,
+								new Runnable() {
+									public void run() {
+										i.remove();
+									}
+								}, 20l);
+						p.addPotionEffect(new PotionEffect(
+								PotionEffectType.SPEED, 10, 1));
+						p.addPotionEffect(new PotionEffect(
+								PotionEffectType.DAMAGE_RESISTANCE, 10, 0));
 					}
 				}
 			}
@@ -93,18 +100,22 @@ public class StormTheCastle implements IMinigame {
 		Player p = e.p;
 		GameTeam gt = Game.getTeam(p);
 		if (gt == Game.Storm_The_Castle.getTeam("Knights")) {
-			p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(Material.BEACON));
-			Minigames.broadcastDeath(p, e.k, "%s killed themselves and dropped a beacon!",
+			p.getWorld().dropItemNaturally(p.getLocation(),
+					new ItemStack(Material.BEACON));
+			Minigames.broadcastDeath(p, e.k,
+					"%s killed themselves and dropped a beacon!",
 					"%s was killed by %s and dropped a beacon!");
 			giveItems(p);
 		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
 			if (p.getInventory().contains(Material.BEACON)) {
-				Minigames.broadcastDeath(p, e.k, "%s killed themselves and lost a beacon",
+				Minigames.broadcastDeath(p, e.k,
+						"%s killed themselves and lost a beacon",
 						"%s was killed by %s and lost a beacon");
 			}
 			giveItems(p);
 		} else {
-			Minigames.broadcastDeath(p, e.k, "%s killed themselves", "%s was killed by %s");
+			Minigames.broadcastDeath(p, e.k, "%s killed themselves",
+					"%s was killed by %s");
 			giveItems(p);
 		}
 	}
@@ -126,7 +137,8 @@ public class StormTheCastle implements IMinigame {
 			pi.setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
 			pi.setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
 			pi.setBoots(new ItemStack(Material.LEATHER_BOOTS));
-			pi.addItem(ItemMetaUtils.addEnchantment(new ItemStack(Material.STONE_AXE), Enchantment.DAMAGE_ALL, 0));
+			pi.addItem(ItemMetaUtils.addEnchantment(new ItemStack(
+					Material.STONE_AXE), Enchantment.DAMAGE_ALL, 0));
 		}
 	}
 
@@ -137,10 +149,14 @@ public class StormTheCastle implements IMinigame {
 		if (gt == Game.Storm_The_Castle.getTeam("Knights")) {
 			e.setCancelled(true);
 			e.getItem().remove();
-			Minigames.broadcast(ChatColor.GOLD, "A %s was recovered by the knights!", "beacon");
-		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians") && !p.getInventory().contains(Material.BEACON)) {
-			Minigames.broadcast(ChatColor.GOLD, p.getName() + " has picked up a %s!", "beacon");
-			Minigames.send(p, "You have a %s! Go place it on the %s to win!", "beacon", "gold block");
+			Minigames.broadcast(ChatColor.GOLD,
+					"A %s was recovered by the knights!", "beacon");
+		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")
+				&& !p.getInventory().contains(Material.BEACON)) {
+			Minigames.broadcast(ChatColor.GOLD, p.getName()
+					+ " has picked up a %s!", "beacon");
+			Minigames.send(p, "You have a %s! Go place it on the %s to win!",
+					"beacon", "gold block");
 		}
 	}
 
@@ -149,11 +165,13 @@ public class StormTheCastle implements IMinigame {
 		Player p = e.getPlayer();
 		Block b = e.getBlock();
 		Block against = e.getBlockAgainst();
-		if (Game.getTeam(p).name.equalsIgnoreCase("Barbarians") && LocUtils.isSame(b.getLocation(), beaconPlace)
+		if (Game.getTeam(p).name.equalsIgnoreCase("Barbarians")
+				&& LocUtils.isSame(b.getLocation(), beaconPlace)
 				&& against.getType() == Material.GOLD_BLOCK) {
-			Minigames.broadcast(ChatColor.RED, "%s placed a beacon!", p.getName());
-			PointsUtils.addPoints(p, Game.Storm_The_Castle.getTeam("Knights").getPlayers().size() * 50,
-					"placing a beacon", true);
+			Minigames.broadcast(ChatColor.RED, "%s placed a beacon!",
+					p.getName());
+			PointsUtils.addPoints(p, Game.Storm_The_Castle.getTeam("Knights")
+					.getPlayers().size() * 50, "placing a beacon", true);
 			needed.setScore(needed.getScore() - 1);
 			if (needed.getScore() < 1) {
 				Minigames.stop(Game.getTeam(p).team);
@@ -171,20 +189,27 @@ public class StormTheCastle implements IMinigame {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
-		  if(!e.getWhoClicked().getGameMode().equals(GameMode.CREATIVE))
-		   e.setCancelled(true);
-		 }
+		if (!e.getWhoClicked().getGameMode().equals(GameMode.CREATIVE))
+			e.setCancelled(true);
+	}
+
+	Location knightSpawn = new Location(Minigames.getDefaultWorld(), 2570, 105,
+			-3);
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		GameTeam t = Game.getTeam(e.getPlayer());
 		if (t == Game.Storm_The_Castle.getTeam("Knights")
-				&& beaconPlace.distanceSquared(e.getPlayer().getLocation().add(-0.5, -0.5, -0.5)) <= 1.5) {
+				&& beaconPlace.distanceSquared(e.getPlayer().getLocation()
+						.add(-0.5, -0.5, -0.5)) <= 1.5) {
 			e.setTo(e.getFrom());
-			Minigames.send(e.getPlayer(), "Do not walk over the %s!", "gold block");
+			Minigames.send(e.getPlayer(), "Do not walk over the %s!",
+					"gold block");
+			Player p = e.getPlayer();
+			p.teleport(knightSpawn);
 		}
 	}
 }
