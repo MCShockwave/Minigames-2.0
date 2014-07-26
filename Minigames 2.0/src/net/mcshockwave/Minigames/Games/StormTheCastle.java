@@ -205,11 +205,9 @@ public class StormTheCastle implements IMinigame {
 		if (t == Game.Storm_The_Castle.getTeam("Knights")
 				&& beaconPlace.distanceSquared(e.getPlayer().getLocation()
 						.add(-0.5, -0.5, -0.5)) <= 1.5) {
-			e.setTo(e.getFrom());
+			e.setTo(knightSpawn);
 			Minigames.send(e.getPlayer(), "Do not walk over the %s!",
 					"gold block");
-			Player p = e.getPlayer();
-			p.teleport(knightSpawn);
 		}
 	}
 }
