@@ -70,8 +70,7 @@ public class StormTheCastle implements IMinigame {
 										i.remove();
 									}
 								}, 20l);
-						p.addPotionEffect(new PotionEffect(
-								PotionEffectType.SPEED, 10, 1));
+						p.setWalkSpeed((float) 0.3);
 						p.addPotionEffect(new PotionEffect(
 								PotionEffectType.DAMAGE_RESISTANCE, 10, 0));
 					}
