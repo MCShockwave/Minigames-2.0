@@ -7,7 +7,6 @@ import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Utils.PointsUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -138,7 +137,7 @@ public class StormTheCastle implements IMinigame {
 			pi.setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
 			pi.setBoots(new ItemStack(Material.LEATHER_BOOTS));
 			pi.addItem(ItemMetaUtils.addEnchantment(new ItemStack(
-					Material.STONE_AXE), Enchantment.DAMAGE_ALL, 0));
+					Material.STONE_AXE), Enchantment.DAMAGE_ALL, 1));
 		}
 	}
 
@@ -170,8 +169,6 @@ public class StormTheCastle implements IMinigame {
 				&& against.getType() == Material.GOLD_BLOCK) {
 			Minigames.broadcast(ChatColor.RED, "%s placed a beacon!",
 					p.getName());
-			PointsUtils.addPoints(p, Game.Storm_The_Castle.getTeam("Knights")
-					.getPlayers().size() * 50, "placing a beacon", true);
 			needed.setScore(needed.getScore() - 1);
 			if (needed.getScore() < 1) {
 				Minigames.stop(Game.getTeam(p).team);
