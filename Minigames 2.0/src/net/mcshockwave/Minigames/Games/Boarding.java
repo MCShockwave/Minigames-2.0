@@ -229,7 +229,8 @@ public class Boarding implements IMinigame {
 				ch.add(new Vector(0, 0, rel.getModZ() * 2));
 				int check = 10;
 				for (int i = -check; i <= check; i++) {
-					Location cur = ch.clone().add(i, 0, 0);
+					boolean norsou = rel == BlockFace.NORTH || rel == BlockFace.SOUTH;
+					Location cur = ch.clone().add(norsou ? 1 : 0, 0, norsou ? 0 : 1);
 					if (cur.getBlock().getType() == Material.COAL_BLOCK) {
 						TNTPrimed tnt = (TNTPrimed) cur.getWorld().spawnEntity(cur.clone().add(0, 0, rel.getModZ()),
 								EntityType.PRIMED_TNT);
@@ -329,7 +330,7 @@ public class Boarding implements IMinigame {
 			p.setFlying(false);
 		}
 	}
-	
+
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
 		for (Block b : event.blockList().toArray(new Block[0])) {
