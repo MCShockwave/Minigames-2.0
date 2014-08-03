@@ -127,7 +127,7 @@ public class Force implements CommandExecutor {
 			}
 
 			if (!force) {
-				PointsUtils.addPoints(p2, -getCost(g), "forcing " + g.name, false);
+				PointsUtils.addPoints(p2, -getCost(g), "forcing " + g.name);
 
 				setForceTime(p2, translateLong(System.currentTimeMillis(), true) + 20);
 

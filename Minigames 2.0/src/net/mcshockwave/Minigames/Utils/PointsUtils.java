@@ -9,11 +9,8 @@ import org.bukkit.entity.Player;
 
 public class PointsUtils {
 
-	public static void addPoints(Player p, int points, String reason, boolean mult) {
+	public static void addPoints(Player p, int points, String reason) {
 		int po = getPoints(p);
-		if (mult) {
-			points *= Minigames.getMultiplier(p);
-		}
 		po += points;
 		Minigames.send(points >= 0 ? ChatColor.GREEN : ChatColor.RED, p, "%s points"
 				+ (reason != null ? " for " + reason : ""), (points >= 0 ? "+" : "") + points);

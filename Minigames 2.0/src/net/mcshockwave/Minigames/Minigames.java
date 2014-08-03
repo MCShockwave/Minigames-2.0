@@ -252,7 +252,7 @@ public class Minigames extends JavaPlugin {
 
 				Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 					public void run() {
-						PointsUtils.addPoints(win, points, "winning " + name, true);
+						PointsUtils.addPoints(win, points, "winning " + name);
 						win.playSound(win.getLocation(), Sound.LEVEL_UP, 1, 1);
 						Statistics.incrWins(win.getName(), true);
 					}
@@ -285,7 +285,7 @@ public class Minigames extends JavaPlugin {
 
 						Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 							public void run() {
-								PointsUtils.addPoints(w, points, "winning " + name, true);
+								PointsUtils.addPoints(w, points, "winning " + name);
 								w.playSound(w.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
 								Statistics.incrWins(w.getName(), false);
 							}
@@ -376,7 +376,7 @@ public class Minigames extends JavaPlugin {
 		gameForced = false;
 		canOpenShop = false;
 
-		pointsOnWin = getOptedIn().size() * (currentGame.isTeamGame() ? 10 : 20);
+		pointsOnWin = getOptedIn().size() * (currentGame.isTeamGame() ? 20 : 40);
 
 		for (Player p : getOptedIn()) {
 			for (Player p2 : getOptedIn()) {
@@ -403,11 +403,8 @@ public class Minigames extends JavaPlugin {
 		}
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			float m = getMultiplier(p);
-			sendAll(p,
-					getBroadcastMessage("%s has started!", currentGame.name),
-					getBroadcastMessage("You will earn %s" + (m > 1 ? " (" + m + "x)" : "") + " points if you win",
-							(int) (pointsOnWin * m), m));
+			sendAll(p, getBroadcastMessage("%s has started!", currentGame.name),
+					getBroadcastMessage("You will earn %s points if you win", pointsOnWin));
 
 			p.setHealth(20);
 		}
@@ -497,8 +494,8 @@ public class Minigames extends JavaPlugin {
 		SoundUtils.playSoundToAll(Sound.AMBIENCE_THUNDER, 1, 0.75f);
 
 		int time = currentGame.time;
-		int[] secs = { 45, 30, 15, 10, 5, 4, 3, 2, 1 };
-		for (int i = time; i > 0; i--) {
+		int[] secs = { 45, 30, 15, 10, 5, 4, 3, 2, 1, 0 };
+		for (int i = time; i > 1; i--) {
 			final int i2 = time - i;
 			timer.add(Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 				public void run() {
@@ -532,31 +529,6 @@ public class Minigames extends JavaPlugin {
 	public static World getDefaultWorld() {
 		World dw = Bukkit.getWorld("McMinigames");
 		return dw;
-	}
-
-	public static float getMultiplier(Player p) {
-		if (SQLTable.hasRank(p.getName(), Rank.NETHER)) {
-			return 3;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.OBSIDIAN)) {
-			return 2.5f;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.EMERALD)) {
-			return 2.25f;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.DIAMOND)) {
-			return 2f;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.GOLD)) {
-			return 1.75f;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.IRON)) {
-			return 1.5f;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.COAL)) {
-			return 1.25f;
-		}
-		return 1;
 	}
 
 	public static String getBroadcastMessage(String mes, Object... form) {
@@ -799,7 +771,7 @@ public class Minigames extends JavaPlugin {
 	public static void refundAll() {
 		for (Player p : used.keySet()) {
 			ShopItem u = used.get(p);
-			PointsUtils.addPoints(p, u.cost, "refund of " + u.name, false);
+			PointsUtils.addPoints(p, u.cost, "refund of " + u.name);
 		}
 	}
 
