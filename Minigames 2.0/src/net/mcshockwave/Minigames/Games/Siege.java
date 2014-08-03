@@ -19,6 +19,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -36,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Button;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
@@ -347,10 +349,23 @@ public class Siege implements IMinigame {
 	public void onEntityExplode(EntityExplodeEvent event) {
 		for (Block b : event.blockList()) {
 			if (rand.nextInt(4) == 0) {
-				FallingBlock fb = b.getWorld().spawnFallingBlock(b.getLocation(),
+				final FallingBlock fb = b.getWorld().spawnFallingBlock(b.getLocation(),
 						b.getType() == Material.GRASS ? Material.DIRT : b.getType(), (byte) 0);
 				fb.setDropItem(false);
 				fb.setVelocity(Vector.getRandom().multiply(2).subtract(Vector.getRandom()).add(new Vector(0, 0.5, 0)));
+				new BukkitRunnable() {
+					public void run() {
+						for (Entity e : fb.getNearbyEntities(2, 2, 2)) {
+							if (e instanceof Damageable) {
+								((Damageable) e).damage(e.getFallDistance(), fb);
+							}
+						}
+						
+						if (!fb.isValid() || fb.isDead()) {
+							cancel();
+						}
+					}
+				}.runTaskTimer(plugin, 3, 3);
 			}
 		}
 	}
