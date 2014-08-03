@@ -346,10 +346,12 @@ public class Siege implements IMinigame {
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
 		for (Block b : event.blockList()) {
-			FallingBlock fb = b.getWorld().spawnFallingBlock(b.getLocation(),
-					b.getType() == Material.GRASS ? Material.DIRT : b.getType(), (byte) 0);
-			fb.setDropItem(false);
-			fb.setVelocity(Vector.getRandom().multiply(2).subtract(Vector.getRandom()).add(new Vector(0, 0.5, 0)));
+			if (rand.nextInt(4) == 0) {
+				FallingBlock fb = b.getWorld().spawnFallingBlock(b.getLocation(),
+						b.getType() == Material.GRASS ? Material.DIRT : b.getType(), (byte) 0);
+				fb.setDropItem(false);
+				fb.setVelocity(Vector.getRandom().multiply(2).subtract(Vector.getRandom()).add(new Vector(0, 0.5, 0)));
+			}
 		}
 	}
 
