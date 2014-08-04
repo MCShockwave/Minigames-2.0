@@ -1,7 +1,5 @@
 package net.mcshockwave.Minigames;
 
-import java.util.Random;
-
 import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.Currency.LevelUtils;
@@ -9,10 +7,10 @@ import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
 import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.worlds.FileElements;
-import net.mcshockwave.Minigames.worlds.Multiworld;
 import net.mcshockwave.Minigames.Commands.Force;
 import net.mcshockwave.Minigames.Commands.MgInfo;
+import net.mcshockwave.Minigames.worlds.FileElements;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,6 +49,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
+
+import java.util.Random;
 
 public class DefaultListener implements Listener {
 

@@ -111,7 +111,7 @@ public class Sidebar {
 			this.name = name;
 			if (isDisplayed()) {
 				int val = getVal();
-				obj.getScoreboard().resetScores(getScore().getPlayer());
+				obj.getScoreboard().resetScores(getScore().getEntry());
 				getScore().setScore(val);
 			}
 		}
@@ -142,7 +142,7 @@ public class Sidebar {
 				if (displayed) {
 					getScore().setScore(getVal());
 				} else {
-					obj.getScoreboard().resetScores(getScore().getPlayer());
+					obj.getScoreboard().resetScores(getScore().getEntry());
 				}
 
 				if (update) {
