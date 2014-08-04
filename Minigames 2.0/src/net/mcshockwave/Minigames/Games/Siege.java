@@ -131,12 +131,12 @@ public class Siege implements IMinigame {
 			if (v == yv) {
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.YELLOW,
 						"The %s Villager has died!\n%s can no longer respawn!", "Yellow", "Yellow"));
-				yhealth.getScoreboard().resetScores(yhealth.getPlayer());
+				yhealth.getScoreboard().resetScores(yhealth.getEntry());
 			}
 			if (v == gv) {
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.GREEN,
 						"The %s Villager has died!\n%s can no longer respawn!", "Green", "Green"));
-				ghealth.getScoreboard().resetScores(ghealth.getPlayer());
+				ghealth.getScoreboard().resetScores(ghealth.getEntry());
 			}
 		}
 	}

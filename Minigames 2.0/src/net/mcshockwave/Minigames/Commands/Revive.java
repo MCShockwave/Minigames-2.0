@@ -24,7 +24,6 @@ import org.bukkit.potion.PotionEffectType;
 
 public class Revive implements CommandExecutor {
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender s, Command c, String l, String[] a) {
 		if (s instanceof Player && SQLTable.hasRank(((Player) s).getName(), Rank.MOD)) {
