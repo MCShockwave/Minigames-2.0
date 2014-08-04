@@ -287,7 +287,7 @@ public class Minigames extends JavaPlugin {
 
 				Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 					public void run() {
-						PointsUtils.addPoints(win, points, "winning " + name, true);
+						PointsUtils.addPoints(win, points, "winning " + name);
 						win.playSound(win.getLocation(), Sound.LEVEL_UP, 1, 1);
 						Statistics.incrWins(win.getName(), true);
 					}
@@ -319,7 +319,7 @@ public class Minigames extends JavaPlugin {
 
 						Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 							public void run() {
-								PointsUtils.addPoints(w, points, "winning " + name, true);
+								PointsUtils.addPoints(w, points, "winning " + name);
 								w.playSound(w.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
 								Statistics.incrWins(w.getName(), false);
 							}
@@ -534,7 +534,7 @@ public class Minigames extends JavaPlugin {
 		gameForced = false;
 		canOpenShop = false;
 
-		pointsOnWin = getOptedIn().size() * (currentGame.isTeamGame() ? 10 : 20);
+		pointsOnWin = getOptedIn().size() * (currentGame.isTeamGame() ? 20 : 40);
 
 		for (Player p : getOptedIn()) {
 			for (Player p2 : getOptedIn()) {
@@ -561,11 +561,9 @@ public class Minigames extends JavaPlugin {
 		}
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			float m = getMultiplier(p);
 			sendAll(p,
 					getBroadcastMessage("%s has started!", currentGame.name),
-					getBroadcastMessage("You will earn %s" + (m > 1 ? " (" + m + "x)" : "") + " points if you win",
-							(int) (pointsOnWin * m), m));
+					getBroadcastMessage("You will earn %s points if you win", pointsOnWin));
 
 			p.setHealth(20);
 		}
@@ -696,31 +694,6 @@ public class Minigames extends JavaPlugin {
 	}
 
 	// @@@@@@@@@@@@@@@@@@@@@@@ [ OTHER ] @@@@@@@@@@@@@@@@@@@@@@@
-
-	public static float getMultiplier(Player p) {
-		if (SQLTable.hasRank(p.getName(), Rank.NETHER)) {
-			return 3;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.OBSIDIAN)) {
-			return 2.5f;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.EMERALD)) {
-			return 2.25f;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.DIAMOND)) {
-			return 2f;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.GOLD)) {
-			return 1.75f;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.IRON)) {
-			return 1.5f;
-		}
-		if (SQLTable.hasRank(p.getName(), Rank.COAL)) {
-			return 1.25f;
-		}
-		return 1;
-	}
 
 	public static String getBroadcastMessage(String mes, Object... form) {
 		return getBroadcastMessage(ChatColor.GOLD, mes, form);
@@ -971,7 +944,7 @@ public class Minigames extends JavaPlugin {
 		for (Player p : used.keySet()) {
 			ShopItem u = used.get(p);
 			if (!ShopUtils.hasPermaItem(p, u)) {
-				PointsUtils.addPoints(p, u.cost, "refund of " + u.name, false);
+				PointsUtils.addPoints(p, u.cost, "refund of " + u.name);
 			}
 		}
 	}

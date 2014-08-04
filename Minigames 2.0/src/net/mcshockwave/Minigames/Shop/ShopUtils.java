@@ -107,7 +107,7 @@ public class ShopUtils {
 				return;
 			}
 
-			PointsUtils.addPoints(p, -si.cost, "buying " + si.name, false);
+			PointsUtils.addPoints(p, -si.cost, "buying " + si.name);
 
 			Minigames.used.put(p, si);
 			Minigames.send(ChatColor.YELLOW, p, "Bought %s for %s points!", si.name, si.cost);
@@ -127,7 +127,7 @@ public class ShopUtils {
 					return;
 				}
 
-				PointsUtils.addPoints(p, -si.getPermaCost(), "buying " + si.name + " (Permanent)", false);
+				PointsUtils.addPoints(p, -si.getPermaCost(), "buying " + si.name + " (Permanent)");
 
 				Minigames.used.put(p, si);
 				Minigames.send(ChatColor.YELLOW, p, "Bought %s (Permanent) for %s points!", si.name, si.getPermaCost());
@@ -166,7 +166,7 @@ public class ShopUtils {
 	public static void refundItems() {
 		for (Player p : Minigames.used.keySet()) {
 			ShopItem si = Minigames.used.get(p);
-			PointsUtils.addPoints(p, si.cost, "refund of " + si.name, false);
+			PointsUtils.addPoints(p, si.cost, "refund of " + si.name);
 		}
 		Minigames.used.clear();
 		Minigames.usedNoPay.clear();
