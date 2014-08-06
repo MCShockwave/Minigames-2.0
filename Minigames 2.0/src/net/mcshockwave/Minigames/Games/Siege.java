@@ -357,7 +357,7 @@ public class Siege implements IMinigame {
 					public void run() {
 						for (Entity e : fb.getNearbyEntities(2, 2, 2)) {
 							if (e instanceof Damageable) {
-								((Damageable) e).damage(e.getFallDistance(), fb);
+								((Damageable) e).damage(e.getTicksLived() / 2, fb);
 							}
 						}
 						
