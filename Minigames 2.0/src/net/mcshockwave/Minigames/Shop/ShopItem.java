@@ -62,12 +62,6 @@ public enum ShopItem {
 		"Start with a wooden pole.",
 		"Hitting your opponent with this",
 		"pole will give them nausea."),
-	Panther(
-		Game.Brawl,
-		1,
-		false,
-		3000,
-		"You are granted one double jump per match."),
 	Outcast(
 		Game.Brawl,
 		2,

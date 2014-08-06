@@ -6,33 +6,28 @@ import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
-import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
 
 public class Brawl implements IMinigame {
 
 	public Player	b1		= null, b2 = null;
 
-	Location		l1		= new Location(Multiworld.getGame(), 301.5, 134, -780, 270, 0);
-	Location		l2		= new Location(Multiworld.getGame(), 306.5, 134, -780, 90, 0);
-
 	public long		invin	= 0;
+	
+	public ArrayList<String> selection = new ArrayList<>();
 
 	@Override
 	public void onGameStart() {
@@ -42,15 +37,25 @@ public class Brawl implements IMinigame {
 			}
 		}, 50);
 	}
+	
+	public void resetSelectionList() {
+		for (String s : Minigames.alivePlayers) {
+			selection.add(s);
+		}
+	}
 
 	@Override
 	public void onGameEnd() {
 		b1 = null;
 		b2 = null;
+		selection.clear();
 	}
 
 	@Override
 	public void onPlayerDeath(DeathEvent e) {
+		if (selection.contains(e.p.getName())) {
+			selection.remove(e.p.getName());
+		}
 		if (b1 == e.p || b2 == e.p) {
 			Minigames.broadcastDeath(e.p, e.k, "%s fell off the tower", "%s was knocked off the tower by %s");
 			if (e.p == b1) {
@@ -77,16 +82,25 @@ public class Brawl implements IMinigame {
 		Player ret = null;
 		int times = 0;
 		while (ret == null) {
-			ret = Minigames.getOptedIn().get(rand.nextInt(Minigames.getOptedIn().size()));
+			if (selection.size() < 1) {
+				resetSelectionList();
+			}
+			
+			String name = selection.get(rand.nextInt(selection.size()));
+			ret = Bukkit.getPlayer(name);
+			
+			if (ret == null && name != null) {
+				selection.remove(name);
+			}
 
 			if (ret == b1 || ret == b2 || !Minigames.alivePlayers.contains(ret.getName())) {
 				ret = null;
 			}
-			times++;
-			if (times > 10000) {
+			if (++times > 10000) {
 				break;
 			}
 		}
+		selection.remove(ret.getName());
 		return ret;
 	}
 
@@ -114,8 +128,8 @@ public class Brawl implements IMinigame {
 
 		invin = System.currentTimeMillis() + 3000;
 
-		b1.teleport(l1);
-		b2.teleport(l2);
+		b1.teleport(Game.getLocation("brawl-spawn-1"));
+		b2.teleport(Game.getLocation("brawl-spawn-2"));
 
 		specAbil(b1);
 		specAbil(b2);
@@ -130,9 +144,6 @@ public class Brawl implements IMinigame {
 	public void specAbil(Player p) {
 		if (Minigames.hasItem(p, ShopItem.Ruthless)) {
 			p.getInventory().addItem(ItemMetaUtils.setItemName(new ItemStack(Material.STICK), "§rWooden Pole"));
-		}
-		if (Minigames.hasItem(p, ShopItem.Panther)) {
-			p.setAllowFlight(true);
 		}
 		if (Minigames.hasItem(p, ShopItem.Outcast)) {
 			p.getInventory().addItem(new ItemStack(Material.WOOD_SWORD));
@@ -158,18 +169,6 @@ public class Brawl implements IMinigame {
 			}
 		} else {
 			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler
-	public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
-		Player p = event.getPlayer();
-
-		if (p.getGameMode() != GameMode.CREATIVE && Minigames.alivePlayers.contains(p.getName()) && event.isFlying()) {
-			event.setCancelled(true);
-			p.setVelocity(p.getVelocity().add(new Vector(0, 2, 0)));
-			p.getWorld().playSound(p.getLocation(), Sound.ENDERDRAGON_WINGS, 3, 1);
-			p.setAllowFlight(false);
 		}
 	}
 

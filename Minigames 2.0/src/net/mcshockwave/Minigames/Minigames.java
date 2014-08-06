@@ -26,6 +26,7 @@ import net.mcshockwave.Minigames.Shop.ShopUtils;
 import net.mcshockwave.Minigames.Utils.PointsUtils;
 import net.mcshockwave.Minigames.Utils.SoundUtils;
 import net.mcshockwave.Minigames.Utils.TeleportUtils;
+import net.mcshockwave.Minigames.worlds.FileElements;
 import net.mcshockwave.Minigames.worlds.Multiworld;
 import net.mcshockwave.Minigames.worlds.WorldFileUtils;
 
@@ -486,7 +487,8 @@ public class Minigames extends JavaPlugin {
 
 					String[] gmrls = { "doDaylightCycle:false", "doMobSpawning:false", "doMobLoot:false",
 							"keepInventory:true", "doTileDrops:false" };
-					w.setTime(5000);
+					w.setTime(FileElements.has("time", mapname) ? Integer.parseInt(FileElements.get("time", mapname))
+							: 5000);
 					for (String s : gmrls) {
 						String[] spl = s.split(":");
 						w.setGameRuleValue(spl[0], spl[1]);
@@ -561,8 +563,7 @@ public class Minigames extends JavaPlugin {
 		}
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			sendAll(p,
-					getBroadcastMessage("%s has started!", currentGame.name),
+			sendAll(p, getBroadcastMessage("%s has started!", currentGame.name),
 					getBroadcastMessage("You will earn %s points if you win", pointsOnWin));
 
 			p.setHealth(20);
