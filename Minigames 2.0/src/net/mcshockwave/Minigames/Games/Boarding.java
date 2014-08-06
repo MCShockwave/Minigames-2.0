@@ -229,8 +229,8 @@ public class Boarding implements IMinigame {
 				ch.add(new Vector(0, 0, rel.getModZ() * 2));
 				int check = 10;
 				for (int i = -check; i <= check; i++) {
-					boolean norsou = rel == BlockFace.NORTH || rel == BlockFace.SOUTH;
-					Location cur = ch.clone().add(norsou ? 1 : 0, 0, norsou ? 0 : 1);
+					boolean norsou = (rel == BlockFace.NORTH || rel == BlockFace.SOUTH);
+					Location cur = ch.clone().add(norsou ? i : 0, 0, norsou ? 0 : i);
 					if (cur.getBlock().getType() == Material.COAL_BLOCK) {
 						TNTPrimed tnt = (TNTPrimed) cur.getWorld().spawnEntity(cur.clone().add(0, 0, rel.getModZ()),
 								EntityType.PRIMED_TNT);

@@ -53,9 +53,6 @@ public class Brawl implements IMinigame {
 
 	@Override
 	public void onPlayerDeath(DeathEvent e) {
-		if (selection.contains(e.p.getName())) {
-			selection.remove(e.p.getName());
-		}
 		if (b1 == e.p || b2 == e.p) {
 			Minigames.broadcastDeath(e.p, e.k, "%s fell off the tower", "%s was knocked off the tower by %s");
 			if (e.p == b1) {
@@ -68,6 +65,9 @@ public class Brawl implements IMinigame {
 					selectRandoms();
 				}
 			}, 2);
+		}
+		if (selection.contains(e.p.getName())) {
+			selection.remove(e.p.getName());
 		}
 	}
 
