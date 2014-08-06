@@ -356,11 +356,12 @@ public class Siege implements IMinigame {
 				new BukkitRunnable() {
 					public void run() {
 						for (Entity e : fb.getNearbyEntities(2, 2, 2)) {
-							if (e instanceof Damageable) {
+							if (e instanceof Damageable
+									&& (e instanceof Player && Minigames.alivePlayers.contains(((Player) e).getName()) || !(e instanceof Player))) {
 								((Damageable) e).damage(e.getTicksLived() / 2, fb);
 							}
 						}
-						
+
 						if (!fb.isValid() || fb.isDead()) {
 							cancel();
 						}
