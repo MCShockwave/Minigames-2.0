@@ -355,8 +355,9 @@ public class DefaultListener implements Listener {
 		if (event.getTo().getY() < (FileElements.has("min-y", "Game") ? Game.getDouble("min-y") : 80)) {
 			if (Minigames.optedOut.contains(p.getName()) || Minigames.explode) {
 				p.teleport(p.getWorld().getSpawnLocation());
-			} else
-				p.damage(20);
+			} else {
+				p.damage(p.getMaxHealth());
+			}
 		}
 	}
 
