@@ -10,6 +10,12 @@ public class TeleportUtils {
 	private static Random	rand	= new Random();
 
 	public static void spread(Location mid, int radius, Player... toSpread) {
+		if (radius <= 0) {
+			for (Player p : toSpread) {
+				p.teleport(mid);
+			}
+			return;
+		}
 		for (Player p : toSpread) {
 			if (p == null)
 				continue;

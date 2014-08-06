@@ -243,7 +243,7 @@ public enum Game {
 	public List<String>		maplist	= new ArrayList<>();
 
 	public static Game[]	enabled	= { Game.Build_and_Fight, Game.Hot_Potato, Game.Laser_Tag, Game.Core,
-			Game.Boarding, Game.Tiers, Game.Dodgeball, Game.Siege, Game.Airships };
+			Game.Boarding, Game.Tiers, Game.Dodgeball, Game.Siege, Game.Airships, Game.Brawl };
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP,
 			GameTeam[] teams, String... maps) {
