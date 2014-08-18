@@ -49,6 +49,9 @@ public class MGC implements CommandExecutor {
 				String map = g.maplist.get(0);
 				Minigames.resetGameWorld(g, map);
 			}
+			if (args[0].equalsIgnoreCase("updateMap")) {
+				Minigames.updateMap(args[1]);
+			}
 		}
 		return false;
 	}

@@ -57,7 +57,11 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -901,6 +905,33 @@ public class Minigames extends JavaPlugin {
 				Minigames.stop(w);
 			} else if (Minigames.alivePlayers.size() < 1) {
 				Minigames.stop(null);
+			}
+		}
+	}
+
+	public static void updateMap(String map) {
+		Authenticator.setDefault(new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication("admin", "hostserver".toCharArray());
+			}
+		});
+		InputStream is = null;
+		try {
+			URL url = new URL("http://mcsw.us/hostserver/Maps/" + map);
+			is = url.openStream();
+			byte[] buffer = new byte[1024];
+			int bytesRead = -1;
+			StringBuilder page = new StringBuilder(1024);
+			while ((bytesRead = is.read(buffer)) != -1) {
+				page.append(new String(buffer, 0, bytesRead));
+			}
+			Bukkit.broadcastMessage(page.toString());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (Exception e) {
 			}
 		}
 	}
