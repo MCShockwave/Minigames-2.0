@@ -133,7 +133,7 @@ public enum Game {
 		new Location(Minigames.getDefaultWorld(), -16, 108, 605),
 		new GameTeam[] {
 				new GameTeam("Green", ChatColor.GREEN, new Location(Minigames.getDefaultWorld(), -41, 124, 557, 270, 0)),
-				new GameTeam("Yellow", ChatColor.YELLOW, new Location(Minigames.getDefaultWorld(), 36, 121, 637, 180, 0)) }),
+				new GameTeam("Yellow", ChatColor.YELLOW, new Location(Minigames.getDefaultWorld(), 26, 121, 634, 180, 0)) }),
 	Boarding(
 		new Boarding(),
 		Material.IRON_AXE,
