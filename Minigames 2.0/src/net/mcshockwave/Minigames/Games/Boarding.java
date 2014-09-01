@@ -167,6 +167,7 @@ public class Boarding implements IMinigame {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		final Player p = event.getPlayer();

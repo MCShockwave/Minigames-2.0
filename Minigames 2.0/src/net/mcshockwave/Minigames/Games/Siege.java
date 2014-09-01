@@ -33,8 +33,8 @@ public class Siege implements IMinigame {
 	Villager	yv			= null;
 	Villager	gv			= null;
 
-	Location	yl			= new Location(Minigames.getDefaultWorld(), 453.5, 117.5, 195, 90, 0);
-	Location	gl			= new Location(Minigames.getDefaultWorld(), 275.5, 117.5, 156, 270, 0);
+	Location	yl			= new Location(Minigames.getDefaultWorld(), 453.5, 118.5, 195, 90, 0);
+	Location	gl			= new Location(Minigames.getDefaultWorld(), 275.5, 118.5, 156, 270, 0);
 
 	BukkitTask	bt			= null;
 
@@ -131,12 +131,12 @@ public class Siege implements IMinigame {
 			if (v == yv) {
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.YELLOW,
 						"The %s Villager has died!\n%s can no longer respawn!", "Yellow", "Yellow"));
-				yhealth.getScoreboard().resetScores(yhealth.getEntry());
+				yhealth.getScoreboard().resetScores(yhealth.getPlayer());
 			}
 			if (v == gv) {
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.GREEN,
 						"The %s Villager has died!\n%s can no longer respawn!", "Green", "Green"));
-				ghealth.getScoreboard().resetScores(ghealth.getEntry());
+				ghealth.getScoreboard().resetScores(ghealth.getPlayer());
 			}
 		}
 	}

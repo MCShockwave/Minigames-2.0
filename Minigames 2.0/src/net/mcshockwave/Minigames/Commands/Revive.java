@@ -31,6 +31,7 @@ public class Revive implements CommandExecutor {
 				s.sendMessage(ChatColor.RED + "Improper Syntax");
 				return true;
 			}
+			@SuppressWarnings("deprecation")
 			Player p = Bukkit.getPlayerExact(a[0]);
 			Game cg = Minigames.currentGame;
 			if (cg.isTeamGame() && a.length > 1) {
@@ -47,6 +48,9 @@ public class Revive implements CommandExecutor {
 					return true;
 				}
 				Minigames.resetPlayer(p);
+				for (Player pl : Bukkit.getOnlinePlayers()) {
+					pl.showPlayer(p);
+				}
 				Minigames.deadPlayers.remove(p.getName());
 				Minigames.alivePlayers.add(p.getName());
 				team.team.addPlayer(p);
@@ -134,9 +138,15 @@ public class Revive implements CommandExecutor {
 				} else if (cg == Game.Village_Battle) {
 					VillageBattle vb = new VillageBattle();
 					vb.startPlayer(p, team);
+				} else if (cg == Game.TRON) {
+					p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 100000000, 0));
+					p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, 2));
 				}
 			} else {
 				Minigames.resetPlayer(p);
+				for (Player pl : Bukkit.getOnlinePlayers()) {
+					pl.showPlayer(p);
+				}
 				Minigames.deadPlayers.remove(p.getName());
 				Minigames.alivePlayers.add(p.getName());
 				if (cg == Game.Brawl) {
