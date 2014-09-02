@@ -134,8 +134,9 @@ public class DefaultListener implements Listener {
 						cc = Game.getTeam(sp).color;
 					}
 
-					i.addItem(ItemMetaUtils.setItemName(new ItemStack(Material.SKULL_ITEM, 1, (short) 3),
-							cc + sp.getName()));
+					i.addItem(ItemMetaUtils.setHeadName(
+							ItemMetaUtils.setItemName(new ItemStack(Material.SKULL_ITEM, 1, (short) 3),
+									cc + sp.getName()), sp.getName()));
 				}
 			}
 			p.openInventory(i);

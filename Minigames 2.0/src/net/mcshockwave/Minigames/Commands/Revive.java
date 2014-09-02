@@ -31,8 +31,7 @@ public class Revive implements CommandExecutor {
 				s.sendMessage(ChatColor.RED + "Improper Syntax");
 				return true;
 			}
-			@SuppressWarnings("deprecation")
-			Player p = Bukkit.getPlayerExact(a[0]);
+			Player p = Bukkit.getPlayer(a[0]);
 			Game cg = Minigames.currentGame;
 			if (cg.isTeamGame() && a.length > 1) {
 				GameTeam team = cg.getTeam(a[1]);
