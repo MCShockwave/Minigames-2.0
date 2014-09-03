@@ -133,7 +133,8 @@ public enum Game {
 		new Location(Minigames.getDefaultWorld(), -16, 108, 605),
 		new GameTeam[] {
 				new GameTeam("Green", ChatColor.GREEN, new Location(Minigames.getDefaultWorld(), -41, 124, 557, 270, 0)),
-				new GameTeam("Yellow", ChatColor.YELLOW, new Location(Minigames.getDefaultWorld(), 26, 121, 634, 180, 0)) }),
+				new GameTeam("Yellow", ChatColor.YELLOW,
+						new Location(Minigames.getDefaultWorld(), 26, 121, 634, 180, 0)) }),
 	Boarding(
 		new Boarding(),
 		Material.IRON_AXE,
@@ -281,13 +282,15 @@ public enum Game {
 				new GameTeam("Knights", ChatColor.AQUA, new Location(Minigames.getDefaultWorld(), 2570, 104, -3)),
 				new GameTeam("Barbarians", ChatColor.RED, new Location(Minigames.getDefaultWorld(), 2418, 82, -3)) });
 
-	public String		name;
-	public IMinigame	mclass;
-	public GameTeam[]	teams	= null;
-	public Location		spawn	= null, lobby = null;
-	public int			radius	= -1, time;
-	public boolean		canRespawn, allowPVP;
-	public ItemStack	icon	= null;
+	public String			name;
+	public IMinigame		mclass;
+	public GameTeam[]		teams	= null;
+	public Location			spawn	= null, lobby = null;
+	public int				radius	= -1, time;
+	public boolean			canRespawn, allowPVP;
+	public ItemStack		icon	= null;
+
+	public static Game[]	broken	= { Game.Ghostbusters };
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, Location lobby,
 			GameTeam[] teams) {

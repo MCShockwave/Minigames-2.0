@@ -3,10 +3,9 @@ package net.mcshockwave.Minigames;
 import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.SQLTable.Rank;
-import net.mcshockwave.MCS.Stats.Statistics;
 import net.mcshockwave.MCS.Commands.VanishCommand;
+import net.mcshockwave.MCS.Stats.Statistics;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
-import net.mcshockwave.MCS.Utils.NametagUtils;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Commands.Force;
 import net.mcshockwave.Minigames.Commands.MGC;
@@ -50,6 +49,7 @@ import org.bukkit.scoreboard.Team;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -143,7 +143,7 @@ public class Minigames extends JavaPlugin {
 		}
 
 		currentGame = Game.values()[rand.nextInt(Game.values().length)];
-		if (currentGame == gameBefore) {
+		if (currentGame == gameBefore || Arrays.asList(Game.broken).contains(currentGame)) {
 			startCount();
 			return;
 		}
@@ -345,10 +345,6 @@ public class Minigames extends JavaPlugin {
 
 			if (SQLTable.hasRank(p.getName(), Rank.IRON)) {
 				giveHelm(p);
-			}
-
-			if (NametagUtils.isNametagHidden(p)) {
-				NametagUtils.showNametag(p);
 			}
 		}
 		for (Entity e : w.getEntities()) {

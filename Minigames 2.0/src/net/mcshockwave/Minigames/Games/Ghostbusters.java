@@ -1,7 +1,6 @@
 package net.mcshockwave.Minigames.Games;
 
 import net.mcshockwave.MCS.MCShockwave;
-import net.mcshockwave.MCS.Utils.NametagUtils;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
@@ -37,7 +36,6 @@ public class Ghostbusters implements IMinigame {
 	public void onGameStart() {
 		for (Player p : getGhosts().getPlayers()) {
 			giveKit(p, true);
-			NametagUtils.hideNametag(p);
 		}
 		for (Player p : getHumans().getPlayers()) {
 			giveKit(p, false);

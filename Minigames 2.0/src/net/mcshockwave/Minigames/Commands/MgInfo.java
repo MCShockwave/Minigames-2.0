@@ -14,6 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.util.Arrays;
+
 public class MgInfo implements CommandExecutor {
 
 	@Override
@@ -39,6 +41,11 @@ public class MgInfo implements CommandExecutor {
 			int l = Game.values().length;
 			Inventory i = Bukkit.createInventory(null, l + (9 - (l % 9)), "Info");
 			for (Game g : Game.values()) {
+				if (Arrays.asList(Game.broken).contains(g)) {
+					i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "§c" + g.name),
+							"§6Currently Broken"));
+					continue;
+				}
 				boolean hasShop = ShopUtils.getItems(g).length > 0;
 				try {
 					GameInfo.valueOf(g.name()).toString();

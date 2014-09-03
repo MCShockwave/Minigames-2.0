@@ -1,5 +1,6 @@
 package net.mcshockwave.Minigames.Commands;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import net.mcshockwave.MCS.SQLTable;
@@ -44,6 +45,12 @@ public class Force implements CommandExecutor {
 	public static Inventory getForceGame(Player p) {
 		Inventory i = Bukkit.createInventory(p, (Game.values().length + (9 - Game.values().length % 9)), "Force Games");
 		for (Game g : Game.values()) {
+			if (Arrays.asList(Game.broken).contains(g)) {
+				i.addItem(ItemMetaUtils.setLore(
+						ItemMetaUtils.setItemName(g.icon.clone(), ChatColor.GRAY + "Force: " + ChatColor.RED + g.name),
+						"", "§6Currently Broken"));
+				continue;
+			}
 			i.addItem(ItemMetaUtils.setLore(
 					ItemMetaUtils.setItemName(g.icon.clone(), ChatColor.GRAY + "Force: " + ChatColor.GOLD + g.name),
 					"", "Cost: " + getCost(g) + " points"));
@@ -90,6 +97,11 @@ public class Force implements CommandExecutor {
 		}
 
 		if (!force) {
+			if (Arrays.asList(Game.broken).contains(g)) {
+				Minigames.send(p2, "That game is currently %s!", "broken");
+				return;
+			}
+
 			if (getForceTime(p2) > translateLong(System.currentTimeMillis(), true)) {
 				p2.closeInventory();
 				Minigames.send(p2, "You have %s minutes until you can force again!",
