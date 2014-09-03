@@ -394,8 +394,8 @@ public class Minigames extends JavaPlugin {
 				}
 			}
 			alivePlayers.add(p.getName());
-			if (p.getGameMode() != GameMode.ADVENTURE) {
-				p.setGameMode(GameMode.ADVENTURE);
+			if (p.getGameMode() != GameMode.SURVIVAL) {
+				p.setGameMode(GameMode.SURVIVAL);
 			}
 			clearInv(p);
 			p.setFallDistance(0);
