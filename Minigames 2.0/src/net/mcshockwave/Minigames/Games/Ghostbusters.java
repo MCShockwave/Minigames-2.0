@@ -40,6 +40,7 @@ public class Ghostbusters implements IMinigame {
 		for (Player p : getHumans().getPlayers()) {
 			giveKit(p, false);
 		}
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),"scoreboard teams option Ghosts nametagVisibility hideForOtherTeam");
 	}
 
 	public void giveKit(Player p, boolean ghosts) {
