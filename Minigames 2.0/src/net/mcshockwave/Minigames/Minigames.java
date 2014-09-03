@@ -6,6 +6,7 @@ import net.mcshockwave.MCS.SQLTable.Rank;
 import net.mcshockwave.MCS.Stats.Statistics;
 import net.mcshockwave.MCS.Commands.VanishCommand;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.NametagUtils;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Commands.Force;
 import net.mcshockwave.Minigames.Commands.MGC;
@@ -344,6 +345,10 @@ public class Minigames extends JavaPlugin {
 
 			if (SQLTable.hasRank(p.getName(), Rank.IRON)) {
 				giveHelm(p);
+			}
+
+			if (NametagUtils.isNametagHidden(p)) {
+				NametagUtils.showNametag(p);
 			}
 		}
 		for (Entity e : w.getEntities()) {
