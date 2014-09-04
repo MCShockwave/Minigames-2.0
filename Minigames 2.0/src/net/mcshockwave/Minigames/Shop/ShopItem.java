@@ -107,7 +107,7 @@ public enum ShopItem {
 		1,
 		false,
 		2500,
-		"§c§lCurrently Broken",
+		"Â§cÂ§lCurrently Broken",
 		"Right click your ender eye to get a full",
 		"heal and teleport to a treehouse within the map.",
 		"One-time use per life"),
@@ -270,7 +270,7 @@ public enum ShopItem {
 		2,
 		true,
 		3000,
-		"Disable the enemy team’s possessing abilities",
+		"Disable the enemy team's possessing abilities",
 		" for 10 seconds!");
 
 	public String	name;

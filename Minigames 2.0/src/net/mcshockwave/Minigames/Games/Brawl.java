@@ -143,7 +143,7 @@ public class Brawl implements IMinigame {
 
 	public void specAbil(Player p) {
 		if (Minigames.hasItem(p, ShopItem.Ruthless)) {
-			p.getInventory().addItem(ItemMetaUtils.setItemName(new ItemStack(Material.STICK), "§rWooden Pole"));
+			p.getInventory().addItem(ItemMetaUtils.setItemName(new ItemStack(Material.STICK), "Â§rWooden Pole"));
 		}
 		if (Minigames.hasItem(p, ShopItem.Outcast)) {
 			p.getInventory().addItem(new ItemStack(Material.WOOD_SWORD));

@@ -84,7 +84,7 @@ public class Sidebar {
 	}
 
 	public static void setDisplayName(String name) {
-		Minigames.sidebar.setDisplayName("ง7งl" + name);
+		Minigames.sidebar.setDisplayName("ยง7ยงl" + name);
 	}
 
 	public static class GameScore {

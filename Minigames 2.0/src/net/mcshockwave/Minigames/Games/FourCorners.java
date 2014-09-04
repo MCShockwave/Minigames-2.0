@@ -62,7 +62,7 @@ public class FourCorners implements IMinigame {
 			
 			if (Minigames.hasItem(p, ShopItem.Hacker)) {
 				p.getInventory().setItem(8,
-						ItemMetaUtils.setItemName(new ItemStack(Material.NETHER_STAR), "§rRight-click to hack corner"));
+						ItemMetaUtils.setItemName(new ItemStack(Material.NETHER_STAR), "Â§rRight-click to hack corner"));
 			}
 			if (Minigames.hasItem(p, ShopItem.Virus)) {
 				final Player p2 = p;

@@ -204,7 +204,7 @@ public class Minigames extends JavaPlugin {
 
 								resetGameWorld(currentGame, currentMap);
 
-								broadcast("Map chosen: %s", "�l" + currentMap);
+								broadcast("Map chosen: %s", "§l" + currentMap);
 							}
 							if (b == 5) {
 								try {
@@ -983,7 +983,7 @@ public class Minigames extends JavaPlugin {
 				sidebar_left.put(gt, Sidebar.getNewScore(gt.color + gt.name, gt.getPlayers().size()));
 			}
 		} else {
-			sidebar_left.put(null, Sidebar.getNewScore("�oPlayers Left", alivePlayers.size()));
+			sidebar_left.put(null, Sidebar.getNewScore("§oPlayers Left", alivePlayers.size()));
 		}
 	}
 

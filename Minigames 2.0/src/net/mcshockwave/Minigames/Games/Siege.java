@@ -59,8 +59,8 @@ public class Siege implements IMinigame {
 
 	@Override
 	public void onGameStart() {
-		yhp = Sidebar.getNewScore("§eYellow King", startHealth);
-		ghp = Sidebar.getNewScore("§aGreen King", startHealth);
+		yhp = Sidebar.getNewScore("Â§eYellow King", startHealth);
+		ghp = Sidebar.getNewScore("Â§aGreen King", startHealth);
 
 		final Location yl = Game.getLocation("yellow-king");
 		final Location gl = Game.getLocation("green-king");

@@ -61,8 +61,8 @@ public class Boarding implements IMinigame {
 		gr = rein;
 		yr = rein;
 
-		gs = Sidebar.getNewScore("§aReinforcements", gr);
-		ys = Sidebar.getNewScore("§eReinforcements", yr);
+		gs = Sidebar.getNewScore("Â§aReinforcements", gr);
+		ys = Sidebar.getNewScore("Â§eReinforcements", yr);
 
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
@@ -77,7 +77,7 @@ public class Boarding implements IMinigame {
 		pi.addItem(ItemMetaUtils.setItemName(new ItemStack(Material.IRON_SWORD), ChatColor.RESET + "Steel Sword"));
 		pi.addItem(ItemMetaUtils.setItemName(new ItemStack(Material.IRON_AXE), ChatColor.RESET + "Musket"));
 		pi.setItem(8, new ItemStack(Material.SULPHUR, 2));
-		pi.setItem(7, ItemMetaUtils.setItemName(new ItemStack(Material.BUCKET), "§bFire Extinguisher"));
+		pi.setItem(7, ItemMetaUtils.setItemName(new ItemStack(Material.BUCKET), "Â§bFire Extinguisher"));
 		if (Minigames.hasItem(p, ShopItem.Buccaneer)) {
 			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, 0));
 			p.setAllowFlight(true);

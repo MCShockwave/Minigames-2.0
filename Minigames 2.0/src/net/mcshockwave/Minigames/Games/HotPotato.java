@@ -56,7 +56,7 @@ public class HotPotato implements IMinigame {
 		if (hp.containsKey(p.getName())) {
 			hp.get(p.getName()).setVal((int) p.getHealth());
 		} else {
-			hp.put(p.getName(), Sidebar.getNewScore("§o" + p.getName(), (int) p.getHealth()));
+			hp.put(p.getName(), Sidebar.getNewScore("Â§o" + p.getName(), (int) p.getHealth()));
 		}
 	}
 

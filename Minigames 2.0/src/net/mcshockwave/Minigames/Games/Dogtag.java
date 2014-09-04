@@ -61,7 +61,7 @@ public class Dogtag implements IMinigame {
 						if (id != -1) {
 							Object[] os = getNearestDogtag(p);
 							ItemStack com = p.getInventory().getItem(id);
-							ItemMetaUtils.setItemName(com, "§rPointing to: §b" + os[0]);
+							ItemMetaUtils.setItemName(com, "Â§rPointing to: Â§b" + os[0]);
 							if (os[1] != null) {
 								p.setCompassTarget((Location) os[1]);
 							} else {
@@ -182,11 +182,11 @@ public class Dogtag implements IMinigame {
 
 		if (Minigames.hasItem(p, ShopItem.Colonel)) {
 			p.getInventory().setItem(8,
-					ItemMetaUtils.setItemName(new ItemStack(Material.SULPHUR, 3), "§rRight-click to set mine"));
+					ItemMetaUtils.setItemName(new ItemStack(Material.SULPHUR, 3), "Â§rRight-click to set mine"));
 		}
 		if (Minigames.hasItem(p, ShopItem.Major)) {
 			p.getInventory().setItem(8,
-					ItemMetaUtils.setItemName(new ItemStack(Material.COMPASS), "§rPointing to: §bNothing"));
+					ItemMetaUtils.setItemName(new ItemStack(Material.COMPASS), "Â§rPointing to: Â§bNothing"));
 		}
 	}
 
