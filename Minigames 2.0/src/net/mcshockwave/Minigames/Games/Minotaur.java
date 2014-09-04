@@ -37,7 +37,7 @@ public class Minotaur implements IMinigame {
 		int maxX = Math.max(startArea.getBlockX(), endArea.getBlockX()), maxZ = Math.max(startArea.getBlockZ(),
 				endArea.getBlockZ());
 
-		int y = startArea.getBlockY();
+		int y = Game.getInt("chests-y");
 		for (int x = minX; x <= maxX; x++) {
 			for (int z = minZ; z <= maxZ; z++) {
 				Block b = Multiworld.getGame().getBlockAt(new Location(Multiworld.getGame(), x, y, z));
