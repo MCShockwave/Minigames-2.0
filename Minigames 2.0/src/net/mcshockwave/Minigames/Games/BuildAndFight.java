@@ -41,7 +41,7 @@ public class BuildAndFight implements IMinigame {
 	@Override
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
-		
+
 		BlockUtils.save(Game.getLocation("bridge-corner-1"), Game.getLocation("bridge-corner-2"), "baf-bridge", true);
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
@@ -134,6 +134,10 @@ public class BuildAndFight implements IMinigame {
 			return true;
 		}
 		if (b.getType() == Material.STAINED_CLAY) {
+			return false;
+		}
+		if (b.getType() != Material.WOOL && b.getType() != Material.STAINED_GLASS
+				&& Game.getString("indestructable").equalsIgnoreCase("true")) {
 			return false;
 		}
 		if (gt != null) {
