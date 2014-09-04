@@ -8,10 +8,10 @@ import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,33 +22,26 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class Minotaur implements IMinigame {
 
-	Material[]			chests		= { Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
-			Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, Material.WOOD_SWORD, Material.STONE_SWORD,
-			Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.IRON_CHESTPLATE };
+	Material[]			chests	= { Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS,
+			Material.LEATHER_BOOTS, Material.WOOD_SWORD, Material.STONE_SWORD, Material.IRON_SWORD,
+			Material.DIAMOND_SWORD, Material.IRON_CHESTPLATE };
 
-	public BukkitTask	refill		= null;
-
-	Location			startArea	= new Location(Multiworld.getGame(), 1039, 111, 39);
-	Location			endArea		= new Location(Multiworld.getGame(), 961, 111, -39);
+	public BukkitTask	refill	= null;
 
 	public void refillChests() {
-		int minX = Math.min(startArea.getBlockX(), endArea.getBlockX()), minZ = Math.min(startArea.getBlockZ(),
-				endArea.getBlockZ());
-		int maxX = Math.max(startArea.getBlockX(), endArea.getBlockX()), maxZ = Math.max(startArea.getBlockZ(),
-				endArea.getBlockZ());
+		for (Chunk c : Multiworld.getGame().getLoadedChunks()) {
+			for (BlockState bs : c.getTileEntities()) {
+				if (bs instanceof Chest) {
+					Chest ch = (Chest) bs;
 
-		int y = Game.getInt("chests-y");
-		for (int x = minX; x <= maxX; x++) {
-			for (int z = minZ; z <= maxZ; z++) {
-				Block b = Multiworld.getGame().getBlockAt(new Location(Multiworld.getGame(), x, y, z));
-				if (b.getType() == Material.CHEST) {
-					Chest c = (Chest) b.getState();
-
-					c.getInventory().clear();
+					ch.getBlockInventory().clear();
 
 					for (int i = 0; i < rand.nextInt(6); i++) {
-						c.getInventory().setItem(rand.nextInt(27), new ItemStack(chests[rand.nextInt(chests.length)]));
+						ch.getBlockInventory().setItem(rand.nextInt(27),
+								new ItemStack(chests[rand.nextInt(chests.length)]));
 					}
+
+					ch.update(true);
 				}
 			}
 		}
@@ -79,8 +72,6 @@ public class Minotaur implements IMinigame {
 
 	@Override
 	public void onGameStart() {
-		refillChests();
-
 		Minigames.broadcast(ChatColor.RED, "%s is the minotaur!", getMino().getName());
 
 		PlayerInventory pi = getMino().getInventory();
@@ -104,7 +95,7 @@ public class Minotaur implements IMinigame {
 				Bukkit.broadcastMessage(ChatColor.YELLOW + "Chests have been refilled!");
 				refillChests();
 			}
-		}, 600, 1200);
+		}, 100, 600);
 	}
 
 	@Override
