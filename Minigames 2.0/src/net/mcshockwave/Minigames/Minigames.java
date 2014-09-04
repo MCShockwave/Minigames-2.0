@@ -489,8 +489,6 @@ public class Minigames extends JavaPlugin {
 
 					String[] gmrls = { "doDaylightCycle:false", "doMobSpawning:false", "doMobLoot:false",
 							"keepInventory:true", "doTileDrops:false" };
-					w.setTime(FileElements.has("time", mapname) ? Integer.parseInt(FileElements.get("time", mapname))
-							: 5000);
 					for (String s : gmrls) {
 						String[] spl = s.split(":");
 						w.setGameRuleValue(spl[0], spl[1]);
@@ -661,6 +659,10 @@ public class Minigames extends JavaPlugin {
 		sidebar = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("Sidebar", "dummy");
 		sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		Sidebar.setDisplayName(currentGame.name);
+
+		if (FileElements.has("time", "Game")) {
+			Multiworld.getGame().setTime(Game.getInt("time"));
+		}
 
 		SoundUtils.playSoundToAll(Sound.AMBIENCE_THUNDER, 1, 0.75f);
 
