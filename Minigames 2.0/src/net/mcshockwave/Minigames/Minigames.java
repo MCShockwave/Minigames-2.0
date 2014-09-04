@@ -621,28 +621,28 @@ public class Minigames extends JavaPlugin {
 						break;
 					}
 				}
-				// if (currentGame == Game.Ghostbusters) {
-				// int max = getOptedIn().size() / 4 + 1;
-				// if (tid == 0 && ts[0].getPlayers().size() >= max) {
-				// tid = 1;
-				// }
-				// } else if (currentGame == Game.Infection) {
-				// int max = getOptedIn().size() > 6 ? 3 : 1;
-				// if (tid == 0 && ts[0].getPlayers().size() >= max) {
-				// tid = 1;
-				// }
-				// } else if (currentGame == Game.Minotaur) {
-				// if (ts[1].getPlayers().size() < 1) {
-				// ts[1].addPlayer(p);
-				// } else {
-				// ts[0].addPlayer(p);
-				// }
-				// } else {
-				tid++;
-				if (tid >= tsal.size()) {
-					tid = 0;
+				if (currentGame == Game.Ghostbusters) {
+					int max = getOptedIn().size() / 4 + 1;
+					if (tid == 0 && ts[0].getPlayers().size() >= max) {
+						tid = 1;
+					}
+				} else if (currentGame == Game.Infection) {
+					int max = getOptedIn().size() > 6 ? 3 : 1;
+					if (tid == 0 && ts[0].getPlayers().size() >= max) {
+						tid = 1;
+					}
+				} else if (currentGame == Game.Minotaur) {
+					if (ts[1].getPlayers().size() < 1) {
+						ts[1].addPlayer(p);
+					} else {
+						ts[0].addPlayer(p);
+					}
+				} else {
+					tid++;
+					if (tid >= tsal.size()) {
+						tid = 0;
+					}
 				}
-				// }
 			}
 		} else {
 			TeleportUtils.spread(Game.getFFASpawn(), Game.getInt("radius"), getOptedIn().toArray(new Player[0]));
