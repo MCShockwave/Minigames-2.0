@@ -43,18 +43,18 @@ public class MgInfo implements CommandExecutor {
 				try {
 					GameInfo.valueOf(g.name()).toString();
 					if (hasShop) {
-						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "§a" + g.name),
+						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "Â§a" + g.name),
 								"Click for info"));
 					} else {
-						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "§a" + g.name),
+						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "Â§a" + g.name),
 								"Click for info", "No Shop added yet!"));
 					}
 				} catch (Exception e) {
 					if (hasShop) {
-						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "§c" + g.name),
+						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "Â§c" + g.name),
 								"No Info added yet!"));
 					} else {
-						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "§c" + g.name),
+						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "Â§c" + g.name),
 								"No Info added yet!", "No Shop added yet!"));
 					}
 				}
