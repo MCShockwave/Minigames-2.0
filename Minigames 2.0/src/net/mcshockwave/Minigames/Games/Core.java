@@ -13,6 +13,7 @@ import net.mcshockwave.Minigames.worlds.Multiworld;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -49,7 +50,7 @@ public class Core implements IMinigame {
 
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
-		
+
 		core = Game.getBlock("Core");
 		rad = Game.getInt("core-radius");
 
@@ -156,10 +157,11 @@ public class Core implements IMinigame {
 
 	public void doEffect(final byte teamColor, long time) {
 		for (int c = 2; c < 16; c += 2) {
-			Block b1 = Multiworld.getGame().getBlockAt(c, 100, c);
-			Block b2 = Multiworld.getGame().getBlockAt(-c, 100, c);
-			Block b3 = Multiworld.getGame().getBlockAt(c, 100, -c);
-			Block b4 = Multiworld.getGame().getBlockAt(-c, 100, -c);
+			int y = Game.getInt("spawn-y");
+			Block b1 = Multiworld.getGame().getBlockAt(c, y, c);
+			Block b2 = Multiworld.getGame().getBlockAt(-c, y, c);
+			Block b3 = Multiworld.getGame().getBlockAt(c, y, -c);
+			Block b4 = Multiworld.getGame().getBlockAt(-c, y, -c);
 
 			final Block[] bs = { b1, b2, b3, b4 };
 
@@ -199,8 +201,10 @@ public class Core implements IMinigame {
 			return;
 		}
 		if (Minigames.getTeamsLeft().size() > 2 && coreTeam != null && gt.team == coreTeam) {
-			if (p.getLocation().distanceSquared(Game.getLocation("lobby")) <= rad * rad) {
-				p.setVelocity(LocUtils.getVelocity(Game.getLocation("lobby"), p.getLocation()).multiply(0.5));
+			Location spawn = core.getLocation().clone();
+			spawn.setY(Game.getInt("spawn-y"));
+			if (p.getLocation().distanceSquared(spawn) <= rad * rad) {
+				p.setVelocity(LocUtils.getVelocity(spawn, p.getLocation()).multiply(0.5));
 				Minigames.send(p, "You can't enter your %s until there are 2 teams left!", "Core");
 			}
 		}
