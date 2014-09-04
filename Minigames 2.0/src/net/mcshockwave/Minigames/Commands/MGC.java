@@ -54,7 +54,7 @@ public class MGC implements CommandExecutor {
 			}
 			if (args[0].equalsIgnoreCase("updateAll")) {
 				for (Game g : Game.values()) {
-					if (g.maplist.size() > 0) {
+					if (g.maplist.size() > 0 && !g.maplist.get(0).equals("Default")) {
 						for (String map : g.maplist) {
 							String mapname = g.name() + "-" + map;
 							Minigames.updateMap(mapname);
