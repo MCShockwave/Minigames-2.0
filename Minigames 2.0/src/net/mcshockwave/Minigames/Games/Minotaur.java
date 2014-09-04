@@ -75,16 +75,16 @@ public class Minotaur implements IMinigame {
 		Minigames.broadcast(ChatColor.RED, "%s is the minotaur!", getMino().getName());
 
 		PlayerInventory pi = getMino().getInventory();
-		pi.setHelmet(new ItemStack(Material.IRON_HELMET));
+		pi.setHelmet(new ItemStack(Material.DIAMOND_HELMET));
 		pi.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
 		pi.setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS));
-		pi.setBoots(new ItemStack(Material.IRON_BOOTS));
+		pi.setBoots(new ItemStack(Material.DIAMOND_BOOTS));
 		pi.setItem(0, new ItemStack(Material.DIAMOND_SWORD));
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				for (Player p : Minigames.getOptedIn()) {
-					p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 49));
+					p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 254));
 					Minigames.send(ChatColor.RED, p, "You have %s seconds of invincibility!", "30");
 				}
 			}

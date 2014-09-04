@@ -49,7 +49,9 @@ public enum Game {
 		true,
 		new GameTeam[] { new GameTeam("Red", ChatColor.RED), new GameTeam("Blue", ChatColor.BLUE),
 				new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Clay"),
+		"Clay",
+		"Impact",
+		"Urban"),
 	Airships(
 		new Airships(),
 		Material.BOW,
@@ -76,7 +78,8 @@ public enum Game {
 		false,
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Medieval"),
+		"Medieval",
+		"Cavern"),
 	Dodgeball(
 		new Dodgeball(),
 		Material.SNOW_BALL,
@@ -86,7 +89,8 @@ public enum Game {
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
 		"Arena",
-		"Snowfort"),
+		"Snowfort",
+		"Gymnasium"),
 	Four_Corners(
 		new FourCorners(),
 		Material.STAINED_CLAY,
@@ -125,7 +129,8 @@ public enum Game {
 		true,
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Airships"),
+		"Airships",
+		"Seas"),
 	Village_Battle(
 		new VillageBattle(),
 		Material.MONSTER_EGG,
@@ -150,7 +155,8 @@ public enum Game {
 		8,
 		false,
 		true,
-		"Hell"),
+		"Hell",
+		"Field"),
 	Infection(
 		new Infection(),
 		Material.SKULL_ITEM,
@@ -182,7 +188,9 @@ public enum Game {
 		8,
 		false,
 		true,
-		new GameTeam[] { new GameTeam("Humans", ChatColor.WHITE), new GameTeam("The Minotaur", ChatColor.RED) }),
+		new GameTeam[] { new GameTeam("Humans", ChatColor.WHITE), new GameTeam("The Minotaur", ChatColor.RED) },
+		"Hedge",
+		"Sewers"),
 	// Lockdown(
 	// new Lockdown(),
 	// Material.DIAMOND_BLOCK,
@@ -203,7 +211,8 @@ public enum Game {
 		true,
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Arena"),
+		"Arena",
+		"Moon"),
 	Ghostbusters(
 		new Ghostbusters(),
 		Material.SKULL_ITEM,
@@ -211,7 +220,8 @@ public enum Game {
 		10,
 		false,
 		true,
-		new GameTeam[] { new GameTeam("Ghosts", ChatColor.DARK_GRAY), new GameTeam("Humans", ChatColor.WHITE) }),
+		new GameTeam[] { new GameTeam("Ghosts", ChatColor.DARK_GRAY), new GameTeam("Humans", ChatColor.WHITE) },
+		"Mansion"),
 	Tiers(
 		new Tiers(),
 		Material.DIAMOND_SWORD,
@@ -221,7 +231,8 @@ public enum Game {
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW),
 				new GameTeam("Red", ChatColor.RED), new GameTeam("Blue", ChatColor.BLUE) },
-		"Sandstone"),
+		"Sandstone",
+		"Mines"),
 	Storm_The_Castle(
 		new StormTheCastle(),
 		Material.BEACON,
