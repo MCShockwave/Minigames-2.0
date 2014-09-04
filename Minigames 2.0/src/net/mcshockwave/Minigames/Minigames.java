@@ -51,16 +51,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -206,7 +204,7 @@ public class Minigames extends JavaPlugin {
 
 								resetGameWorld(currentGame, currentMap);
 
-								broadcast("Map chosen: %s", "§l" + currentMap);
+								broadcast("Map chosen: %s", "ï¿½l" + currentMap);
 							}
 							if (b == 5) {
 								try {
@@ -909,31 +907,21 @@ public class Minigames extends JavaPlugin {
 		}
 	}
 
-	public static void updateMap(String map) {
-		Authenticator.setDefault(new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("admin", "hostserver".toCharArray());
+	public static void updateMap(final String map) {
+		new BukkitRunnable() {
+			public void run() {
+				try {
+					URL url = new URL("http://mcsw.us/hostserver/Maps/" + map + ".zip");
+					File maps = new File("Maps/" + map);
+					File del = Unpackager.unpackArchive(url, maps);
+					Bukkit.broadcastMessage("Â§aUpdated map " + map);
+					del.delete();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					Bukkit.broadcastMessage("Â§cError updating map: " + ex.getLocalizedMessage());
+				}
 			}
-		});
-		InputStream is = null;
-		try {
-			URL url = new URL("http://mcsw.us/hostserver/Maps/" + map);
-			is = url.openStream();
-			byte[] buffer = new byte[1024];
-			int bytesRead = -1;
-			StringBuilder page = new StringBuilder(1024);
-			while ((bytesRead = is.read(buffer)) != -1) {
-				page.append(new String(buffer, 0, bytesRead));
-			}
-			Bukkit.broadcastMessage(page.toString());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (Exception e) {
-			}
-		}
+		}.runTaskAsynchronously(ins);
 	}
 
 	public static List<Team> getTeamsLeft() {
@@ -995,7 +983,7 @@ public class Minigames extends JavaPlugin {
 				sidebar_left.put(gt, Sidebar.getNewScore(gt.color + gt.name, gt.getPlayers().size()));
 			}
 		} else {
-			sidebar_left.put(null, Sidebar.getNewScore("§oPlayers Left", alivePlayers.size()));
+			sidebar_left.put(null, Sidebar.getNewScore("ï¿½oPlayers Left", alivePlayers.size()));
 		}
 	}
 
