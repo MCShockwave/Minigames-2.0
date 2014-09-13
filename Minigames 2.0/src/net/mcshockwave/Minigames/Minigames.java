@@ -8,6 +8,7 @@ import net.mcshockwave.MCS.Stats.Statistics;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Commands.Force;
+import net.mcshockwave.Minigames.Commands.InvisCommand;
 import net.mcshockwave.Minigames.Commands.MGC;
 import net.mcshockwave.Minigames.Commands.MgInfo;
 import net.mcshockwave.Minigames.Commands.Opt;
@@ -97,6 +98,7 @@ public class Minigames extends JavaPlugin {
 		getCommand("team").setExecutor(new TeamSelect());
 		getCommand("upsies").setExecutor(new UpsiesCommand());
 		getCommand("revive").setExecutor(new Revive());
+		getCommand("invis").setExecutor(new InvisCommand());
 
 		if (checkCanStart()) {
 			startCount();
