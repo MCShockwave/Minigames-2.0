@@ -108,8 +108,8 @@ public class LaserTag implements IMinigame {
 			if (cooldown.contains(e.getPlayer().getName())) {
 				return;
 			}
-			if (Game.getTeam(e.getPlayer()).spawn.distance(e.getPlayer().getLocation()) < 5) {
-				Minigames.send(e.getPlayer(), "You can not %s while in your base!", ChatColor.RED + "shoot");
+			if (Game.getTeam(e.getPlayer()).spawn.distance(e.getPlayer().getLocation()) > 47) {
+				Minigames.send(e.getPlayer(), "You can not %s while in the other team base!", ChatColor.RED + "shoot");
 				return;
 			}
 			cooldown.add(e.getPlayer().getName());
