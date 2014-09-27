@@ -42,26 +42,26 @@ public class MgInfo implements CommandExecutor {
 			Inventory i = Bukkit.createInventory(null, l + (9 - (l % 9)), "Info");
 			for (Game g : Game.values()) {
 				if (Arrays.asList(Game.broken).contains(g)) {
-					i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "§c" + g.name),
-							"§6Currently Broken"));
+					i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "¤c" + g.name),
+							"¤6Currently Broken"));
 					continue;
 				}
 				boolean hasShop = ShopUtils.getItems(g).length > 0;
 				try {
 					GameInfo.valueOf(g.name()).toString();
 					if (hasShop) {
-						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "§a" + g.name),
+						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "¤a" + g.name),
 								"Click for info"));
 					} else {
-						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "§a" + g.name),
+						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "¤a" + g.name),
 								"Click for info", "No Shop added yet!"));
 					}
 				} catch (Exception e) {
 					if (hasShop) {
-						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "§c" + g.name),
+						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "¤c" + g.name),
 								"No Info added yet!"));
 					} else {
-						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "§c" + g.name),
+						i.addItem(ItemMetaUtils.setLore(ItemMetaUtils.setItemName(g.icon.clone(), "¤c" + g.name),
 								"No Info added yet!", "No Shop added yet!"));
 					}
 				}

@@ -35,7 +35,7 @@ public class Tiers implements IMinigame {
 	public void onGameStart() {
 		tis = sc.registerNewObjective("Tiers", "dummy");
 		tis.setDisplaySlot(DisplaySlot.SIDEBAR);
-		tis.setDisplayName("§7§lTiers");
+		tis.setDisplayName("¤7¤lTiers");
 
 		for (GameTeam gt : Game.Tiers.teams) {
 			tier.put(gt, 0);

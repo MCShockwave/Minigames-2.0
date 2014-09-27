@@ -185,7 +185,7 @@ public class LaserTag implements IMinigame {
 							if (LocUtils.isSame(yb1, b.getLocation())) {
 								yb1.getBlock().setType(Material.REDSTONE_BLOCK);
 								yb2.getBlock().setType(Material.REDSTONE_BLOCK);
-								Minigames.broadcast(gt.color, "%s has hit the §e§oYellow§7 base!", p.getName());
+								Minigames.broadcast(gt.color, "%s has hit the ¤e¤oYellow¤7 base!", p.getName());
 								Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 									public void run() {
 										yb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);

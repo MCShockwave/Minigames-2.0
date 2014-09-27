@@ -78,9 +78,9 @@ public class StormTheCastle implements IMinigame {
 		Scoreboard ma = Bukkit.getScoreboardManager().getMainScoreboard();
 		neededObj = ma.registerNewObjective("Needed", "dummy");
 		neededObj.setDisplaySlot(DisplaySlot.SIDEBAR);
-		neededObj.setDisplayName("§eBeacons");
+		neededObj.setDisplayName("¤eBeacons");
 
-		needed = neededObj.getScore(Bukkit.getOfflinePlayer("§cLeft:"));
+		needed = neededObj.getScore(Bukkit.getOfflinePlayer("¤cLeft:"));
 		needed.setScore(BEACONS_NEEDED);
 	}
 
