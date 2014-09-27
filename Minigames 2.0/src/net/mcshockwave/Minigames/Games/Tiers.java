@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-
 import java.util.HashMap;
 
 public class Tiers implements IMinigame {
@@ -111,6 +111,27 @@ public class Tiers implements IMinigame {
 		}
 	}
 
+	@EventHandler
+	public void onPlayerDamageByPlayer(EntityDamageByEntityEvent e) {
+		if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) {
+			return;
+		}
+		Player p = (Player) e.getEntity();
+		Player dm = (Player) e.getDamager();
+		GameTeam pt = Game.getTeam(p);
+		GameTeam dmt = Game.getTeam(dm);
+		if (pt.team == Game.getTeam(dm).team) {
+			return;
+		}
+		if (p.getLocation().distanceSquared(pt.spawn) < 2 * 2) {
+			e.setCancelled(true);
+			Minigames.send(dm, "Do not %s!", "spawnkill");
+		} else if (dm.getLocation().distanceSquared(dmt.spawn) < 2 * 2) {
+			e.setCancelled(true);
+			Minigames.send(dm, "Do not camp you %s!", "spawn");
+		}
+	}
+	
 	public void addKill(GameTeam gt) {
 		int bf = buffer.get(gt);
 		bf++;

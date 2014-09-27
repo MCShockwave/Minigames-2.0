@@ -44,6 +44,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -303,6 +304,22 @@ public class VillageBattle implements IMinigame {
 
 				if (gt.color == cc) {
 					event.setCancelled(true);
+				}
+			} else if (event.getDamager() instanceof Arrow) {
+				Arrow a = (Arrow) event.getDamager();
+				ProjectileSource shoot = a.getShooter();
+				if (shoot instanceof Player) {
+					Player shooter = (Player) a.getShooter();
+					
+					Villager v = (Villager) event.getEntity();
+					GameTeam gt = Game.getTeam(shooter);
+
+					String name = v.getCustomName();
+					ChatColor cc = ChatColor.getByChar(name.charAt(1));
+
+					if (gt.color == cc) {
+						event.setCancelled(true);
+					}
 				}
 			}
 		}

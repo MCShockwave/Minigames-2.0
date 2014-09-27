@@ -19,6 +19,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -69,10 +70,6 @@ public class StormTheCastle implements IMinigame {
 										i.remove();
 									}
 								}, 20l);
-						p.addPotionEffect(new PotionEffect(
-								PotionEffectType.SPEED, 10, 1));
-						p.addPotionEffect(new PotionEffect(
-								PotionEffectType.DAMAGE_RESISTANCE, 10, 0));
 					}
 				}
 			}
@@ -156,6 +153,10 @@ public class StormTheCastle implements IMinigame {
 					+ " has picked up a %s!", "beacon");
 			Minigames.send(p, "You have a %s! Go place it on the %s to win!",
 					"beacon", "gold block");
+			p.addPotionEffect(new PotionEffect(
+					PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
+			p.addPotionEffect(new PotionEffect(
+					PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0));
 		}
 	}
 
@@ -169,6 +170,9 @@ public class StormTheCastle implements IMinigame {
 				&& against.getType() == Material.GOLD_BLOCK) {
 			Minigames.broadcast(ChatColor.RED, "%s placed a beacon!",
 					p.getName());
+			for (PotionEffect pot : p.getActivePotionEffects()) {
+				p.removePotionEffect(pot.getType());
+			}
 			needed.setScore(needed.getScore() - 1);
 			if (needed.getScore() < 1) {
 				Minigames.stop(Game.getTeam(p).team);
@@ -205,6 +209,27 @@ public class StormTheCastle implements IMinigame {
 			e.setTo(knightSpawn);
 			Minigames.send(e.getPlayer(), "Do not walk over the %s!",
 					"gold block");
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerDamageByPlayer(EntityDamageByEntityEvent e) {
+		if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) {
+			return;
+		}
+		Player p = (Player) e.getEntity();
+		Player dm = (Player) e.getDamager();
+		GameTeam pt = Game.getTeam(p);
+		GameTeam dmt = Game.getTeam(dm);
+		if (pt.team == Game.getTeam(dm).team) {
+			return;
+		}
+		if (p.getLocation().distanceSquared(pt.spawn) < 2 * 2) {
+			e.setCancelled(true);
+			Minigames.send(dm, "Do not %s!", "spawnkill");
+		} else if (dm.getLocation().distanceSquared(dmt.spawn) < 2 * 2) {
+			e.setCancelled(true);
+			Minigames.send(dm, "Do not camp you %s!", "spawn");
 		}
 	}
 }
