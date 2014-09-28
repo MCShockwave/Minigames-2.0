@@ -48,13 +48,13 @@ public class Siege implements IMinigame {
 	@Override
 	public void onGameStart() {
 		hp = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("VillagerHealth", "dummy");
-		hp.setDisplayName("§dKing Health");
+		hp.setDisplayName("¤dKing Health");
 		hp.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-		yhealth = hp.getScore(Bukkit.getOfflinePlayer("§eYellow King"));
+		yhealth = hp.getScore(Bukkit.getOfflinePlayer("¤eYellow King"));
 		yhealth.setScore(startHealth);
 
-		ghealth = hp.getScore(Bukkit.getOfflinePlayer("§aGreen King"));
+		ghealth = hp.getScore(Bukkit.getOfflinePlayer("¤aGreen King"));
 		ghealth.setScore(startHealth);
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
