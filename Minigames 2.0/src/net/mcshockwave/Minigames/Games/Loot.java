@@ -23,22 +23,31 @@ import java.util.concurrent.TimeUnit;
 
 public class Loot implements IMinigame {
 
-	ItemStack[]	helms		= { new ItemStack(Material.LEATHER_HELMET), new ItemStack(Material.CHAINMAIL_HELMET),
-			new ItemStack(Material.IRON_HELMET), new ItemStack(Material.DIAMOND_HELMET) };
-	ItemStack[]	chests		= { new ItemStack(Material.LEATHER_CHESTPLATE),
-			new ItemStack(Material.CHAINMAIL_CHESTPLATE), new ItemStack(Material.IRON_CHESTPLATE),
+	ItemStack[] helms = { new ItemStack(Material.LEATHER_HELMET),
+			new ItemStack(Material.CHAINMAIL_HELMET),
+			new ItemStack(Material.IRON_HELMET),
+			new ItemStack(Material.DIAMOND_HELMET) };
+	ItemStack[] chests = { new ItemStack(Material.LEATHER_CHESTPLATE),
+			new ItemStack(Material.CHAINMAIL_CHESTPLATE),
+			new ItemStack(Material.IRON_CHESTPLATE),
 			new ItemStack(Material.DIAMOND_CHESTPLATE) };
-	ItemStack[]	legs		= { new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.CHAINMAIL_LEGGINGS),
-			new ItemStack(Material.IRON_LEGGINGS), new ItemStack(Material.DIAMOND_LEGGINGS) };
-	ItemStack[]	boots		= { new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.CHAINMAIL_BOOTS),
-			new ItemStack(Material.IRON_BOOTS), new ItemStack(Material.DIAMOND_BOOTS) };
-	ItemStack[]	swords		= { new ItemStack(Material.WOOD_SWORD), new ItemStack(Material.STONE_SWORD),
-			new ItemStack(Material.IRON_SWORD), new ItemStack(Material.DIAMOND_SWORD) };
-	ItemStack[]	potions		= { new ItemStack(Material.POTION, 1, (short) 8201),
-			new ItemStack(Material.POTION, 1, (short) 16388), new ItemStack(Material.POTION, 1, (short) 8229),
-			new ItemStack(Material.POTION, 1, (short) 8226), new ItemStack(Material.POTION, 1, (short) 8225) };
+	ItemStack[] legs = { new ItemStack(Material.LEATHER_LEGGINGS),
+			new ItemStack(Material.CHAINMAIL_LEGGINGS),
+			new ItemStack(Material.IRON_LEGGINGS),
+			new ItemStack(Material.DIAMOND_LEGGINGS) };
+	ItemStack[] boots = { new ItemStack(Material.LEATHER_BOOTS),
+			new ItemStack(Material.CHAINMAIL_BOOTS),
+			new ItemStack(Material.IRON_BOOTS),
+			new ItemStack(Material.DIAMOND_BOOTS) };
+	ItemStack[] swords = { new ItemStack(Material.WOOD_SWORD),
+			new ItemStack(Material.STONE_SWORD),
+			new ItemStack(Material.IRON_SWORD),
+			new ItemStack(Material.DIAMOND_SWORD) };
+	ItemStack[] potions = { new ItemStack(Material.POTION, 1, (short) 8229),
+			new ItemStack(Material.POTION, 1, (short) 8226),
+			new ItemStack(Material.POTION, 1, (short) 8225) };
 
-	public long	invinTime	= 0;
+	public long invinTime = 0;
 
 	public void onGameStart() {
 		for (Player p : Minigames.getOptedIn()) {
@@ -47,7 +56,8 @@ public class Loot implements IMinigame {
 		}
 
 		int s = 10;
-		Minigames.broadcast(ChatColor.GREEN, "You have %s seconds of invincibility!", s);
+		Minigames.broadcast(ChatColor.GREEN,
+				"You have %s seconds of invincibility!", s);
 		invinTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()) + s;
 	}
 
@@ -113,7 +123,8 @@ public class Loot implements IMinigame {
 	}
 
 	public void onPlayerDeath(DeathEvent e) {
-		Minigames.broadcastDeath(e.p, e.k, "%s was killed", "%s was killed by %s");
+		Minigames.broadcastDeath(e.p, e.k, "%s was killed",
+				"%s was killed by %s");
 
 		dropItems(e.p, e.p.getEyeLocation());
 	}
@@ -159,8 +170,12 @@ public class Loot implements IMinigame {
 
 			if (invinTime >= TimeUnit.NANOSECONDS.toSeconds(System.nanoTime())) {
 				event.setCancelled(true);
-				Minigames.send(d, "You still have %s seconds of invincibility!",
-						invinTime - TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()));
+				Minigames.send(
+						d,
+						"You still have %s seconds of invincibility!",
+						invinTime
+								- TimeUnit.NANOSECONDS.toSeconds(System
+										.nanoTime()));
 			}
 		}
 	}
@@ -173,8 +188,13 @@ public class Loot implements IMinigame {
 		if (it.getType() == Material.POTION) {
 			if (invinTime >= TimeUnit.NANOSECONDS.toSeconds(System.nanoTime())) {
 				event.setCancelled(true);
-				Minigames.send(p, "You cannot use %s during invincibility! (%s seconds left)", "potions", invinTime
-						- TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()));
+				Minigames
+						.send(p,
+								"You cannot use %s during invincibility! (%s seconds left)",
+								"potions",
+								invinTime
+										- TimeUnit.NANOSECONDS.toSeconds(System
+												.nanoTime()));
 			}
 		}
 	}
