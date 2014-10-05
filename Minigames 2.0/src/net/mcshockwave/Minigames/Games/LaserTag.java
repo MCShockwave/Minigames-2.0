@@ -185,7 +185,7 @@ public class LaserTag implements IMinigame {
 							if (LocUtils.isSame(yb1, b.getLocation())) {
 								yb1.getBlock().setType(Material.REDSTONE_BLOCK);
 								yb2.getBlock().setType(Material.REDSTONE_BLOCK);
-								Minigames.broadcast(gt.color, "%s has hit the ¤e¤oYellow¤7 base!", p.getName());
+								Minigames.broadcast(gt.color, "%s has hit the Â§eÂ§oYellowÂ§7 base!", p.getName());
 								Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 									public void run() {
 										yb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
@@ -202,7 +202,7 @@ public class LaserTag implements IMinigame {
 							if (LocUtils.isSame(yb2, b.getLocation())) {
 								yb2.getBlock().setType(Material.REDSTONE_BLOCK);
 								yb1.getBlock().setType(Material.REDSTONE_BLOCK);
-								Minigames.broadcast(gt.color, "%s has hit the ¤e¤oYellow¤7 base!", p.getName());
+								Minigames.broadcast(gt.color, "%s has hit the Â§eÂ§oYellowÂ§7 base!", p.getName());
 								Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 									public void run() {
 										yb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
@@ -221,7 +221,7 @@ public class LaserTag implements IMinigame {
 							if (LocUtils.isSame(gb1, b.getLocation())) {
 								gb1.getBlock().setType(Material.REDSTONE_BLOCK);
 								gb2.getBlock().setType(Material.REDSTONE_BLOCK);
-								Minigames.broadcast(gt.color, "%s has hit the ¤a¤oGreen¤7 base!", p.getName());
+								Minigames.broadcast(gt.color, "%s has hit the Â§aÂ§oGreenÂ§7 base!", p.getName());
 								Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 									public void run() {
 										gb1.getBlock().setType(Material.REDSTONE_LAMP_OFF);
@@ -238,7 +238,7 @@ public class LaserTag implements IMinigame {
 							if (LocUtils.isSame(gb2, b.getLocation())) {
 								gb2.getBlock().setType(Material.REDSTONE_BLOCK);
 								gb1.getBlock().setType(Material.REDSTONE_BLOCK);
-								Minigames.broadcast(gt.color, "%s has hit the ¤a¤oGreen¤7 base!", p.getName());
+								Minigames.broadcast(gt.color, "%s has hit the Â§aÂ§oGreenÂ§7 base!", p.getName());
 								Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 									public void run() {
 										gb2.getBlock().setType(Material.REDSTONE_LAMP_OFF);
@@ -263,7 +263,7 @@ public class LaserTag implements IMinigame {
 	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof Player) {
-			((Player) event.getDamager()).sendMessage("¤cNo pvp!");
+			((Player) event.getDamager()).sendMessage("Â§cNo pvp!");
 			event.setCancelled(true);
 		}
 	}
