@@ -2,22 +2,33 @@ package net.mcshockwave.Minigames.Games;
 
 import java.util.HashMap;
 
+import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Shop.ShopItem;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
@@ -35,6 +46,15 @@ public class TRON implements IMinigame {
 			Minigames.send(ChatColor.RED, p, "Don't stop moving or you will %s!", "die");
 			p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 100000000, 0));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, 2));
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				public void run() {
+					for (Player p : Minigames.getOptedIn()) {
+						if (Minigames.hasItem(p, ShopItem.Color_Bomb)) {
+							p.getInventory().setItem(8, ItemMetaUtils.setItemName(new ItemStack(Material.TNT), "§5Color Bomb"));
+						}
+					}
+				}
+			}, 5);
 		}
 	}
 
@@ -117,6 +137,50 @@ public class TRON implements IMinigame {
 		if (event.getCause() == DamageCause.FALL) {
 			event.setCancelled(true);
 		}
+	}
+	
+	@EventHandler
+	public void onInteract(PlayerInteractEvent event) {
+		Player p = event.getPlayer();
+		ItemStack it = event.getItem();
+		if(it.getType().equals(Material.TNT)) {
+			if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+				p.setItemInHand(null);
+
+				final TNTPrimed tnt = (TNTPrimed) p.getWorld().spawnEntity(p.getEyeLocation(), EntityType.PRIMED_TNT);
+				tnt.setVelocity(p.getLocation().getDirection().multiply(2));
+				tnt.setFuseTicks((int) 20l);
+			} else {
+				Minigames.send(p, "You must %s to use the color bomb!", "right click");
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlace(BlockPlaceEvent event) {
+		if(event.getBlock().getType() == Material.TNT) {
+			event.setCancelled(true);
+		}
+	} 
+	
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void onExplosion(EntityExplodeEvent event) {
+		for(final Block w : event.blockList()) {
+			if(w.getType().equals(Material.WOOL)) {
+				if (!wool.containsKey(w)) {
+					wool.put(w, w.getData());
+				}
+				w.setData((byte) 10);
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+					public void run() {
+						w.setData(wool.get(w));
+						wool.remove(w);
+					}
+				}, 200);
+			}
+		}
+		event.blockList().clear();
 	}
 
 }
