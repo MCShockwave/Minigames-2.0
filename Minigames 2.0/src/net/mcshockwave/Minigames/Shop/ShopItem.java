@@ -257,8 +257,8 @@ public enum ShopItem {
 			1,
 			true,
 			2000,
-			"You will recieve 2 color bombs",
-			"Throwing down one of the color bombs",
+			"You will recieve a color bomb",
+			"Throwing down the color bomb",
 			"will create impassable purple wool"),
 	// Village Battle
 	Ressurector(
