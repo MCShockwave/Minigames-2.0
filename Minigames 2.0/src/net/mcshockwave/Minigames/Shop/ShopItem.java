@@ -253,13 +253,14 @@ public enum ShopItem {
 	// Tiers
 	// TRON
 	Color_Bomb(
-			Game.TRON,
-			1,
-			true,
-			2000,
-			"You will recieve a color bomb",
-			"Throwing down the color bomb",
-			"will create impassable purple wool"),
+		Game.TRON,
+		1,
+		true,
+		2000,
+		"You will recieve a color bomb.",
+		"Throwing down the color bomb",
+		"will create impassable purple wool",
+		"for 10 seconds."),
 	// Village Battle
 	Ressurector(
 		Game.Village_Battle,

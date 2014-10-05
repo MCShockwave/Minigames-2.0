@@ -1,27 +1,22 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.HashMap;
-
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
-import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -32,6 +27,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.HashMap;
 
 public class TRON implements IMinigame {
 
@@ -50,7 +47,8 @@ public class TRON implements IMinigame {
 				public void run() {
 					for (Player p : Minigames.getOptedIn()) {
 						if (Minigames.hasItem(p, ShopItem.Color_Bomb)) {
-							p.getInventory().setItem(8, ItemMetaUtils.setItemName(new ItemStack(Material.TNT), "§5Color Bomb"));
+							p.getInventory().setItem(8,
+									ItemMetaUtils.setItemName(new ItemStack(Material.TNT), "§5Color Bomb"));
 						}
 					}
 				}
@@ -137,17 +135,17 @@ public class TRON implements IMinigame {
 		if (event.getCause() == DamageCause.FALL) {
 			event.setCancelled(true);
 		}
-		if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
+		if (event.getCause() == DamageCause.BLOCK_EXPLOSION) {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		ItemStack it = event.getItem();
-		if(it.getType().equals(Material.TNT)) {
-			if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+		if (it != null && it.getType() == Material.TNT) {
+			if (event.getAction().name().contains("RIGHT_CLICK")) {
 				p.setItemInHand(null);
 
 				final TNTPrimed tnt = (TNTPrimed) p.getWorld().spawnEntity(p.getEyeLocation(), EntityType.PRIMED_TNT);
@@ -158,19 +156,19 @@ public class TRON implements IMinigame {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlace(BlockPlaceEvent event) {
-		if(event.getBlock().getType() == Material.TNT) {
+		if (event.getBlock().getType() == Material.TNT) {
 			event.setCancelled(true);
 		}
-	} 
-	
+	}
+
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onExplosion(EntityExplodeEvent event) {
-		for(final Block w : event.blockList()) {
-			if(w.getType().equals(Material.WOOL)) {
+		for (final Block w : event.blockList()) {
+			if (w.getType().equals(Material.WOOL)) {
 				if (!wool.containsKey(w)) {
 					wool.put(w, w.getData());
 				}
