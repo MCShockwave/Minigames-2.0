@@ -23,6 +23,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -83,6 +84,11 @@ public class Infection implements IMinigame {
 			e.gt.team.removePlayer(e.p);
 			Minigames.broadcastDeath(e.p, e.k, "%s was infected", "%s was infected by %s");
 			Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Zombies").addPlayer(e.p);
+			ItemStack h = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
+			SkullMeta meta = (SkullMeta)h.getItemMeta();
+			meta.setOwner("PanZombiePL");
+			h.setItemMeta(meta);
+			e.p.getInventory().setHelmet(h);
 		}
 		giveKit(e.p);
 	}
