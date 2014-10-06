@@ -252,6 +252,15 @@ public enum ShopItem {
 	// Spleef
 	// Tiers
 	// TRON
+	Color_Bomb(
+		Game.TRON,
+		1,
+		true,
+		2000,
+		"You will recieve a color bomb.",
+		"Throwing down the color bomb",
+		"will create impassable purple wool",
+		"for 10 seconds."),
 	// Village Battle
 	Ressurector(
 		Game.Village_Battle,
@@ -275,7 +284,7 @@ public enum ShopItem {
 		2,
 		true,
 		3000,
-		"Disable the enemy team’s possessing abilities",
+		"Disable the enemy teamï¿½s possessing abilities",
 		" for 10 seconds!");
 
 	public String	name;
