@@ -162,7 +162,8 @@ public class DefaultListener implements Listener {
 				if (rand.nextInt(SQLTable.Settings.getInt("Setting", "XPChance", "Value")) == 0) {
 					int minXp = SQLTable.Settings.getInt("Setting", "XPMin", "Value");
 					int maxXp = SQLTable.Settings.getInt("Setting", "XPMax", "Value");
-					LevelUtils.addXP(k, rand.nextInt(maxXp - minXp) + minXp, "killing " + p.getName(), true);
+					int xp = rand.nextInt(maxXp - minXp) + minXp;
+					LevelUtils.addXP(k, MCShockwave.xpmult == 1 ? xp : xp * MCShockwave.xpmult, "killing " + p.getName(), true);
 				}
 			}
 		}

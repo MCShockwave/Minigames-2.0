@@ -255,7 +255,7 @@ public class Minigames extends JavaPlugin {
 
 				Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 					public void run() {
-						PointsUtils.addPoints(win, points, "winning " + name);
+						PointsUtils.addPoints(win, MCShockwave.pointmult == 1 ? points : points * MCShockwave.pointmult, "winning " + name);
 						win.playSound(win.getLocation(), Sound.LEVEL_UP, 1, 1);
 						Statistics.incrWins(win.getName(), true);
 					}
@@ -381,6 +381,19 @@ public class Minigames extends JavaPlugin {
 
 		pointsOnWin = getOptedIn().size() * (currentGame.isTeamGame() ? 20 : 40);
 
+		if (MCShockwave.pointmult != 1 && MCShockwave.xpmult == 1) {
+			broadcastAll(ChatColor.RED + "" + ChatColor.BOLD + "Server point multiplier is active for this game! Current multiplier: " + 
+					ChatColor.AQUA + "" + ChatColor.BOLD + "x" + MCShockwave.pointmult);
+		}
+		if (MCShockwave.xpmult != 1 && MCShockwave.pointmult == 1) {
+			broadcastAll(ChatColor.RED + "" + ChatColor.BOLD + "Server xp multiplier is active for this game! Current multiplier: " + 
+					ChatColor.AQUA + "" + ChatColor.BOLD + "x" + MCShockwave.xpmult);
+		}
+		if (MCShockwave.xpmult != 1 && MCShockwave.pointmult != 1) {
+			broadcastAll(ChatColor.RED + "" + ChatColor.BOLD + "Server point and xp multipliers are active for this game! Current multipliers: " + 
+					ChatColor.AQUA + "" + ChatColor.BOLD + "x" + MCShockwave.pointmult + " Points, x" + MCShockwave.xpmult + " XP");
+		}
+		
 		for (Player p : getOptedIn()) {
 			for (Player p2 : getOptedIn()) {
 				if (p != p2) {
@@ -407,7 +420,7 @@ public class Minigames extends JavaPlugin {
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			sendAll(p, getBroadcastMessage("%s has started!", currentGame.name),
-					getBroadcastMessage("You will earn %s points if you win", pointsOnWin));
+					getBroadcastMessage("You will earn %s points if you win", MCShockwave.pointmult == 1 ? pointsOnWin : pointsOnWin * MCShockwave.pointmult));
 
 			p.setHealth(20);
 		}
