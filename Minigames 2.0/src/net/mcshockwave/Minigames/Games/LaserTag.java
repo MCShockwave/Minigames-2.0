@@ -110,6 +110,7 @@ public class LaserTag implements IMinigame {
 			}
 			if (Game.getTeam(e.getPlayer()).spawn.distanceSquared(e.getPlayer().getLocation()) < 5 * 5) {
 				Minigames.send(e.getPlayer(), "You can not %s while in your base!", ChatColor.RED + "shoot");
+				return;
 			}
 			cooldown.add(e.getPlayer().getName());
 			Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {

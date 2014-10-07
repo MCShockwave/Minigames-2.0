@@ -255,11 +255,11 @@ public enum ShopItem {
 	Color_Bomb(
 		Game.TRON,
 		1,
-		true,
+		false,
 		2000,
-		"You will recieve a color bomb.",
-		"Throwing down the color bomb",
-		"will create impassable purple wool",
+		"You will recieve 1 color bomb.",
+		"Throwing the color bomb will",
+		"create purple wool that kills both teams",
 		"for 10 seconds."),
 	// Village Battle
 	Ressurector(
@@ -284,7 +284,7 @@ public enum ShopItem {
 		2,
 		true,
 		3000,
-		"Disable the enemy team�s possessing abilities",
+		"Disable the enemy team's possessing abilities",
 		" for 10 seconds!");
 
 	public String	name;

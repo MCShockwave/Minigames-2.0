@@ -257,7 +257,7 @@ public class VillageBattle implements IMinigame {
 				p.getInventory().setItem(
 						8,
 						ItemMetaUtils.setItemName(ItemMetaUtils.setLore(new ItemStack(Material.NETHER_STAR),
-								"Click to disable enemy", "possessing for 15 seconds!"), "¤eDisruptor"));
+								"Click to disable enemy", "possessing for 15 seconds!"), "Â§eDisruptor"));
 			}
 			if (pk.main.getType() == Material.BOW) {
 				p.getInventory().setItem(27, new ItemStack(Material.ARROW));
@@ -573,8 +573,8 @@ public class VillageBattle implements IMinigame {
 							Minigames.broadcast(oppo.color, "%s can posess villagers again!", oppo.name);
 						}
 					});
-					Minigames.broadcast(oppo.color, Game.getTeam(p).color + "¤o" + p.getName()
-							+ "¤7 has disabled %s possession for 10 seconds!", oppo.name);
+					Minigames.broadcast(oppo.color, Game.getTeam(p).color + "Â§o" + p.getName()
+							+ "Â§7 has disabled %s possession for 10 seconds!", oppo.name);
 
 					CooldownUtils.addCooldown("PlayerDisrupt", p.getName(), 3600, new Runnable() {
 						public void run() {
