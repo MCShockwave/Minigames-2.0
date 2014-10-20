@@ -424,7 +424,7 @@ public class DefaultListener implements Listener {
 		String mlc = message.toLowerCase();
 		String[] argslc = mlc.split(" ");
 
-		if (argslc[0].equalsIgnoreCase("/kill")) {
+		if (argslc[0].equalsIgnoreCase("/kill") || argslc[0].equalsIgnoreCase("/bukkit:kill")) {
 			e.setCancelled(true);
 		}
 	}
