@@ -426,7 +426,7 @@ public class DefaultListener implements Listener {
 
 		if (argslc[0].equalsIgnoreCase("/kill") || argslc[0].equalsIgnoreCase("/bukkit:kill")) {
 			e.setCancelled(true);
-		}
+		}  
 	}
 
 	@EventHandler
