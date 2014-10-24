@@ -231,7 +231,7 @@ public class StormTheCastle implements IMinigame {
 			Minigames.send(dm, "Do not %s!", "spawnkill");
 		} else if (dm.getLocation().distanceSquared(dmt.spawn) < 2 * 2) {
 			e.setCancelled(true);
-			Minigames.send(dm, "Do not camp you %s!", "spawn");
+			Minigames.send(dm, "Do not camp your %s!", "spawn");
 		}
 	}
 }
