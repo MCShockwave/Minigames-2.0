@@ -7,6 +7,7 @@ import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Utils.PointsUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -170,6 +171,7 @@ public class StormTheCastle implements IMinigame {
 				&& against.getType() == Material.GOLD_BLOCK) {
 			Minigames.broadcast(ChatColor.RED, "%s placed a beacon!",
 					p.getName());
+			PointsUtils.addPoints(p, Minigames.getOptedIn().size() >= 30 ? 750 : 250, null);
 			for (PotionEffect pot : p.getActivePotionEffects()) {
 				p.removePotionEffect(pot.getType());
 			}

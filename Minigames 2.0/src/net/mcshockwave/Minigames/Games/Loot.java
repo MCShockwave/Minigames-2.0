@@ -148,13 +148,13 @@ public class Loot implements IMinigame {
 		PlayerInventory pi = p.getInventory();
 
 		for (ItemStack it : pi.getArmorContents()) {
-			if (it != null) {
+			if (it != null && it.getType() != Material.AIR) {
 				l.getWorld().dropItemNaturally(l, it);
 			}
 		}
 
 		for (ItemStack it : pi.getContents()) {
-			if (it != null) {
+			if (it != null && it.getType() != Material.AIR) {
 				l.getWorld().dropItemNaturally(l, it);
 			}
 		}

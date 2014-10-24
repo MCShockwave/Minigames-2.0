@@ -35,7 +35,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -373,7 +372,11 @@ public class DefaultListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (!Minigames.started || Minigames.started) {
+		if (Minigames.started) {
+			if (!(Minigames.currentGame == Game.TRON)) {
+				event.blockList().clear();
+			}
+		} else {
 			event.blockList().clear();
 		}
 	}
@@ -416,17 +419,6 @@ public class DefaultListener implements Listener {
 		if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
 			event.setCancelled(true);
 		}
-	}
-
-	@EventHandler
-	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e) {
-		String message = e.getMessage();
-		String mlc = message.toLowerCase();
-		String[] argslc = mlc.split(" ");
-
-		if(argslc[0].equalsIgnoreCase("/kill") || argslc[0].equalsIgnoreCase("/bukkit:kill")) {
-			e.setCancelled(true);
-		}  
 	}
 
 	@EventHandler

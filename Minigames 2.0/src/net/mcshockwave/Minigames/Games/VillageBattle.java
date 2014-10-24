@@ -515,7 +515,7 @@ public class VillageBattle implements IMinigame {
 			PacketUtils.sendPacketGlobally(b.getLocation(), 50,
 					PacketUtils.generateBlockParticles(Material.ANVIL, 0, b.getLocation()));
 
-			for (Entity e : event.getEntity().getNearbyEntities(5, 5, 5)) {
+			for (Entity e : event.getEntity().getNearbyEntities(2.5, 2.5, 2.5)) {
 				if (e instanceof Player) {
 					Player p2 = (Player) e;
 
