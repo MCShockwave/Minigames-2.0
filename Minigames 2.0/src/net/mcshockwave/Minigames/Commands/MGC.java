@@ -64,7 +64,7 @@ public class MGC implements CommandExecutor {
 			}
 			if (args[0].equalsIgnoreCase("listMaps")) {
 				for (Game g : Game.values()) {
-					if (g.maplist.size() == 1 && g.maplist.get(0).equalsIgnoreCase("Default")) {
+					if (!g.isEnabled()) {
 						continue;
 					}
 					Minigames.send(p, "§6§l" + g.name);
