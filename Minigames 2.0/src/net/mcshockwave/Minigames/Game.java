@@ -130,7 +130,8 @@ public enum Game {
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
 		"Airships",
-		"Seas"),
+		"Seas",
+		"Galaxy"),
 	Village_Battle(
 		new VillageBattle(),
 		Material.MONSTER_EGG,
@@ -181,7 +182,8 @@ public enum Game {
 		0,
 		10,
 		false,
-		true),
+		true,
+		"LoveLands"),
 	Minotaur(
 		new Minotaur(),
 		Material.DIAMOND_AXE,
@@ -192,18 +194,6 @@ public enum Game {
 		new GameTeam[] { new GameTeam("Humans", ChatColor.WHITE), new GameTeam("The Minotaur", ChatColor.RED) },
 		"Hedge",
 		"Sewers"),
-	// Lockdown(
-	// new Lockdown(),
-	// Material.DIAMOND_BLOCK,
-	// 0,
-	// 10,
-	// true,
-	// true,
-	// new Location(1500, 121, 0),
-	// new GameTeam[] { new GameTeam("Green", ChatColor.GREEN, new
-	// Location(1502, 95, -103)),
-	// new GameTeam("Yellow", ChatColor.YELLOW, new Location(1498, 103, 100))
-	// }),
 	Laser_Tag(
 		new LaserTag(),
 		Material.DIAMOND_HOE,
@@ -255,7 +245,7 @@ public enum Game {
 	public List<String>		maplist	= new ArrayList<>();
 
 	public static Game[]	enabled	= { Game.Build_and_Fight, Game.Hot_Potato, Game.Laser_Tag, Game.Core,
-			Game.Boarding, Game.Tiers, Game.Dodgeball, Game.Siege, Game.Airships, Game.Brawl, Game.Minotaur };
+			Game.Boarding, Game.Tiers, Game.Dodgeball, Game.Siege, Game.Airships, Game.Brawl, Game.Minotaur, Game.Loot };
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP,
 			GameTeam[] teams, String... maps) {
