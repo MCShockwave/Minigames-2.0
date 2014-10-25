@@ -1,5 +1,6 @@
 package net.mcshockwave.Minigames;
 
+import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.Minigames.Games.Airships;
 import net.mcshockwave.Minigames.Games.Boarding;
 import net.mcshockwave.Minigames.Games.Brawl;
@@ -48,28 +49,21 @@ public enum Game {
 		true,
 		true,
 		new GameTeam[] { new GameTeam("Red", ChatColor.RED), new GameTeam("Blue", ChatColor.BLUE),
-				new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Clay",
-		"Impact",
-		"Urban"),
+				new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
 	Airships(
 		new Airships(),
 		Material.BOW,
 		0,
 		8,
 		false,
-		true,
-		"Valley"),
+		true),
 	Brawl(
 		new Brawl(),
 		Material.STICK,
 		0,
 		8,
 		false,
-		true,
-		"Classic",
-		"Future",
-		"Mushroom"),
+		true),
 	Build_and_Fight(
 		new BuildAndFight(),
 		Material.WOOL,
@@ -77,9 +71,7 @@ public enum Game {
 		8,
 		false,
 		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Medieval",
-		"Cavern"),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
 	Dodgeball(
 		new Dodgeball(),
 		Material.SNOW_BALL,
@@ -87,10 +79,7 @@ public enum Game {
 		6,
 		false,
 		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Arena",
-		"Snowfort",
-		"Gymnasium"),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
 	Four_Corners(
 		new FourCorners(),
 		Material.STAINED_CLAY,
@@ -128,10 +117,7 @@ public enum Game {
 		10,
 		true,
 		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Airships",
-		"Seas",
-		"Galaxy"),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
 	Village_Battle(
 		new VillageBattle(),
 		Material.MONSTER_EGG,
@@ -155,9 +141,7 @@ public enum Game {
 		0,
 		8,
 		false,
-		true,
-		"Hell",
-		"Field"),
+		true),
 	Infection(
 		new Infection(),
 		Material.SKULL_ITEM,
@@ -173,17 +157,14 @@ public enum Game {
 		8,
 		true,
 		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Valhalla",
-		"Wasteland"),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
 	Loot(
 		new Loot(),
 		Material.DIAMOND_CHESTPLATE,
 		0,
 		10,
 		false,
-		true,
-		"LoveLands"),
+		true),
 	Minotaur(
 		new Minotaur(),
 		Material.DIAMOND_AXE,
@@ -191,9 +172,7 @@ public enum Game {
 		8,
 		false,
 		true,
-		new GameTeam[] { new GameTeam("Humans", ChatColor.WHITE), new GameTeam("The Minotaur", ChatColor.RED) },
-		"Hedge",
-		"Sewers"),
+		new GameTeam[] { new GameTeam("Humans", ChatColor.WHITE), new GameTeam("The Minotaur", ChatColor.RED) }),
 	Laser_Tag(
 		new LaserTag(),
 		Material.DIAMOND_HOE,
@@ -201,9 +180,7 @@ public enum Game {
 		10,
 		true,
 		true,
-		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Arena",
-		"Moon"),
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
 	Ghostbusters(
 		new Ghostbusters(),
 		Material.SKULL_ITEM,
@@ -211,8 +188,7 @@ public enum Game {
 		10,
 		false,
 		true,
-		new GameTeam[] { new GameTeam("Ghosts", ChatColor.DARK_GRAY), new GameTeam("Humans", ChatColor.WHITE) },
-		"Mansion"),
+		new GameTeam[] { new GameTeam("Ghosts", ChatColor.DARK_GRAY), new GameTeam("Humans", ChatColor.WHITE) }),
 	Tiers(
 		new Tiers(),
 		Material.DIAMOND_SWORD,
@@ -221,9 +197,7 @@ public enum Game {
 		true,
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW),
-				new GameTeam("Red", ChatColor.RED), new GameTeam("Blue", ChatColor.BLUE) },
-		"Sandstone",
-		"Mines"),
+				new GameTeam("Red", ChatColor.RED), new GameTeam("Blue", ChatColor.BLUE) }),
 	Storm_The_Castle(
 		new StormTheCastle(),
 		Material.BEACON,
@@ -247,21 +221,34 @@ public enum Game {
 	public static Game[]	enabled	= { Game.Build_and_Fight, Game.Hot_Potato, Game.Laser_Tag, Game.Core,
 			Game.Boarding, Game.Tiers, Game.Dodgeball, Game.Siege, Game.Airships, Game.Brawl, Game.Minotaur, Game.Loot };
 
-	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP,
-			GameTeam[] teams, String... maps) {
+	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, GameTeam[] teams) {
 		this.teams = teams;
-		init(mclass, icon, iconData, time, canRespawn, allowPVP, maps);
+		init(mclass, icon, iconData, time, canRespawn, allowPVP);
 	}
 
-	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, String... maps) {
+	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP) {
 		// this.spawn = new Location(Multiworld.getGame(), spawn.getX() + 0.5,
 		// spawn.getY() + 0.5, spawn.getZ() + 0.5);
 		// this.radius = radius;
-		init(mclass, icon, iconData, time, canRespawn, allowPVP, maps);
+		init(mclass, icon, iconData, time, canRespawn, allowPVP);
 	}
 
-	public void init(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP,
-			String... maps) {
+	public void updateMaps() {
+		if (this.maplist != null) {
+			this.maplist.clear();
+		} else
+			this.maplist = new ArrayList<>();
+		List<String> maps = SQLTable.MinigameMaps.getAll("Game", name(), "Name");
+		if (maps.size() < 1) {
+			this.maplist.add("Default");
+		} else {
+			for (String s : maps) {
+				this.maplist.add(s);
+			}
+		}
+	}
+
+	public void init(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP) {
 		name = name().replace('_', ' ');
 		this.mclass = mclass;
 		this.canRespawn = canRespawn;
@@ -270,13 +257,7 @@ public enum Game {
 		this.icon = new ItemStack(icon, 1, (byte) iconData);
 		this.allowPVP = allowPVP;
 		this.time = time;
-		if (maps.length < 1) {
-			this.maplist.add("Default");
-		} else {
-			for (String s : maps) {
-				this.maplist.add(s);
-			}
-		}
+		updateMaps();
 	}
 
 	public boolean isTeamGame() {

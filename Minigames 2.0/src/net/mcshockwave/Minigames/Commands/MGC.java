@@ -62,6 +62,20 @@ public class MGC implements CommandExecutor {
 					}
 				}
 			}
+			if (args[0].equalsIgnoreCase("listMaps")) {
+				for (Game g : Game.values()) {
+					Minigames.send(p, "§6§l" + g.name);
+					for (String s : g.maplist) {
+						Minigames.send(ChatColor.GRAY, p, "%s", s);
+					}
+				}
+			}
+			if (args[0].equalsIgnoreCase("updateMapList")) {
+				for (Game g : Game.values()) {
+					g.updateMaps();
+				}
+				p.sendMessage("§cUpdated maps for all games");
+			}
 		}
 		return false;
 	}
