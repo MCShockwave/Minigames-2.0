@@ -173,7 +173,8 @@ public enum Game {
 		true,
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) },
-		"Valhalla"),
+		"Valhalla",
+		"Wasteland"),
 	Loot(
 		new Loot(),
 		Material.DIAMOND_CHESTPLATE,
