@@ -15,7 +15,6 @@ import net.mcshockwave.Minigames.Commands.MgInfo;
 import net.mcshockwave.Minigames.Commands.Opt;
 import net.mcshockwave.Minigames.Commands.Shop;
 import net.mcshockwave.Minigames.Commands.TeamSelect;
-import net.mcshockwave.Minigames.Commands.UpsiesCommand;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.PreGame;
 import net.mcshockwave.Minigames.Handlers.Sidebar;
@@ -109,7 +108,7 @@ public class Minigames extends JavaPlugin {
 		getCommand("shop").setExecutor(new Shop());
 		// getCommand("points").setExecutor(new Points());
 		getCommand("team").setExecutor(new TeamSelect());
-		getCommand("upsies").setExecutor(new UpsiesCommand());
+		// getCommand("upsies").setExecutor(new UpsiesCommand());
 
 		if (checkCanStart()) {
 			startCount();
@@ -147,9 +146,8 @@ public class Minigames extends JavaPlugin {
 		}
 
 		// TODO temp
-		// currentGame = Game.values()[rand.nextInt(Game.values().length)];
-		currentGame = Game.enabled[rand.nextInt(Game.enabled.length)];
-		if (currentGame == gameBefore && Game.enabled.length > 1) {
+		currentGame = Game.values()[rand.nextInt(Game.values().length)];
+		if (currentGame == gameBefore || !currentGame.isEnabled()) {
 			startCount();
 			return;
 		}

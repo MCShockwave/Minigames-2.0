@@ -36,9 +36,12 @@ public class MgInfo implements CommandExecutor {
 			} catch (Exception e) {
 			}
 		} else {
-			int l = Game.enabled.length;
+			int l = Game.values().length;
 			Inventory i = Bukkit.createInventory(null, l + (9 - (l % 9)), "Info");
-			for (Game g : Game.enabled) {
+			for (Game g : Game.values()) {
+				if (!g.isEnabled()) {
+					continue;
+				}
 				boolean hasShop = ShopUtils.getItems(g).length > 0;
 				try {
 					GameInfo.valueOf(g.name()).toString();

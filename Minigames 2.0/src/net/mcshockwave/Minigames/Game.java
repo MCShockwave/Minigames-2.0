@@ -208,18 +208,19 @@ public enum Game {
 		new GameTeam[] { new GameTeam("Knights", ChatColor.AQUA), new GameTeam("Barbarians", ChatColor.RED) });
 	;
 
-	public String			name;
-	public IMinigame		mclass;
-	public GameTeam[]		teams	= null;
+	public String		name;
+	public IMinigame	mclass;
+	public GameTeam[]	teams	= null;
 	// public Location spawn = null, lobby = null;
-	public int				time;
-	public boolean			canRespawn, allowPVP;
-	public ItemStack		icon	= null;
+	public int			time;
+	public boolean		canRespawn, allowPVP;
+	public ItemStack	icon	= null;
 
-	public List<String>		maplist	= new ArrayList<>();
+	public List<String>	maplist	= new ArrayList<>();
 
-	public static Game[]	enabled	= { Game.Build_and_Fight, Game.Hot_Potato, Game.Laser_Tag, Game.Core,
-			Game.Boarding, Game.Tiers, Game.Dodgeball, Game.Siege, Game.Airships, Game.Brawl, Game.Minotaur, Game.Loot };
+	public boolean isEnabled() {
+		return maplist.size() > 1 || maplist.size() > 0 && !maplist.get(0).equalsIgnoreCase("Default");
+	}
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, GameTeam[] teams) {
 		this.teams = teams;
