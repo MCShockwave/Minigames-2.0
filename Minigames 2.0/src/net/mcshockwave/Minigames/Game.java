@@ -36,6 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -208,18 +209,21 @@ public enum Game {
 		new GameTeam[] { new GameTeam("Knights", ChatColor.AQUA), new GameTeam("Barbarians", ChatColor.RED) });
 	;
 
-	public String		name;
-	public IMinigame	mclass;
-	public GameTeam[]	teams	= null;
-	// public Location spawn = null, lobby = null;
-	public int			time;
-	public boolean		canRespawn, allowPVP;
-	public ItemStack	icon	= null;
+	public static Game[]	disabled	= { Game.Ghostbusters };
 
-	public List<String>	maplist	= new ArrayList<>();
+	public String			name;
+	public IMinigame		mclass;
+	public GameTeam[]		teams		= null;
+	// public Location spawn = null, lobby = null;
+	public int				time;
+	public boolean			canRespawn, allowPVP;
+	public ItemStack		icon		= null;
+
+	public List<String>		maplist		= new ArrayList<>();
 
 	public boolean isEnabled() {
-		return maplist.size() > 1 || maplist.size() > 0 && !maplist.get(0).equalsIgnoreCase("Default");
+		return !Arrays.asList(disabled).contains(this)
+				&& (maplist.size() > 1 || maplist.size() > 0 && !maplist.get(0).equalsIgnoreCase("Default"));
 	}
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, GameTeam[] teams) {
