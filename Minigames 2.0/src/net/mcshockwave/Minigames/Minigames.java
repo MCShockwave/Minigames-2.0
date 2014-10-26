@@ -660,6 +660,8 @@ public class Minigames extends JavaPlugin {
 
 		if (FileElements.has("time", "Game")) {
 			Multiworld.getGame().setTime(Game.getInt("time"));
+		} else {
+			Multiworld.getGame().setTime(5000);
 		}
 
 		SoundUtils.playSoundToAll(Sound.AMBIENCE_THUNDER, 1, 0.75f);
