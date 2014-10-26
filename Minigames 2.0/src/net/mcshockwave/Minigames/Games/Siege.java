@@ -19,6 +19,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -183,6 +184,13 @@ public class Siege implements IMinigame {
 				e.setTo(l);
 				MCShockwave.send(e.getPlayer(), "Do not climb the %s!", "mountains");
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
+		if (Minigames.getOptedIn().contains(e.getPlayer()) && e.getRightClicked() instanceof Villager) {
+			e.setCancelled(true);
 		}
 	}
 

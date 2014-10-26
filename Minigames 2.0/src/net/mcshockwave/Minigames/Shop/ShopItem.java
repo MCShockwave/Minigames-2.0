@@ -250,12 +250,29 @@ public enum ShopItem {
 	// Minotaur
 	// Siege
 	// Spleef
+	TNT_Bomb(
+		Game.Spleef,
+		0,
+		true,
+		1500,
+		"Start with 1 tnt bomb.",
+		"Throwing the tnt bomb will",
+		"make it explode."),
+	Teleporter(
+		Game.Spleef,
+		1,
+		true,
+		2000,
+		"Start with a ghast tear",
+		"that when right-clicked",
+		"will rnadomly teleport you",
+		"anywhere in the spleef map."),
 	// Tiers
 	// TRON
 	Color_Bomb(
 		Game.TRON,
 		1,
-		false,
+		true,
 		2000,
 		"You will recieve 1 color bomb.",
 		"Throwing the color bomb will",

@@ -136,7 +136,7 @@ public class TRON implements IMinigame {
 		if (event.getCause() == DamageCause.FALL) {
 			event.setCancelled(true);
 		}
-		if (event.getCause() == DamageCause.BLOCK_EXPLOSION) {
+		if (event.getCause() == DamageCause.ENTITY_EXPLOSION) {
 			event.setCancelled(true);
 		}
 	}

@@ -373,7 +373,7 @@ public class DefaultListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityExplode(EntityExplodeEvent event) {
 		if (Minigames.started) {
-			if (!(Minigames.currentGame == Game.TRON)) {
+			if (!(Minigames.currentGame == Game.TRON) && !(Minigames.currentGame == Game.Spleef)) {
 				event.blockList().clear();
 			}
 		} else {
