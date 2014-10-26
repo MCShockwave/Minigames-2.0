@@ -218,13 +218,6 @@ public enum ShopItem {
 		"players down."),
 	// Hot Potato
 	// Infection
-	Floater(
-		Game.Infection,
-		0,
-		true,
-		1750,
-		"Double jump throughout the map,",
-		" zombie or human."),
 	Lurker(
 		Game.Infection,
 		1,

@@ -10,22 +10,18 @@ import net.mcshockwave.Minigames.Shop.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 
@@ -35,10 +31,6 @@ public class Infection implements IMinigame {
 	public void onGameStart() {
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
-
-			if (Minigames.hasItem(p, ShopItem.Floater)) {
-				p.setAllowFlight(true);
-			}
 		}
 	}
 
@@ -111,27 +103,6 @@ public class Infection implements IMinigame {
 					p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 80, 1));
 				}
 			}
-		}
-	}
-
-	@EventHandler
-	public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
-		Player p = event.getPlayer();
-
-		if (p.getGameMode() != GameMode.CREATIVE && Minigames.alivePlayers.contains(p.getName()) && event.isFlying()) {
-			event.setCancelled(true);
-			p.setFlying(false);
-			if (p.getLocation().getBlock().getType() != Material.VINE
-					&& (p.getLocation().add(0, -1, 0).getBlock().getType() != Material.AIR || p.getLocation()
-							.add(0, -2, 0).getBlock().getType() != Material.AIR)) {
-				p.setVelocity(p.getVelocity().add(new Vector(0, 1.5, 0)));
-				p.getWorld().playSound(p.getLocation(), Sound.ENDERDRAGON_WINGS, 3, 1);
-			} else
-				p.setVelocity(p.getVelocity().add(new Vector(0, -0.1, 0)));
-		}
-
-		if (p.getGameMode() != GameMode.CREATIVE && p.isFlying() && Minigames.alivePlayers.contains(p.getName())) {
-			p.setFlying(false);
 		}
 	}
 
