@@ -254,7 +254,7 @@ public enum ShopItem {
 		Game.Spleef,
 		0,
 		true,
-		1500,
+		2500,
 		"Start with 1 tnt bomb.",
 		"Throwing the tnt bomb will",
 		"make it explode."),
@@ -265,7 +265,7 @@ public enum ShopItem {
 		2000,
 		"Start with a ghast tear",
 		"that when right-clicked",
-		"will rnadomly teleport you",
+		"will randomly teleport you",
 		"anywhere in the spleef map."),
 	// Tiers
 	// TRON
