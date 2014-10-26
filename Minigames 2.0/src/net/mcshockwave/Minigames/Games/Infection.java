@@ -37,7 +37,6 @@ public class Infection implements IMinigame {
 	public void giveKit(Player p) {
 		Minigames.clearInv(p);
 		Minigames.milkPlayer(p);
-		p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000000, 1));
 		// if IsHuman
 		if (Game.getTeam(p) != null && Game.getTeam(p).color == ChatColor.YELLOW) {
 			p.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
