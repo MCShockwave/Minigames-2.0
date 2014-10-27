@@ -50,6 +50,9 @@ public class Spleef implements IMinigame {
 			if (Minigames.hasItem(p, ShopItem.Teleporter)) {
 				p.getInventory().setItem(8, ItemMetaUtils.setItemName(new ItemStack(Material.GHAST_TEAR), ChatColor.LIGHT_PURPLE + "Teleporter"));
 			}
+			if (Minigames.hasItem(p, ShopItem.Apocolypse)) {
+				p.getInventory().setItem(8, ItemMetaUtils.setItemName(new ItemStack(Material.NETHER_STAR), ChatColor.AQUA + "Apocolypse"));
+			}
 		}
 		Minigames.broadcast("You have %s seconds of invincibility!", invincibilityTime);
 		invin = System.currentTimeMillis() + (invincibilityTime * 1000);
@@ -104,7 +107,7 @@ public class Spleef implements IMinigame {
 				pl.playSound(pl.getEyeLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
 			}
 			SchedulerUtils u = SchedulerUtils.getNew();
-			for (int i = 0; i < 6; i++) {
+			for (int i = 0; i < 10; i++) {
 				final Location m = LocUtils.addRand(Game.Spleef.spawn, 25, 0, 25).add(0, 50, 0);
 				u.add(new Runnable() {
 					public void run() {
