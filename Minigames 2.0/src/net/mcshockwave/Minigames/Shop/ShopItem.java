@@ -267,6 +267,14 @@ public enum ShopItem {
 		"that when right-clicked",
 		"will randomly teleport you",
 		"anywhere in the spleef map."),
+	Apocolypse(
+		Game.Spleef,
+		2,
+		false,
+		10000,
+		"Right-click you nether star",
+		"for an apocolypse of tnt.",
+		"Very explosive."),
 	// Tiers
 	// TRON
 	Color_Bomb(

@@ -6,6 +6,9 @@ import java.util.Random;
 
 import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.LocUtils;
+import net.mcshockwave.MCS.Utils.SchedulerUtils;
+import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
@@ -15,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -92,6 +96,24 @@ public class Spleef implements IMinigame {
 			p.teleport(new Location(Minigames.getDefaultWorld(), corner1.getBlockX() + tax, 105, corner2.getBlockZ() + taz, p.getLocation().getYaw(), p.getLocation().getPitch()));
 			p.setFireTicks(0);
 			MCShockwave.send(ChatColor.GREEN, p, "%s", "§lWhoooooosh!");
+		}
+		if (event.getItem().getType() == Material.NETHER_STAR) {
+			p.setItemInHand(null);
+			MCShockwave.broadcast(ChatColor.DARK_PURPLE, "%s", "§l" + p.getName() + ": May death rain upon them!");
+			for (Player pl : Bukkit.getOnlinePlayers()) {
+				pl.playSound(pl.getEyeLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
+			}
+			SchedulerUtils u = SchedulerUtils.getNew();
+			for (int i = 0; i < 6; i++) {
+				final Location m = LocUtils.addRand(Game.Spleef.spawn, 25, 0, 25).add(0, 50, 0);
+				u.add(new Runnable() {
+					public void run() {
+						m.getWorld().spawnEntity(m, EntityType.PRIMED_TNT);
+					}
+				});
+				u.add(r.nextInt(10));
+			}
+			u.execute();
 		}
 	}
 	

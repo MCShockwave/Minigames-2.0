@@ -521,7 +521,7 @@ public class VillageBattle implements IMinigame {
 
 					if (p2 != p && Game.getTeam(p2) != Game.getTeam(p) && Minigames.alivePlayers.contains(p2.getName())
 							&& types.containsKey(p2)) {
-						p2.damage(10);
+						p2.damage(10, p);
 					}
 				}
 
