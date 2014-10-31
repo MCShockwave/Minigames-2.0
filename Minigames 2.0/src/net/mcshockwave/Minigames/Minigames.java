@@ -327,11 +327,27 @@ public class Minigames extends JavaPlugin {
 						}, 20);
 					}
 				}
+				for (String s : Game.getTeam(win).deadPlayers) {
+					if (Bukkit.getPlayer(s) != null) {
+						final Player pl = Bukkit.getPlayer(s);
+
+						final String name = currentGame.name;
+						final int points = pointsOnWin / 2;
+
+						Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
+							public void run() {
+								PointsUtils.addPoints(pl, points, "your team winning " + name);
+								pl.playSound(pl.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
+								Statistics.incrWins(pl.getName(), false);
+							}
+						}, 20);
+					}
+				}
 				for (Player p : getOptedIn()) {
 					final Player p2 = p;
 					Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 						public void run() {
-							if (!win.hasPlayer(p2)) {
+							if (!win.hasPlayer(p2) && !Game.getTeam(win).deadPlayers.contains(p2.getName())) {
 								p2.playSound(p2.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
 							}
 						}
@@ -823,7 +839,12 @@ public class Minigames extends JavaPlugin {
 			}
 
 			if (currentGame.isTeamGame()) {
-				Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p).removePlayer(p);
+				GameTeam gt = Game.getTeam(p);
+				if (gt != null) {
+					gt.team.removePlayer(p);
+					gt.deadPlayers.add(p.getName());
+				}
+				// Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p).removePlayer(p);
 			}
 
 			if (defaultSidebar) {

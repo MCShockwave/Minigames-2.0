@@ -270,10 +270,11 @@ public enum Game {
 	}
 
 	public static class GameTeam {
-		public String		name;
-		public ChatColor	color;
+		public String				name;
+		public ChatColor			color;
 		// public Location spawn;
-		public Team			team	= null;
+		public Team					team		= null;
+		public ArrayList<String>	deadPlayers	= new ArrayList<>();
 
 		public GameTeam(String name, ChatColor color) {
 			this.name = name;
