@@ -36,7 +36,7 @@ public class Loot implements IMinigame {
 	ItemStack[]	swords		= { new ItemStack(Material.WOOD_SWORD), new ItemStack(Material.STONE_SWORD),
 			new ItemStack(Material.IRON_SWORD), new ItemStack(Material.DIAMOND_SWORD) };
 	ItemStack[]	potions		= { new ItemStack(Material.POTION, 1, (short) 8229),
-			new ItemStack(Material.POTION, 1, (short) 8226), new ItemStack(Material.POTION, 1, (short) 8225) };
+			new ItemStack(Material.POTION, 1, (short)8226), new ItemStack(Material.POTION, 1, (short) 8225) };
 
 	public long	invinTime	= 0;
 
