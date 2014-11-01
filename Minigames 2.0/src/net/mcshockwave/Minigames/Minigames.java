@@ -842,7 +842,9 @@ public class Minigames extends JavaPlugin {
 				GameTeam gt = Game.getTeam(p);
 				if (gt != null) {
 					gt.team.removePlayer(p);
-					gt.deadPlayers.add(p.getName());
+					if (!gt.deadPlayers.contains(p.getName())) {
+						gt.deadPlayers.add(p.getName());
+					}
 				}
 				// Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p).removePlayer(p);
 			}
