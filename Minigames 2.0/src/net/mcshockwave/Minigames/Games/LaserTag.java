@@ -9,6 +9,7 @@ import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Shop.ShopItem;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -140,9 +141,19 @@ public class LaserTag implements IMinigame {
 							if (Game.getTeam(p) == Game.getTeam(pla)) {
 								break;
 							}
-							pla.damage(pla.getHealth());
-							addLives(Game.getTeam(pla), -1);
-							checkPoints(Game.getTeam(pla));
+							if (Minigames.hasItem(pla, ShopItem.Tank)) {
+								if (pla.getHealth() <= 10.0) {
+									pla.damage(pla.getHealth(), p);
+									addLives(Game.getTeam(pla), -1);
+									checkPoints(Game.getTeam(pla));
+								} else {
+								pla.damage(10, p);
+								}
+							} else {
+								pla.damage(pla.getHealth(), p);
+								addLives(Game.getTeam(pla), -1);
+								checkPoints(Game.getTeam(pla));
+							}
 							break;
 						}
 					}
@@ -167,9 +178,19 @@ public class LaserTag implements IMinigame {
 								bool1 = false;
 								GameTeam gt = Game.getTeam(pla);
 								if (Game.getTeam(p) != gt) {
-									pla.damage(pla.getHealth());
-									addLives(Game.getTeam(pla), -1);
-									checkPoints(Game.getTeam(pla));
+									if (Minigames.hasItem(pla, ShopItem.Tank)) {
+										if (pla.getHealth() <= 10.0) {
+											pla.damage(pla.getHealth(), p);
+											addLives(Game.getTeam(pla), -1);
+											checkPoints(Game.getTeam(pla));
+										} else {
+										pla.damage(10, p);
+										}
+									} else {
+										pla.damage(pla.getHealth(), p);
+										addLives(Game.getTeam(pla), -1);
+										checkPoints(Game.getTeam(pla));
+									}
 								}
 								break;
 							} else {
