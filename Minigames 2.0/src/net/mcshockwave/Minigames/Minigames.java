@@ -687,7 +687,7 @@ public class Minigames extends JavaPlugin {
 				if (currentGame.isTeamGame() && Game.getTeam(p.getKiller()) != null) {
 					displayKiller = Game.getTeam(p.getKiller()).color + displayKiller;
 				}
-				PacketUtils.playTitle(p.getKiller(), 0, 2, 13, null, "§7Killed §6" + display);
+				PacketUtils.playTitle(p.getKiller(), 0, 2, 13, "", "§7Killed §6" + display);
 				PacketUtils.playTitle(p, 3, 10, 10, "§6" + displayKiller, "§7§oKilled You");
 			} else {
 				PacketUtils.playTitle(p, 3, 10, 10, "§6Nobody", "§7§oKilled You");
