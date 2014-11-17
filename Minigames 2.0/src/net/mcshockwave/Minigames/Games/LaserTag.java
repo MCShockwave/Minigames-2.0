@@ -9,8 +9,6 @@ import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Shop.ShopItem;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,6 +20,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -135,25 +136,14 @@ public class LaserTag implements IMinigame {
 						Player pla = (Player) ent;
 						Location end_loc = ent.getLocation();
 						double distance = bl.getLocation().distanceSquared(end_loc);
-						if (distance <= 4 && Minigames.alivePlayers.contains(pla.getName())
-								&& Game.getTeam(pla).spawn.distanceSquared(pla.getLocation()) > 10 * 10) {
+						if (distance <= 4 && Minigames.alivePlayers.contains(pla.getName()) && Game.getTeam(pla).spawn.distanceSquared(pla.getLocation()) > 10 * 10) {
 							bool = false;
 							if (Game.getTeam(p) == Game.getTeam(pla)) {
 								break;
 							}
-							if (Minigames.hasItem(pla, ShopItem.Tank)) {
-								if (pla.getHealth() <= 10.0) {
-									pla.damage(pla.getHealth(), p);
-									addLives(Game.getTeam(pla), -1);
-									checkPoints(Game.getTeam(pla));
-								} else {
-								pla.damage(10, p);
-								}
-							} else {
-								pla.damage(pla.getHealth(), p);
-								addLives(Game.getTeam(pla), -1);
-								checkPoints(Game.getTeam(pla));
-							}
+							pla.damage(pla.getHealth());
+							addLives(Game.getTeam(pla), -1);
+							checkPoints(Game.getTeam(pla));
 							break;
 						}
 					}
@@ -161,8 +151,8 @@ public class LaserTag implements IMinigame {
 				if (!bool) {
 					break;
 				}
-				PacketUtils.playParticleEffect(ParticleEffect.FIREWORKS_SPARK, bl.getLocation().add(0.5, 0.5, 0.5), 0,
-						0.1f, 3);
+				
+				PacketUtils.playParticleEffect(ParticleEffect.FIREWORKS_SPARK, bl.getLocation().add(0.5, 0.5, 0.5), 0, 0.1f, 3);
 
 				List<Block> bll = p.getLineOfSight(null, 50);
 				final Block b = bll.get(bll.size() - 1);
@@ -173,25 +163,15 @@ public class LaserTag implements IMinigame {
 						if (ent instanceof Player) {
 							Player pla = (Player) ent;
 							double distance = block.getLocation().distanceSquared(ent.getLocation());
-							if (distance <= 4 && Minigames.alivePlayers.contains(pla.getName())
-									&& Game.getTeam(pla).spawn.distanceSquared(pla.getLocation()) > 10 * 10) {
+							if (distance <= 4 && Minigames.alivePlayers.contains(pla.getName()) && Game.getTeam(pla).spawn.distanceSquared(pla.getLocation()) > 10 * 10) {
 								bool1 = false;
 								GameTeam gt = Game.getTeam(pla);
-								if (Game.getTeam(p) != gt) {
-									if (Minigames.hasItem(pla, ShopItem.Tank)) {
-										if (pla.getHealth() <= 10.0) {
-											pla.damage(pla.getHealth(), p);
-											addLives(Game.getTeam(pla), -1);
-											checkPoints(Game.getTeam(pla));
-										} else {
-										pla.damage(10, p);
-										}
-									} else {
-										pla.damage(pla.getHealth(), p);
-										addLives(Game.getTeam(pla), -1);
-										checkPoints(Game.getTeam(pla));
-									}
+								if (Game.getTeam(p) == gt) {
+									break;
 								}
+								pla.damage(pla.getHealth());
+								addLives(Game.getTeam(pla), -1);
+								checkPoints(Game.getTeam(pla));
 								break;
 							} else {
 								bool1 = true;
@@ -199,6 +179,7 @@ public class LaserTag implements IMinigame {
 						}
 					}
 				}
+
 				if (bool1) {
 					GameTeam gt = Game.getTeam(p);
 
@@ -290,6 +271,20 @@ public class LaserTag implements IMinigame {
 		}
 	}
 
+	@EventHandler
+	public void onEntityDamage(EntityDamageEvent e) {
+		if (e.getCause() == DamageCause.FALL) {
+			e.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onRegainHealth(EntityRegainHealthEvent e) {
+		if (e.getEntity() instanceof Player) {
+			e.setCancelled(true);
+		}
+	}
+	
 	public void giveItems(Player p) {
 		p.getInventory().clear();
 		p.getInventory().addItem(ItemMetaUtils.setItemName(new ItemStack(Material.DIAMOND_HOE), "Laser Gun"));

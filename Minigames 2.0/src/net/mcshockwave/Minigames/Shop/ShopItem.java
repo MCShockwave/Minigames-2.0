@@ -247,13 +247,6 @@ public enum ShopItem {
 		"zombies. As a zombie any human you hit will",
 		"be withered for a short time."),
 	// Laser Tag
-	Tank(
-		Game.Laser_Tag,
-		0,
-		true,
-		3500,
-		"Annoyed by the pesky one hit kills?",
-		"Take half damage from enemy railguns."),
 	// Loot
 	// Minotaur
 	// Siege
