@@ -155,6 +155,27 @@ public class DefaultListener implements Listener {
 				Minigames.sendDeathToGame(p);
 			}
 
+			// SO IT WONT BREAK K?
+			try {
+				if (p.getKiller() != null) {
+					String display = "§o" + p.getName();
+					String displayKiller = "§o" + p.getKiller().getName();
+					if (Minigames.currentGame.isTeamGame() && Game.getTeam(p) != null) {
+						display = Game.getTeam(p).color + display;
+					}
+					if (Minigames.currentGame.isTeamGame() && Game.getTeam(p.getKiller()) != null) {
+						displayKiller = Game.getTeam(p.getKiller()).color + displayKiller;
+					}
+
+					PacketUtils.playTitle(p.getKiller(), 0, 2, 13, "", "§7Killed §6" + display);
+					PacketUtils.playTitle(p, 3, 10, 10, "§6" + displayKiller, "§7§oKilled You");
+				} else {
+					PacketUtils.playTitle(p, 3, 10, 10, "§6Nobody", "§7§oKilled You");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			if (p.getKiller() != null) {
 				Player k = p.getKiller();
 				Random rand = new Random();
@@ -163,7 +184,8 @@ public class DefaultListener implements Listener {
 					int minXp = SQLTable.Settings.getInt("Setting", "XPMin", "Value");
 					int maxXp = SQLTable.Settings.getInt("Setting", "XPMax", "Value");
 					int xp = rand.nextInt(maxXp - minXp) + minXp;
-					LevelUtils.addXP(k, MCShockwave.xpmult == 1 ? xp : xp * MCShockwave.xpmult, "killing " + p.getName(), true);
+					LevelUtils.addXP(k, MCShockwave.xpmult == 1 ? xp : xp * MCShockwave.xpmult,
+							"killing " + p.getName(), true);
 				}
 			}
 		}

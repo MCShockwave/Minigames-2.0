@@ -6,7 +6,6 @@ import net.mcshockwave.MCS.SQLTable.Rank;
 import net.mcshockwave.MCS.Commands.VanishCommand;
 import net.mcshockwave.MCS.Stats.Statistics;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Commands.Force;
 import net.mcshockwave.Minigames.Commands.InvisCommand;
@@ -676,27 +675,6 @@ public class Minigames extends JavaPlugin {
 
 			if (sendDeath) {
 				sendDeathToGame(p);
-			}
-
-			// SO IT WONT BREAK K?
-			try {
-				if (p.getKiller() != null) {
-					String display = "§o" + p.getName();
-					String displayKiller = "§o" + p.getKiller().getName();
-					if (currentGame.isTeamGame() && Game.getTeam(p) != null) {
-						display = Game.getTeam(p).color + display;
-					}
-					if (currentGame.isTeamGame() && Game.getTeam(p.getKiller()) != null) {
-						displayKiller = Game.getTeam(p.getKiller()).color + displayKiller;
-					}
-
-					PacketUtils.playTitle(p.getKiller(), 0, 2, 13, "", "§7Killed §6" + display);
-					PacketUtils.playTitle(p, 3, 10, 10, "§6" + displayKiller, "§7§oKilled You");
-				} else {
-					PacketUtils.playTitle(p, 3, 10, 10, "§6Nobody", "§7§oKilled You");
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
 			if (currentGame.isTeamGame()) {
