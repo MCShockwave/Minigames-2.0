@@ -829,8 +829,12 @@ public class Minigames extends JavaPlugin {
 			}
 		} catch (Exception e) {
 		}
-		if (de != null && Minigames.currentGame != null) {
-			Minigames.currentGame.mclass.onPlayerDeath(de);
+		try {
+			if (de != null && Minigames.currentGame != null) {
+				Minigames.currentGame.mclass.onPlayerDeath(de);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
