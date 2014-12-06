@@ -354,6 +354,10 @@ public enum Game {
 		return Bukkit.getPlayer(Minigames.alivePlayers.get(rand.nextInt(Minigames.alivePlayers.size())));
 	}
 
+	public static boolean hasElement(String element) {
+		return FileElements.has(element, Multiworld.getGame().getName());
+	}
+
 	public static Location getLocation(String element) {
 		return FileElements.getLoc(element, Multiworld.getGame());
 	}

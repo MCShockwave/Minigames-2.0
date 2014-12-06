@@ -56,8 +56,8 @@ import java.util.HashMap;
 
 public class VillageBattle implements IMinigame {
 
-	Location					gspawn	= new Location(Multiworld.getGame(), 577, 103, 5);
-	Location					yspawn	= new Location(Multiworld.getGame(), 667, 103, -166);
+	Location					gspawn	= null;
+	Location					yspawn	= null;
 
 	Score						gs, ys;
 	Objective					o;
@@ -74,6 +74,9 @@ public class VillageBattle implements IMinigame {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
+		gspawn = Game.getLocation("green-village");
+		yspawn = Game.getLocation("yellow-village");
+
 		int gvc = Game.getInstance(this).teams[0].team.getSize();
 		int yvc = Game.getInstance(this).teams[1].team.getSize();
 
@@ -169,7 +172,8 @@ public class VillageBattle implements IMinigame {
 		boolean notDone = true;
 		int times = 0;
 		while (notDone || times > 100) {
-			Location l = LocUtils.addRand(isGreen ? gspawn.clone() : yspawn.clone(), 25, 1, 25);
+			Location l = LocUtils.addRand(isGreen ? gspawn.clone() : yspawn.clone(), Game.getInt("radius"), 1,
+					Game.getInt("radius"));
 			l.setY(gspawn.getBlockY());
 			if (l.getBlock().getType() == Material.AIR) {
 				notDone = false;

@@ -199,7 +199,11 @@ public class Minigames extends JavaPlugin {
 								}
 							}
 							if (b == 10) {
-								currentMap = currentGame.maplist.get(rand.nextInt(currentGame.maplist.size()));
+								if (nextMap != null && currentGame.maplist.contains(nextMap)) {
+									currentMap = nextMap;
+									nextMap = null;
+								} else
+									currentMap = currentGame.maplist.get(rand.nextInt(currentGame.maplist.size()));
 
 								resetGameWorld(currentGame, currentMap);
 
@@ -838,7 +842,7 @@ public class Minigames extends JavaPlugin {
 			if (sendDeath) {
 				sendDeathToGame(p);
 			}
-			
+
 			if (p.getKiller() != null) {
 				String display = "§o" + p.getName();
 				String displayKiller = "§o" + p.getKiller().getName();
@@ -1012,6 +1016,8 @@ public class Minigames extends JavaPlugin {
 
 	public static boolean						defaultSidebar	= false;
 	public static HashMap<GameTeam, GameScore>	sidebar_left	= new HashMap<>();
+
+	public static String						nextMap			= null;
 
 	public static void showDefaultSidebar() {
 		defaultSidebar = true;

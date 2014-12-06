@@ -79,6 +79,10 @@ public class MGC implements CommandExecutor {
 				}
 				p.sendMessage("§cUpdated maps for all games");
 			}
+			if (args[0].equalsIgnoreCase("nextMap")) {
+				Minigames.nextMap = args[1];
+				p.sendMessage("§6Set next map to " + args[1]);
+			}
 		}
 		return false;
 	}
