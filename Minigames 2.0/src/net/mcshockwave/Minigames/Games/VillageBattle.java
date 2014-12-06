@@ -68,7 +68,6 @@ public class VillageBattle implements IMinigame {
 
 	GameScore					gs		= null, ys = null;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameStart() {
 		gspawn = Game.getLocation("green-village");
