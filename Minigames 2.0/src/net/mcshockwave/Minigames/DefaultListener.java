@@ -4,7 +4,6 @@ import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.Currency.LevelUtils;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
-import net.mcshockwave.MCS.Utils.MiscUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
 import net.mcshockwave.Minigames.Game.GameTeam;
@@ -151,15 +150,31 @@ public class DefaultListener implements Listener {
 
 		event.setDeathMessage("");
 		if (!Minigames.optedOut.contains(p.getName()) && Minigames.currentGame != null && Minigames.started) {
+			if (!Minigames.currentGame.canRespawn) {
+				Minigames.setDead(p, true);
+			} else {
+				Minigames.sendDeathToGame(p);
+			}
+
+			// SO IT WONT BREAK K?
 			try {
-				if (!Minigames.currentGame.canRespawn) {
-					Minigames.setDead(p, true);
+				if (p.getKiller() != null) {
+					String display = "§o" + p.getName();
+					String displayKiller = "§o" + p.getKiller().getName();
+					if (Minigames.currentGame.isTeamGame() && Game.getTeam(p) != null) {
+						display = Game.getTeam(p).color + display;
+					}
+					if (Minigames.currentGame.isTeamGame() && Game.getTeam(p.getKiller()) != null) {
+						displayKiller = Game.getTeam(p.getKiller()).color + displayKiller;
+					}
+
+					PacketUtils.playTitle(p.getKiller(), 0, 2, 13, "", "§7Killed §6" + display);
+					PacketUtils.playTitle(p, 3, 10, 10, "§6" + displayKiller, "§7§oKilled You");
 				} else {
-					Minigames.sendDeathToGame(p);
+					PacketUtils.playTitle(p, 3, 10, 10, "§6Nobody", "§7§oKilled You");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				MiscUtils.printStackTrace(e);
 			}
 
 			if (p.getKiller() != null) {
@@ -173,19 +188,13 @@ public class DefaultListener implements Listener {
 				}
 			}
 		}
-		try {
-			PacketUtils.sendPacketGlobally(p.getEyeLocation(), 50,
-					PacketUtils.generateParticles(ParticleEffect.LAVA, p.getEyeLocation(), 0, 1, 50));
-			p.getWorld().playSound(p.getEyeLocation(), Sound.CHICKEN_EGG_POP, 1, 0);
-			PlayerRespawnEvent pre = new PlayerRespawnEvent(p, p.getWorld().getSpawnLocation(), false);
-			Bukkit.getPluginManager().callEvent(pre);
-			p.teleport(pre.getRespawnLocation());
-		} catch (Exception e) {
-			e.printStackTrace();
-			MiscUtils.printStackTrace(e);
-			p.teleport(p.getWorld().getSpawnLocation());
-		}
+		PacketUtils.sendPacketGlobally(p.getEyeLocation(), 50,
+				PacketUtils.generateParticles(ParticleEffect.LAVA, p.getEyeLocation(), 0, 1, 50));
+		p.getWorld().playSound(p.getEyeLocation(), Sound.CHICKEN_EGG_POP, 1, 0);
+		PlayerRespawnEvent pre = new PlayerRespawnEvent(p, p.getWorld().getSpawnLocation(), false);
+		Bukkit.getPluginManager().callEvent(pre);
 		p.setHealth(20);
+		p.teleport(pre.getRespawnLocation());
 		p.setVelocity(new Vector());
 	}
 
