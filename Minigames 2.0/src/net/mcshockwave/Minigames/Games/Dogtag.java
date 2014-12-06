@@ -147,7 +147,7 @@ public class Dogtag implements IMinigame {
 
 		Minigames.send(e.p, "You have been put in %s until your tag is picked up!", "holding");
 
-		final GameTeam[] gts = Game.getInstance(this).teams;
+		final GameTeam[] gts = Game.Dogtag.teams;
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				if (getAliveCount(gts[0]) < 1) {

@@ -144,7 +144,7 @@ public class Core implements IMinigame {
 						Minigames.getBroadcastMessage("Recapture the Core by %s it!", "Right-Clicking"));
 
 				coreTeam = gt.team;
-				for (GameTeam te : Game.getInstance(this).teams) {
+				for (GameTeam te : Game.Core.teams) {
 					if (coreTeam == te.team) {
 						te.team.setPrefix(te.color + ChatColor.BOLD.toString());
 					} else {

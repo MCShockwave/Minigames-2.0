@@ -60,7 +60,7 @@ public class Boarding implements IMinigame {
 
 	@Override
 	public void onGameStart() {
-		Game g = Game.getInstance(this);
+		Game g = Game.Boarding;
 		int rein = Math.min(g.teams[0].team.getSize() * 5, g.teams[1].team.getSize() * 5);
 		gr = rein;
 		yr = rein;
@@ -109,7 +109,7 @@ public class Boarding implements IMinigame {
 		}
 
 		if (getReinforcements(e.gt) < 0) {
-			GameTeam[] teams = Game.getInstance(this).teams;
+			GameTeam[] teams = Game.Boarding.teams;
 			if (e.gt == teams[0]) {
 				Minigames.stop(teams[1].team);
 			}

@@ -77,8 +77,8 @@ public class VillageBattle implements IMinigame {
 		gspawn = Game.getLocation("green-village");
 		yspawn = Game.getLocation("yellow-village");
 
-		int gvc = Game.getInstance(this).teams[0].team.getSize();
-		int yvc = Game.getInstance(this).teams[1].team.getSize();
+		int gvc = Game.Village_Battle.teams[0].team.getSize();
+		int yvc = Game.Village_Battle.teams[1].team.getSize();
 
 		gvc *= 3;
 		yvc *= 3;
@@ -103,7 +103,6 @@ public class VillageBattle implements IMinigame {
 			startPlayer(p, Game.getTeam(p));
 		}
 
-		final VillageBattle t = this;
 		bt = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
 			public void run() {
 				for (Villager v : greVil) {
@@ -117,7 +116,7 @@ public class VillageBattle implements IMinigame {
 					}
 				}
 
-				for (GameTeam gt : Game.getInstance(t).teams) {
+				for (GameTeam gt : Game.Village_Battle.teams) {
 					setCount(gt, getTotalCountOnTeam(gt));
 				}
 			}
@@ -329,11 +328,11 @@ public class VillageBattle implements IMinigame {
 
 			GameTeam gt = null;
 			if (greVil.contains(v)) {
-				gt = Game.getInstance(this).teams[0];
+				gt = Game.Village_Battle.teams[0];
 				greVil.remove(v);
 			}
 			if (yelVil.contains(v)) {
-				gt = Game.getInstance(this).teams[1];
+				gt = Game.Village_Battle.teams[1];
 				greVil.remove(v);
 			}
 
@@ -436,14 +435,14 @@ public class VillageBattle implements IMinigame {
 		}
 		if (gt.color == ChatColor.GREEN) {
 			if (set <= 0) {
-				Minigames.stop(Game.getInstance(this).teams[1].team);
+				Minigames.stop(Game.Village_Battle.teams[1].team);
 			}
 			if (gs != null && Minigames.started)
 				gs.setScore(set);
 		}
 		if (gt.color == ChatColor.YELLOW) {
 			if (set <= 0) {
-				Minigames.stop(Game.getInstance(this).teams[0].team);
+				Minigames.stop(Game.Village_Battle.teams[0].team);
 			}
 			if (ys != null && Minigames.started)
 				ys.setScore(set);

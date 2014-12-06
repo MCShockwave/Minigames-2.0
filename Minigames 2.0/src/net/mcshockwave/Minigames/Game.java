@@ -325,15 +325,6 @@ public enum Game {
 		return null;
 	}
 
-	public static Game getInstance(IMinigame im) {
-		for (Game g : values()) {
-			if (g.mclass == im) {
-				return g;
-			}
-		}
-		return null;
-	}
-
 	public static byte getWoolColor(GameTeam gt) {
 		ChatColor c = gt.color;
 		if (c == ChatColor.GREEN) {

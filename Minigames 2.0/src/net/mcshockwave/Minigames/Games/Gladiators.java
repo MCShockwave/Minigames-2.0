@@ -44,7 +44,7 @@ public class Gladiators implements IMinigame {
 
 	@Override
 	public void onGameStart() {
-		for (GameTeam gt : Game.getInstance(this).teams) {
+		for (GameTeam gt : Game.Gladiators.teams) {
 			selectRandom(gt);
 		}
 
