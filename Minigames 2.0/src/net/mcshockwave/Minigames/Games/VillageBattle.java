@@ -11,6 +11,8 @@ import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.LocUtils;
 import net.mcshockwave.Minigames.worlds.Multiworld;
@@ -46,10 +48,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,9 +57,6 @@ public class VillageBattle implements IMinigame {
 	Location					gspawn	= null;
 	Location					yspawn	= null;
 
-	Score						gs, ys;
-	Objective					o;
-
 	HashMap<Player, Profession>	types	= new HashMap<Player, Profession>();
 
 	ArrayList<Villager>			greVil	= new ArrayList<Villager>();
@@ -70,6 +65,8 @@ public class VillageBattle implements IMinigame {
 	HashMap<Player, Long>		cool	= new HashMap<Player, Long>();
 
 	BukkitTask					bt		= null;
+
+	GameScore					gs		= null, ys = null;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -90,14 +87,9 @@ public class VillageBattle implements IMinigame {
 			spawnVillager(false, false);
 		}
 
-		Scoreboard s = Bukkit.getScoreboardManager().getMainScoreboard();
-		o = s.registerNewObjective("Villagers", "dummy");
-		o.setDisplayName(ChatColor.AQUA + "Villagers");
-		gs = o.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Green"));
-		gs.setScore(gvc);
-		ys = o.getScore(Bukkit.getOfflinePlayer(ChatColor.YELLOW + "Yellow"));
-		ys.setScore(yvc);
-		o.setDisplaySlot(DisplaySlot.SIDEBAR);
+		Sidebar.setDisplayName("Villagers");
+		gs = Sidebar.getNewScore("§aGreen", gvc);
+		ys = Sidebar.getNewScore("§eYellow", yvc);
 
 		for (Player p : Minigames.getOptedIn()) {
 			startPlayer(p, Game.getTeam(p));
@@ -185,14 +177,6 @@ public class VillageBattle implements IMinigame {
 
 	@Override
 	public void onGameEnd() {
-		o.unregister();
-
-		for (Villager v : greVil) {
-			v.remove();
-		}
-		for (Villager v : yelVil) {
-			v.remove();
-		}
 		greVil.clear();
 		yelVil.clear();
 
@@ -438,14 +422,14 @@ public class VillageBattle implements IMinigame {
 				Minigames.stop(Game.Village_Battle.teams[1].team);
 			}
 			if (gs != null && Minigames.started)
-				gs.setScore(set);
+				gs.setVal(set);
 		}
 		if (gt.color == ChatColor.YELLOW) {
 			if (set <= 0) {
 				Minigames.stop(Game.Village_Battle.teams[0].team);
 			}
 			if (ys != null && Minigames.started)
-				ys.setScore(set);
+				ys.setVal(set);
 		}
 	}
 
