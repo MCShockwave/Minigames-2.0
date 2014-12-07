@@ -37,10 +37,14 @@ import java.util.List;
 
 public class BuildAndFight implements IMinigame {
 
-	boolean	building	= true;
+	boolean			building	= true;
+
+	public boolean	indes		= false;
 
 	@Override
 	public void onGameStart() {
+		indes = Game.hasElement("indestructable") && Game.getString("indestructable").equalsIgnoreCase("true");
+
 		Minigames.showDefaultSidebar();
 
 		BlockUtils.save(Game.getLocation("bridge-corner-1"), Game.getLocation("bridge-corner-2"), "baf-bridge", true);
@@ -137,8 +141,7 @@ public class BuildAndFight implements IMinigame {
 		if (b.getType() == Material.STAINED_CLAY) {
 			return false;
 		}
-		if (b.getType() != Material.WOOL && b.getType() != Material.STAINED_GLASS
-				&& Game.getString("indestructable").equalsIgnoreCase("true")) {
+		if (b.getType() != Material.WOOL && b.getType() != Material.STAINED_GLASS && indes) {
 			return false;
 		}
 		if (gt != null) {
@@ -208,7 +211,8 @@ public class BuildAndFight implements IMinigame {
 			}
 		}
 		for (Block hb : aff) {
-			if (hb.getType() != Material.STAINED_CLAY && hb.getType() != Material.STAINED_GLASS) {
+			if ((hb.getType() == Material.WOOL || !indes && hb.getType() != Material.STAINED_CLAY)
+					&& hb.getType() != Material.STAINED_GLASS) {
 				PacketUtils.sendPacketGlobally(hb.getLocation(), 50,
 						PacketUtils.generateBlockParticles(hb.getType(), hb.getData(), hb.getLocation()));
 				hb.getWorld().playSound(hb.getLocation(), Sound.DIG_WOOL, 1, 1);

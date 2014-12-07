@@ -79,15 +79,15 @@ public class StormTheCastle implements IMinigame {
 		crystalLocation = Game.getLocation("spawn-crystal").getBlock().getLocation().add(0.5, 0, 0.5);
 		crystal = (EnderCrystal) crystalLocation.getWorld().spawnEntity(crystalLocation, EntityType.ENDER_CRYSTAL);
 
-		reinforcementBonus = Game.Storm_The_Castle.getTeam("Barbarians").getPlayers().size() * 3;
-		reinforcements = Sidebar.getNewScore("§cReinforcements", reinforcementBonus * 2);
+		reinforcementBonus = Game.Storm_The_Castle.getTeam("Barbarians").getPlayers().size() * 2;
+		reinforcements = Sidebar.getNewScore("§cReinforcements", reinforcementBonus * 3);
 
 		wallObjLoc = Game.getLocation("objective-wall").getBlock().getLocation();
 
 		wallHealth = Sidebar.getNewScore("§dWall Health", 100);
 		cacheStatus = Sidebar.getNewScore("§eCache - §a✓", -1);
 		inhibitorsRemaining = Sidebar.getNewScore("§dInhibitors", 3);
-		crystalHealth = Sidebar.getNewScore("§dSpawn Crystal", 1000);
+		crystalHealth = Sidebar.getNewScore("§dSpawn Crystal", reinforcementBonus * 5);
 		remainingKnights = Sidebar.getNewScore("§dKnights Left", Game.Storm_The_Castle.getTeam("Knights").getPlayers()
 				.size());
 
@@ -134,6 +134,7 @@ public class StormTheCastle implements IMinigame {
 		for (Player p : Minigames.getOptedIn()) {
 			if (Minigames.alivePlayers.contains(p.getName())) {
 				if (p.getInventory().contains(Material.TNT) || p.getInventory().contains(Material.BEACON)) {
+					p.getInventory().clear();
 					p.damage(p.getMaxHealth());
 				}
 			}
@@ -173,7 +174,7 @@ public class StormTheCastle implements IMinigame {
 				p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(Material.BEACON));
 			}
 			if (p.getInventory().contains(Material.TNT)) {
-				p.getWorld().dropItemNaturally(Game.getLocation("barbarians-supply"), new ItemStack(Material.TNT));
+				p.getWorld().dropItemNaturally(Game.getLocation("barbarian-supply"), new ItemStack(Material.TNT));
 			}
 			giveItems(p);
 		} else {
@@ -209,7 +210,7 @@ public class StormTheCastle implements IMinigame {
 			}
 		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
 			pi.setHelmet(new ItemStack(Material.CHAINMAIL_HELMET));
-			pi.setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+			pi.setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
 			pi.setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
 			pi.setBoots(new ItemStack(Material.CHAINMAIL_BOOTS));
 			pi.addItem(new ItemStack(Material.IRON_AXE));
@@ -309,7 +310,6 @@ public class StormTheCastle implements IMinigame {
 				e.setTo(e.getFrom());
 			Minigames.send(e.getPlayer(), "Do not walk on an %s!", "objective");
 		}
-
 	}
 
 	@EventHandler
