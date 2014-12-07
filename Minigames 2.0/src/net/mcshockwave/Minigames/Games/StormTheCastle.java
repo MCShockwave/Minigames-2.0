@@ -87,7 +87,8 @@ public class StormTheCastle implements IMinigame {
 		wallHealth = Sidebar.getNewScore("§dWall Health", 100);
 		cacheStatus = Sidebar.getNewScore("§eCache - §a✓", -1);
 		inhibitorsRemaining = Sidebar.getNewScore("§dInhibitors", 3);
-		crystalHealth = Sidebar.getNewScore("§dSpawn Crystal", reinforcementBonus * 5);
+		crystalHealth = Sidebar.getNewScore("§dSpawn Crystal", Game.Storm_The_Castle.getTeam("Barbarians").getPlayers()
+				.size() * 100);
 		remainingKnights = Sidebar.getNewScore("§dKnights Left", Game.Storm_The_Castle.getTeam("Knights").getPlayers()
 				.size());
 
