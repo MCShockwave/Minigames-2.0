@@ -136,7 +136,8 @@ public class HotPotato implements IMinigame {
 	public Player getNearestPlayerTo(Player p) {
 		double dis = -1;
 		Player r = null;
-		for (Player c : p.getWorld().getPlayers()) {
+		for (String cn : Minigames.alivePlayers) {
+			Player c = Bukkit.getPlayer(cn);
 			double cdis = c.getLocation().distanceSquared(p.getLocation()); // DoUEvnCDis
 			if (!c.equals(p) && dis == -1 || cdis < dis) {
 				dis = cdis;
