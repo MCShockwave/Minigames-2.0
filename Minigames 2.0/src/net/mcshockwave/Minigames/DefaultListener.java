@@ -375,7 +375,8 @@ public class DefaultListener implements Listener {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
 
-		if (event.getTo().getY() < (FileElements.has("min-y", "Game") ? Game.getDouble("min-y") : 80)) {
+		if (event.getTo().getWorld().getName().equalsIgnoreCase(Multiworld.getGame().getName())
+				&& event.getTo().getY() < (FileElements.has("min-y", "Game") ? Game.getDouble("min-y") : 80)) {
 			if (Minigames.optedOut.contains(p.getName()) || Minigames.explode) {
 				p.teleport(p.getWorld().getSpawnLocation());
 			} else {
