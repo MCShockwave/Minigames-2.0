@@ -203,7 +203,7 @@ public enum Game {
 		new StormTheCastle(),
 		Material.BEACON,
 		0,
-		8,
+		12,
 		true,
 		true,
 		new GameTeam[] { new GameTeam("Knights", ChatColor.AQUA), new GameTeam("Barbarians", ChatColor.RED) });

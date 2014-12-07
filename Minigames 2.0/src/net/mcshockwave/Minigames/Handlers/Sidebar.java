@@ -23,9 +23,8 @@ public class Sidebar {
 	}
 
 	public static GameScore getNewScore(String name, int val) {
-		GameScore sc = new GameScore(name, Minigames.sidebar); // default
-																// objective
-																// here
+		// default objective here
+		GameScore sc = new GameScore(name, Minigames.sidebar);
 		scores.add(sc);
 		if (val == 0) {
 			sc.setVal(1);
@@ -53,7 +52,7 @@ public class Sidebar {
 			}
 		} else {
 			for (GameScore gs : getAllScores()) {
-				if (!gs.isDisplayed()) {
+				if (gs.isDisplayed()) {
 					gs.setDisplayed(true, false);
 				}
 			}
