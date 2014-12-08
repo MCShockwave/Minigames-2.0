@@ -61,9 +61,11 @@ public class StormTheCastle implements IMinigame {
 
 	public Location				wallObjLoc			= null;
 
-	public BukkitTask			particles			= null, drops = null;
+	public BukkitTask			particles			= null, drops = null, advance = null;
 
 	public ArrayList<Location>	inhibitors			= new ArrayList<>();
+
+	public int					tntCount			= 0;
 
 	@Override
 	public void onGameStart() {
@@ -119,12 +121,31 @@ public class StormTheCastle implements IMinigame {
 				Location drop = Game.getLocation("barbarian-supply");
 
 				if (wallHealth.isDisplayed()) {
-					drop.getWorld().dropItemNaturally(drop, new ItemStack(Material.TNT));
+					if (++tntCount == 1) {
+						tntCount = -1;
+						drop.getWorld().dropItemNaturally(drop, new ItemStack(Material.TNT));
+					}
 				} else if (inhibitorsRemaining.isDisplayed()) {
 					drop.getWorld().dropItemNaturally(drop, new ItemStack(Material.BEACON));
 				}
 			}
-		}.runTaskTimer(plugin, 0, 600);
+		}.runTaskTimer(plugin, 0, 300);
+
+		advance = new BukkitRunnable() {
+			public void run() {
+				int z = wallHealth.isDisplayed() ? Game.getInt("stage-1-z") : Game.getInt("stage-2-z");
+				// harm if pz is more than z
+				boolean more = Game.getInt("stage-1-z") > Game.getInt("stage-2-z");
+				for (Player p : Game.Storm_The_Castle.getTeam("Knights").getPlayers()) {
+					int pz = p.getLocation().getBlockZ();
+					if (more && pz > z || !more && pz < z) {
+						p.sendMessage("§cWhere are you going? Your team needs you! Fall back!");
+						p.playSound(p.getLocation(), Sound.ENDERDRAGON_HIT, 10, 0);
+						p.damage(2);
+					}
+				}
+			}
+		}.runTaskTimer(plugin, 0, 20);
 
 		Minigames.broadcastAll(
 				Minigames.getBroadcastMessage("The %s are storming the %s' castle!", "Barbarians", "Knights"),
@@ -155,6 +176,7 @@ public class StormTheCastle implements IMinigame {
 	public void onGameEnd() {
 		particles.cancel();
 		drops.cancel();
+		tntCount = 0;
 	}
 
 	@Override
