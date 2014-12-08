@@ -89,6 +89,8 @@ public class BuildAndFight implements IMinigame {
 			p.getInventory().addItem(
 					new ItemStack(Minigames.hasItem(p, ShopItem.Builder) ? Material.STAINED_CLAY : Material.WOOL, 64,
 							(short) data));
+			if(Minigames.hasItem(p, ShopItem.Builder))
+				p.getInventory().addItem(new ItemStack(Material.IRON_PICKAXE));
 			p.getInventory().addItem(new ItemStack(Material.SHEARS));
 		} else {
 			p.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
@@ -96,6 +98,8 @@ public class BuildAndFight implements IMinigame {
 					new ItemStack(Minigames.hasItem(p, ShopItem.Fighter) ? Material.SHEARS : Material.BOW));
 			if (!Minigames.hasItem(p, ShopItem.Fighter))
 				p.getInventory().addItem(new ItemStack(Material.ARROW, 64));
+			if(Minigames.hasItem(p, ShopItem.Builder))
+				p.getInventory().remove(Material.IRON_PICKAXE);
 		}
 	}
 
