@@ -82,7 +82,7 @@ public class StormTheCastle implements IMinigame {
 		crystal = (EnderCrystal) crystalLocation.getWorld().spawnEntity(crystalLocation, EntityType.ENDER_CRYSTAL);
 
 		reinforcementBonus = Game.Storm_The_Castle.getTeam("Barbarians").getPlayers().size() * 2;
-		reinforcements = Sidebar.getNewScore("§cReinforcements", reinforcementBonus * 3);
+		reinforcements = Sidebar.getNewScore("§cReinforcements", reinforcementBonus * 2);
 
 		wallObjLoc = Game.getLocation("objective-wall").getBlock().getLocation();
 
