@@ -1,17 +1,12 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 
 import org.bukkit.Bukkit;
@@ -23,10 +18,8 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -39,13 +32,14 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 public class Dogtag implements IMinigame {
 
-	HashMap<Item, String>		tag		= new HashMap<Item, String>();
-	HashMap<String, BukkitTask>	slimes	= new HashMap<String, BukkitTask>();
-	ArrayList<Slime>			spawned	= new ArrayList<Slime>();
+	HashMap<Item, String>	tag		= new HashMap<Item, String>();
 
-	BukkitTask					comPo	= null;
+	BukkitTask				comPo	= null;
 
 	@Override
 	public void onGameStart() {
@@ -90,26 +84,10 @@ public class Dogtag implements IMinigame {
 		return new Object[] { "Nothing", null };
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onGameEnd() {
-		for (BukkitTask bt : slimes.values()) {
-			bt.cancel();
-		}
-		slimes.clear();
-		for (Slime s : spawned) {
-			s.remove();
-		}
-		spawned.clear();
 		tag.clear();
 		comPo.cancel();
-
-		for (Map.Entry<Block, GameTeam> e : mines.entrySet()) {
-			Block b = e.getKey();
-			for (Player p : Bukkit.getOnlinePlayers()) {
-				PacketUtils.setBlockFromPacket(p, b, b.getType(), b.getData());
-			}
-		}
 		mines.clear();
 	}
 
@@ -126,19 +104,6 @@ public class Dogtag implements IMinigame {
 				ItemMetaUtils.setItemName(new ItemStack(Material.SKULL_ITEM, 1, (short) 3), UUID.randomUUID()
 						.toString()));
 		i.setPassenger(sk);
-		slimes.put(e.p.getName(), Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
-			public void run() {
-				final Slime name = (Slime) e.p.getWorld().spawnEntity(i.getLocation().clone(), EntityType.SLIME);
-				name.setSize(1);
-				name.setCustomName(e.gt.color + e.p.getName());
-				name.setCustomNameVisible(true);
-				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-					public void run() {
-						name.setHealth(0f);
-					}
-				}, 2);
-			}
-		}, 0, 18));
 
 		tag.put(i, e.p.getName());
 
@@ -239,10 +204,6 @@ public class Dogtag implements IMinigame {
 					Minigames.setDead(re, false);
 				}
 			}
-			if (slimes.containsKey(pla)) {
-				slimes.get(pla).cancel();
-				slimes.remove(pla);
-			}
 		}
 		i.remove();
 		event.setCancelled(true);
@@ -301,6 +262,10 @@ public class Dogtag implements IMinigame {
 
 			mines.put(b, Game.getTeam(p));
 			Minigames.send(p, "Placed %s at location!", "mine");
+			
+			for (Player tm : Game.getTeam(p).getPlayers()) {
+				PacketUtils.setBlockFromPacket(tm, b, Material.TNT, 0);
+			}
 		}
 	}
 

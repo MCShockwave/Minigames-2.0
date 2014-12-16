@@ -1,8 +1,5 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
@@ -19,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 public class Spleef implements IMinigame {
 
 	public long			invin				= 0;
-	public List<Block>	dest				= new ArrayList<Block>();
 	public final int	invincibilityTime	= 10;
 
 	@Override
@@ -33,9 +29,6 @@ public class Spleef implements IMinigame {
 
 	@Override
 	public void onGameEnd() {
-		for (Block b : dest) {
-			b.setType(Material.SNOW_BLOCK);
-		}
 	}
 
 	@Override
@@ -57,14 +50,12 @@ public class Spleef implements IMinigame {
 	}
 
 	public void killBlock(final Block b) {
-		dest.add(b);
 		b.setType(Material.AIR);
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				b.setType(Material.SNOW_BLOCK);
-				dest.remove(b);
 			}
-		}, 200);
+		}, 300);
 	}
 
 }

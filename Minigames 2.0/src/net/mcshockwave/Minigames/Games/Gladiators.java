@@ -31,11 +31,6 @@ import java.util.HashMap;
 
 public class Gladiators implements IMinigame {
 
-	Vector		rs	= new Vector(0.5, 112, -21.5);
-	Vector		ys	= new Vector(-21.5, 112, 0.5);
-	Vector		bs	= new Vector(22.5, 112, 0.5);
-	Vector		gs	= new Vector(0.5, 112, 22.5);
-
 	BukkitTask	bt;
 
 	public Location getLoc(Vector v) {
@@ -88,22 +83,7 @@ public class Gladiators implements IMinigame {
 			Player p = ps[rand.nextInt(ps.length)];
 
 			giveKit(p);
-			switch (gt.color) {
-				case RED:
-					p.teleport(getLoc(rs));
-					break;
-				case YELLOW:
-					p.teleport(getLoc(ys));
-					break;
-				case GREEN:
-					p.teleport(getLoc(gs));
-					break;
-				case BLUE:
-					p.teleport(getLoc(bs));
-					break;
-				default:
-					break;
-			}
+			p.teleport(Game.getLocation("glads-" + gt.color.name().toLowerCase()));
 		} else
 			Minigames.broadcastAll(Minigames.getBroadcastMessage(gt.color, "%s team has been eliminated!", gt.name));
 

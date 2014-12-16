@@ -10,6 +10,7 @@ import net.mcshockwave.Minigames.Games.Dodgeball;
 import net.mcshockwave.Minigames.Games.Dogtag;
 import net.mcshockwave.Minigames.Games.FourCorners;
 import net.mcshockwave.Minigames.Games.Ghostbusters;
+import net.mcshockwave.Minigames.Games.GiantStomp;
 import net.mcshockwave.Minigames.Games.Gladiators;
 import net.mcshockwave.Minigames.Games.HotPotato;
 import net.mcshockwave.Minigames.Games.Infection;
@@ -206,8 +207,14 @@ public enum Game {
 		12,
 		true,
 		true,
-		new GameTeam[] { new GameTeam("Knights", ChatColor.AQUA), new GameTeam("Barbarians", ChatColor.RED) });
-	;
+		new GameTeam[] { new GameTeam("Knights", ChatColor.AQUA), new GameTeam("Barbarians", ChatColor.RED) }),
+	Giant_Stomp(
+		new GiantStomp(),
+		Material.STONE_SWORD,
+		0,
+		6,
+		false,
+		true);
 
 	public static Game[]	disabled	= { Game.Ghostbusters };
 
