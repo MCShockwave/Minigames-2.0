@@ -48,6 +48,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
@@ -146,7 +147,7 @@ public class DefaultListener implements Listener {
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		Player p = event.getEntity();
+		final Player p = event.getEntity();
 
 		event.setDeathMessage("");
 		if (!Minigames.optedOut.contains(p.getName()) && Minigames.currentGame != null && Minigames.started) {
@@ -195,7 +196,12 @@ public class DefaultListener implements Listener {
 		Bukkit.getPluginManager().callEvent(pre);
 		p.setHealth(20);
 		p.teleport(pre.getRespawnLocation());
-		p.setVelocity(new Vector());
+		new BukkitRunnable() {
+			public void run() {
+				p.setVelocity(new Vector());
+				p.setFireTicks(0);
+			}
+		}.runTaskLater(Minigames.ins, 1);
 	}
 
 	@EventHandler
