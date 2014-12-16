@@ -29,6 +29,8 @@ public class Infection implements IMinigame {
 
 	@Override
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
 		}

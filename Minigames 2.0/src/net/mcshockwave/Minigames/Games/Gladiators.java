@@ -39,6 +39,8 @@ public class Gladiators implements IMinigame {
 
 	@Override
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		for (GameTeam gt : Game.Gladiators.teams) {
 			selectRandom(gt);
 		}

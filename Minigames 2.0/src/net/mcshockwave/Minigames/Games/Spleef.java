@@ -20,6 +20,8 @@ public class Spleef implements IMinigame {
 
 	@Override
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		for (Player p : Minigames.getOptedIn()) {
 			p.getInventory().addItem(new ItemStack(Material.DIAMOND_SPADE));
 		}

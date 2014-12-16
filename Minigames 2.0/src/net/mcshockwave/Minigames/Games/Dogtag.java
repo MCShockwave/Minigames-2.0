@@ -43,6 +43,8 @@ public class Dogtag implements IMinigame {
 
 	@Override
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
 		}

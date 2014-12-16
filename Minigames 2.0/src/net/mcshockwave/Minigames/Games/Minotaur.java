@@ -72,6 +72,8 @@ public class Minotaur implements IMinigame {
 
 	@Override
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		Minigames.broadcast(ChatColor.RED, "%s is the minotaur!", getMino().getName());
 
 		PlayerInventory pi = getMino().getInventory();

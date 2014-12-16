@@ -32,6 +32,8 @@ public class GiantStomp implements IMinigame {
 
 	@Override
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		for (Player p : Minigames.getOptedIn()) {
 			giveItems(p);
 		}

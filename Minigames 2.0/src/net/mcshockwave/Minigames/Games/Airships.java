@@ -42,6 +42,8 @@ import org.bukkit.util.Vector;
 public class Airships implements IMinigame {
 
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				for (Player p : Minigames.getOptedIn()) {

@@ -31,6 +31,8 @@ public class Brawl implements IMinigame {
 
 	@Override
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				selectRandoms();

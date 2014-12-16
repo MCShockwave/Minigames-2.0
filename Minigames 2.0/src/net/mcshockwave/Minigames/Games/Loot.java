@@ -41,6 +41,8 @@ public class Loot implements IMinigame {
 	public long	invinTime	= 0;
 
 	public void onGameStart() {
+		Minigames.showDefaultSidebar();
+		
 		for (Player p : Minigames.getOptedIn()) {
 			Minigames.clearInv(p);
 			setRandomGear(p);
