@@ -1,5 +1,6 @@
 package net.mcshockwave.Minigames.Games;
 
+import net.mcshockwave.MCS.Utils.CooldownUtils;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
@@ -26,10 +27,13 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -44,6 +48,7 @@ import java.util.ArrayList;
 
 public class StormTheCastle implements IMinigame {
 
+	public int					maxCache			= 0;
 	public int					cacheLocId			= -1;
 	public Location				cacheLoc			= null;
 
@@ -69,7 +74,7 @@ public class StormTheCastle implements IMinigame {
 
 	@Override
 	public void onGameStart() {
-		int maxCache = 0;
+		maxCache = 0;
 		while (Game.hasElement("cache-" + (++maxCache))) {
 		}
 		maxCache -= 2;
@@ -77,6 +82,8 @@ public class StormTheCastle implements IMinigame {
 		cacheLoc = Game.getLocation("cache-" + cacheLocId);
 
 		placeCache(cacheLoc);
+
+		spawnNewC4();
 
 		crystalLocation = Game.getLocation("spawn-crystal").getBlock().getLocation().add(0.5, 0, 0.5);
 		crystal = (EnderCrystal) crystalLocation.getWorld().spawnEntity(crystalLocation, EntityType.ENDER_CRYSTAL);
@@ -150,6 +157,23 @@ public class StormTheCastle implements IMinigame {
 		Minigames.broadcastAll(
 				Minigames.getBroadcastMessage("The %s are storming the %s' castle!", "Barbarians", "Knights"),
 				Minigames.getBroadcastMessage("The Barbarians need to destroy the %s with TNT!", "Wall"));
+
+		for (Player p : Game.Storm_The_Castle.getTeam("Barbarians").getPlayers()) {
+			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 300, 10));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 300, 0));
+		}
+	}
+
+	public void spawnNewC4() {
+		int bombLoc = 0;
+		while ((bombLoc = rand.nextInt(maxCache)) == cacheLocId) {
+		}
+		Location l = Game.getLocation("cache-" + bombLoc);
+		l.getWorld().dropItemNaturally(
+				l,
+				ItemMetaUtils.setLore(
+						ItemMetaUtils.setItemName(new ItemStack(Material.REDSTONE_COMPARATOR), "§fRemote Explosive"),
+						"§7Place near the Knights' cache", "§7and trigger to blow up"));
 	}
 
 	public void cleanObjectives() {
@@ -183,6 +207,11 @@ public class StormTheCastle implements IMinigame {
 	public void onPlayerDeath(DeathEvent e) {
 		Player p = e.p;
 		GameTeam gt = Game.getTeam(p);
+
+		if (p.getInventory().contains(Material.TRIPWIRE_HOOK)
+				|| p.getInventory().contains(Material.REDSTONE_COMPARATOR)) {
+			spawnNewC4();
+		}
 
 		Minigames.broadcastDeath(p, e.k, "%s was killed", "%s was killed by %s");
 		if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
@@ -263,6 +292,7 @@ public class StormTheCastle implements IMinigame {
 			p.getInventory().addItem(new ItemStack(Material.TNT));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, 1));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, -1));
 
 			Minigames.send(p, "Place the %s on the %s!", "TNT", "gold block");
 		}
@@ -282,20 +312,25 @@ public class StormTheCastle implements IMinigame {
 
 			Minigames.send(p, "Place the %s on one of the %s!", "inhibitor", "gold blocks");
 		}
-		if (gt.name.equalsIgnoreCase("Knights") && (it.getType() == Material.BEACON || it.getType() == Material.TNT)) {
+		if (gt.name.equalsIgnoreCase("Barbarians") && it.getType() == Material.REDSTONE_COMPARATOR) {
+			Minigames.send(p, "Place the %s near the Knights' %s!", "explosive", "cache");
+		}
+		if (gt.name.equalsIgnoreCase("Knights")
+				&& (it.getType() == Material.BEACON || it.getType() == Material.TNT || it.getType() == Material.REDSTONE_COMPARATOR)) {
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
-		Player p = e.getPlayer();
-		Block b = e.getBlock();
+		final Player p = e.getPlayer();
+		final Block b = e.getBlock();
 		Block against = e.getBlockAgainst();
 		if (Game.getTeam(p).name.equalsIgnoreCase("Barbarians") && against.getType() == Material.GOLD_BLOCK) {
 			if (b.getType() == Material.TNT) {
 				TNTPrimed tnt = (TNTPrimed) b.getWorld().spawnEntity(b.getLocation(), EntityType.PRIMED_TNT);
 				tnt.setFuseTicks(10);
+				p.getInventory().clear();
 				p.damage(p.getMaxHealth(), tnt);
 			}
 			if (b.getType() == Material.BEACON) {
@@ -317,6 +352,74 @@ public class StormTheCastle implements IMinigame {
 						reinforcements.setVal(reinforcements.getVal() + reinforcementBonus);
 					}
 				}
+			}
+		}
+
+		if (b.getType() == Material.REDSTONE_COMPARATOR_OFF) {
+			if (b.getLocation().distanceSquared(cacheLoc) > 3 * 3) {
+				e.setCancelled(true);
+				return;
+			}
+			p.setItemInHand(ItemMetaUtils.setItemName(new ItemStack(Material.TRIPWIRE_HOOK), "§fDetonator"));
+			new BukkitRunnable() {
+				public void run() {
+					b.setType(Material.TNT);
+				}
+			}.runTaskLater(Minigames.ins, 1);
+			CooldownUtils.addCooldown("STC-Cache", p.getName(), 200, new Runnable() {
+				public void run() {
+					if (p.getInventory().contains(Material.TRIPWIRE_HOOK)) {
+						Minigames.send(p, "%s is now armed! Click the detonator to blow it up!", "Explosive");
+					}
+				}
+			});
+
+			Minigames.broadcast("%s has been planted at the cache!", "Explosive");
+			for (Player pb : Game.Storm_The_Castle.getTeam("Barbarians").getPlayers()) {
+				Minigames.send(pb, "Keep the Knights from %s it!", "disarming");
+			}
+			for (Player pb : Game.Storm_The_Castle.getTeam("Barbarians").getPlayers()) {
+				Minigames.send(pb, "Break it to %s it!", "disarm");
+			}
+		}
+	}
+
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event) {
+		Player p = event.getPlayer();
+		Block b = event.getBlock();
+
+		if (Game.getTeam(p).name.equalsIgnoreCase("Knights") && b.getType() == Material.TNT) {
+			event.setCancelled(false);
+			for (Player pl : Minigames.getOptedIn()) {
+				if (pl.getInventory().contains(Material.TRIPWIRE_HOOK)) {
+					pl.getInventory().remove(Material.TRIPWIRE_HOOK);
+				}
+			}
+			Minigames.send(p, "Disarmed %s", "explosive");
+
+			spawnNewC4();
+		}
+	}
+
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		Player p = event.getPlayer();
+		Action a = event.getAction();
+		ItemStack it = p.getItemInHand();
+
+		if (a.name().contains("RIGHT_CLICK") && it != null && it.getType() == Material.TRIPWIRE_HOOK) {
+			if (!CooldownUtils.isOnCooldown("STC-Cache", p.getName())) {
+				cacheLocId = -1;
+				cacheLoc.getWorld().createExplosion(cacheLoc, 8f);
+
+				cacheStatus.setName("§eCache - §c✕");
+
+				Minigames.broadcastAll(Minigames.getBroadcastMessage("%s has been destroyed!", "Cache"));
+				p.setItemInHand(null);
+			} else {
+				Minigames.send(p, "Explosive is %s! (%ss remaining)", "arming",
+						CooldownUtils.getCooldownForSec("STC-Cache", p.getName(), 1));
 			}
 		}
 	}

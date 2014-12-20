@@ -47,7 +47,8 @@ public class BuildAndFight implements IMinigame {
 
 		Minigames.showDefaultSidebar();
 
-		BlockUtils.save(Game.getLocation("bridge-corner-1"), Game.getLocation("bridge-corner-2"), "baf-bridge", true);
+		BlockUtils.save(Game.getLocation("bridge-corner-1"), Game.getLocation("bridge-corner-2"), "baf-bridge", true,
+				0, false);
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
@@ -85,7 +86,7 @@ public class BuildAndFight implements IMinigame {
 						giveKit(p, 4);
 					}
 				}
-				BlockUtils.load(Game.getLocation("bridge-corner-1"), "baf-bridge", 0.1);
+				BlockUtils.load(Game.getLocation("bridge-corner-1"), "baf-bridge", 0.1, false);
 			}
 		}, 1200);
 	}

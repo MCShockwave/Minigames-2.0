@@ -1,5 +1,6 @@
 package net.mcshockwave.Minigames.Utils;
 
+import net.mcshockwave.MCS.Utils.SchedulerUtils;
 import net.mcshockwave.Minigames.Minigames;
 
 import org.bukkit.Bukkit;
@@ -19,7 +20,12 @@ public class BlockUtils {
 
 	public static HashMap<String, List<BlockState>>	saved	= new HashMap<>();
 
-	public static void save(Location c1, Location c2, String saveTo, boolean delete) {
+	public static void save(Location c1, Location c2, String saveTo) {
+		save(c1, c2, saveTo, false, 0, false);
+	}
+
+	public static void save(Location c1, Location c2, String saveTo, boolean delete, double delay,
+			final boolean particles) {
 		int x1 = c1.getBlockX();
 		int y1 = c1.getBlockY();
 		int z1 = c1.getBlockZ();
@@ -28,12 +34,16 @@ public class BlockUtils {
 		int y2 = c2.getBlockY();
 		int z2 = c2.getBlockZ();
 
+		SchedulerUtils ut = SchedulerUtils.getNew();
+		double del = 0;
+		ArrayList<Block> bs = new ArrayList<>();
+
 		List<BlockState> sa = new ArrayList<>();
 		for (int x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
 			for (int y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
 				for (int z = Math.min(z1, z2); z <= Math.max(z1, z2); z++) {
 					Location loc = new Location(c1.getWorld(), x, y, z);
-					Block b = loc.getBlock();
+					final Block b = loc.getBlock();
 
 					if (!b.getChunk().isLoaded()) {
 						b.getChunk().load(true);
@@ -42,19 +52,39 @@ public class BlockUtils {
 					sa.add(b.getState());
 
 					if (delete) {
-						b.setType(Material.AIR);
+						if (delay > 0) {
+							bs.add(b);
+						} else {
+							b.setType(Material.AIR);
+						}
 					}
 				}
 			}
 		}
 		Collections.shuffle(sa);
+		Collections.shuffle(bs);
+
+		if (bs.size() > 0) {
+			for (final Block b : bs) {
+				Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
+					public void run() {
+						if (particles) {
+							b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, b.getType());
+						}
+						b.setType(Material.AIR);
+					}
+				}, (long) (del += delay));
+			}
+		}
 
 		saved.remove(saveTo);
 		saved.put(saveTo, sa);
+
+		ut.execute();
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void load(Location c1, String savedTo, final double delay) {
+	public static void load(Location c1, String savedTo, final double delay, final boolean particles) {
 		List<BlockState> states = saved.get(savedTo);
 		double del = 0;
 
@@ -66,7 +96,7 @@ public class BlockUtils {
 					b.setType(bs.getType());
 					b.setData(bs.getRawData());
 
-					if (delay > 0) {
+					if (delay > 0 && particles) {
 						b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, b.getType());
 					}
 				}

@@ -2,7 +2,6 @@ package net.mcshockwave.Minigames.Handlers;
 
 import net.mcshockwave.Minigames.Minigames;
 
-import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 
@@ -99,7 +98,7 @@ public class Sidebar {
 			this.name = name;
 			this.obj = use;
 			this.displayed = true;
-			getScore();
+			getScore().setScore(0);
 		}
 
 		public String getName() {
@@ -109,9 +108,8 @@ public class Sidebar {
 		public void setName(String name) {
 			this.name = name;
 			if (isDisplayed()) {
-				int val = getVal();
-				obj.getScoreboard().resetScores(getScore().getEntry());
-				getScore().setScore(val);
+				setDisplayed(false);
+				setDisplayed(true);
 			}
 		}
 
@@ -150,9 +148,8 @@ public class Sidebar {
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		private Score getScore() {
-			return obj.getScore(Bukkit.getOfflinePlayer(getName()));
+			return obj.getScore(name);
 		}
 
 		public void remove() {

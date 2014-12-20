@@ -1,14 +1,12 @@
 package net.mcshockwave.Minigames.Games;
 
-import java.util.ArrayList;
-
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.BlockUtils;
-import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,39 +25,35 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
+
 public class FourCorners implements IMinigame {
 
-	Location			rs		= new Location(Multiworld.getGame(), 191, 105, -13);
-	Location			re		= new Location(Multiworld.getGame(), 195, 105, -9);
-	Location			ys		= new Location(Multiworld.getGame(), 215, 105, -13);
-	Location			ye		= new Location(Multiworld.getGame(), 211, 105, -9);
-	Location			gs		= new Location(Multiworld.getGame(), 215, 105, 11);
-	Location			ge		= new Location(Multiworld.getGame(), 211, 105, 7);
-	Location			bs		= new Location(Multiworld.getGame(), 191, 105, 11);
-	Location			be		= new Location(Multiworld.getGame(), 195, 105, 7);
+	public String[]		colors	= { "r", "y", "g", "b" };
 
-	Location			p1s		= new Location(Multiworld.getGame(), 196, 105, -12);
-	Location			p1e		= new Location(Multiworld.getGame(), 210, 105, -10);
-	Location			p2s		= new Location(Multiworld.getGame(), 214, 105, -8);
-	Location			p2e		= new Location(Multiworld.getGame(), 212, 105, 6);
-	Location			p3s		= new Location(Multiworld.getGame(), 210, 105, 10);
-	Location			p3e		= new Location(Multiworld.getGame(), 196, 105, 8);
-	Location			p4s		= new Location(Multiworld.getGame(), 192, 105, 6);
-	Location			p4e		= new Location(Multiworld.getGame(), 194, 105, -8);
-
-	Material			set		= Material.STAINED_CLAY;
- 
 	int					chosen	= 0;
 
 	ArrayList<Player>	vi		= new ArrayList<>();
 
 	@Override
 	public void onGameStart() {
+		for (int i = 1; i <= 4; i++) {
+			Location c1 = Game.getLocation("bridge-" + i + "-a");
+			Location c2 = Game.getLocation("bridge-" + i + "-b");
+			BlockUtils.save(c1, c2, "bridge-" + i, false, 0, false);
+		}
+
+		for (String s : colors) {
+			Location c1 = Game.getLocation("corner-" + s + "-a");
+			Location c2 = Game.getLocation("corner-" + s + "-b");
+			BlockUtils.save(c1, c2, "corner-" + s, false, 0, false);
+		}
+
 		setCorners();
 
 		for (Player p : Minigames.getOptedIn()) {
 			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 3));
-			
+
 			if (Minigames.hasItem(p, ShopItem.Hacker)) {
 				p.getInventory().setItem(8,
 						ItemMetaUtils.setItemName(new ItemStack(Material.NETHER_STAR), "§rRight-click to hack corner"));
@@ -80,15 +74,6 @@ public class FourCorners implements IMinigame {
 
 	@Override
 	public void onGameEnd() {
-		BlockUtils.setBlocks(p1s, p1e, set, 9);
-		BlockUtils.setBlocks(p2s, p2e, set, 9);
-		BlockUtils.setBlocks(p3s, p3e, set, 9);
-		BlockUtils.setBlocks(p4s, p4e, set, 9);
-
-		BlockUtils.setBlocks(rs, re, set, 14);
-		BlockUtils.setBlocks(ys, ye, set, 4);
-		BlockUtils.setBlocks(gs, ge, set, 13);
-		BlockUtils.setBlocks(bs, be, set, 11);
 	}
 
 	@Override
@@ -96,26 +81,27 @@ public class FourCorners implements IMinigame {
 	}
 
 	public void destroyCorner(final int id) {
-		BlockUtils.setBlocks(p1s, p1e, Material.AIR, 0);
-		BlockUtils.setBlocks(p2s, p2e, Material.AIR, 0);
-		BlockUtils.setBlocks(p3s, p3e, Material.AIR, 0);
-		BlockUtils.setBlocks(p4s, p4e, Material.AIR, 0);
+		for (int i = 1; i <= 4; i++) {
+			Location c1 = Game.getLocation("bridge-" + i + "-a");
+			Location c2 = Game.getLocation("bridge-" + i + "-b");
+			BlockUtils.save(c1, c2, "bridge-" + i, true, 0.2, false);
+		}
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				if (id == 0) {
 					Minigames.broadcast(ChatColor.RED, "Corner %s chosen!", "Red");
-					BlockUtils.setBlocks(rs, re, Material.AIR, 0);
 				} else if (id == 1) {
 					Minigames.broadcast(ChatColor.YELLOW, "Corner %s chosen!", "Yellow");
-					BlockUtils.setBlocks(ys, ye, Material.AIR, 0);
 				} else if (id == 2) {
 					Minigames.broadcast(ChatColor.GREEN, "Corner %s chosen!", "Green");
-					BlockUtils.setBlocks(gs, ge, Material.AIR, 0);
 				} else if (id == 3) {
 					Minigames.broadcast(ChatColor.BLUE, "Corner %s chosen!", "Blue");
-					BlockUtils.setBlocks(bs, be, Material.AIR, 0);
 				}
+
+				Location c1 = Game.getLocation("corner-" + colors[id] + "-a");
+				Location c2 = Game.getLocation("corner-" + colors[id] + "-b");
+				BlockUtils.save(c1, c2, "corner-" + colors[id], true, 0.01, false);
 			}
 		}, 100);
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
@@ -126,15 +112,15 @@ public class FourCorners implements IMinigame {
 	}
 
 	public void setCorners() {
-		BlockUtils.setBlocks(p1s, p1e, set, 9);
-		BlockUtils.setBlocks(p2s, p2e, set, 9);
-		BlockUtils.setBlocks(p3s, p3e, set, 9);
-		BlockUtils.setBlocks(p4s, p4e, set, 9);
+		for (int i = 1; i <= 4; i++) {
+			Location c1 = Game.getLocation("bridge-" + i + "-a");
+			BlockUtils.load(c1, "bridge-" + i, 0.1, false);
+		}
 
-		BlockUtils.setBlocks(rs, re, set, 14);
-		BlockUtils.setBlocks(ys, ye, set, 4);
-		BlockUtils.setBlocks(gs, ge, set, 13);
-		BlockUtils.setBlocks(bs, be, set, 11);
+		for (String s : colors) {
+			Location c1 = Game.getLocation("corner-" + s + "-a");
+			BlockUtils.load(c1, "corner-" + s, 0.01, false);
+		}
 
 		chosen = -1;
 
