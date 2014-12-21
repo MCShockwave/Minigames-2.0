@@ -20,36 +20,31 @@ public enum GameInfo {
 		"Pay attention when your Core is captured! When it isn't, it's best to stay out of harms way!"),
 	Airships(
 		"Teams",
-		ChatColor.YELLOW + "2",
+		ChatColor.RED + "None",
 		"Respawn",
 		ChatColor.RED + "No",
 		"Main",
-		"Players are spawned in a massive circular cave from each"
-				+ " other with flymode and a bow with infinite arrows."
-				+ " Work with your team to shoot at other players while"
-				+ " dodging some of your own, once you are down to half"
-				+ " a heart you are unable to fly and forced to crash-land"
+		"Players are spawned with flymode and a bow with infinite arrows."
+				+ " Shoot at other players while dodging arrows shot at you"
+				+ ", once your health is drained you are unable to fly and forced to crash-land"
 				+ " into the ground below, eliminating you. Do not touch the ground at any time!",
 		"Goal",
-		"Be the last team standing!",
+		"Be the last person standing!",
 		"Tip",
-		"Watch out for chain reactions! When players die,"
-				+ " they explode and nearby players will lose health and be affected,"
-				+ " possibly exploding with them! Killing others in tight caves might"
-				+ " just kill you as well, so be careful!"),
+		"Move up and down to make it harder for people to hit you!"),
 	Brawl(
 		"Teams",
 		ChatColor.RED + "None",
 		"Respawn",
 		ChatColor.RED + "No",
 		"Main",
-		"Players are spawned around a single platform in a dark underground area. "
+		"Players are spawned around a single platform. "
 				+ "2 players are selected one at a time to battle in the middle. "
 				+ "If you get knocked off the platform, you're out!",
 		"Goal",
 		"Be the last player standing",
 		"Tip",
-		"When battling your opponent," + " don't jump! You get more knockback!"),
+		"When battling your opponent, don't jump! You get more knockback!"),
 	Build_and_Fight(
 		"Teams",
 		ChatColor.YELLOW + "2",
@@ -57,12 +52,12 @@ public enum GameInfo {
 		ChatColor.RED + "No",
 		"Main",
 		"2 teams are spawned on separate platforms, "
-				+ "and are given one minute build time with x64 of your team color's wool. "
+				+ "and are given one minute build time with 64 of their team color's wool. "
 				+ "After time's up, the two platforms are connected and players are given a sword & bow.",
 		"Goal",
 		"Be the last team standing!",
 		"Tip",
-		"Bows can shoot through wool, so make your walls thick!"),
+		"Bows can shoot through wool, and on some maps almost anything, so make your walls thick!"),
 	Dodgeball(
 		"Teams",
 		ChatColor.YELLOW + "2",
@@ -70,9 +65,12 @@ public enum GameInfo {
 		ChatColor.RED + "No",
 		"Main",
 		"Players are spawned on 2 seperate sides of the map"
-				+ " and 8 dodge balls are dropped in the middle of the arena,"
+				+ " and 8 dodgeballs are dropped in the middle of the arena,"
 				+ " and will continue to drop every 30 seconds. Pick up the dodge"
-				+ " balls and throw them at your opponents to eliminate them, and" + " remember: Don't cross the line!",
+				+ "balls and throw them at your opponents to eliminate them."
+				+ " You also start with 5 clay and get 3 more when you get a hit."
+				+ " Use your clay to make barriers to prevent you from being hit!"
+				+ " Keep in mind that dodgeballs can break through clay!",
 		"Goal",
 		"Be the last team standing!",
 		"Tip",
@@ -85,8 +83,7 @@ public enum GameInfo {
 		"Main",
 		"Players are spawned in a small map with 4 corners that are primary colors,"
 				+ " connected by bridges. Every 10 seconds, the bridges will break and one"
-				+ " corner will also be destroyed, causing all the players on that platform"
-				+ " to fall into the abyss.",
+				+ " corner will also be destroyed, causing all the players on that platform" + " to fall and die.",
 		"Goal",
 		"Be the last player standing!",
 		"Tip",
@@ -97,8 +94,8 @@ public enum GameInfo {
 		"Respawn",
 		ChatColor.RED + "No",
 		"Main",
-		"Players are spawned on a wide ice platform one block deep. The only way to kill players"
-				+ " is to break the blocks from under them. To do this, simply click the ice to cause a chunk"
+		"Players are spawned on a wide snow platform one block deep. The only way to kill players"
+				+ " is to break the blocks from under them. To do this, simply click the snow to cause a chunk"
 				+ " of it to fall into the void below.",
 		"Goal",
 		"Be the last player standing!",
@@ -110,7 +107,7 @@ public enum GameInfo {
 		"Respawn",
 		ChatColor.RED + "No",
 		"Main",
-		"Players are spawned on two sides of a dark arena. When you run, a trail of your"
+		"Players are spawned on two sides of an arena. When you run, a trail of your"
 				+ " team's color will follow you. If you touch the opposing team's trail, you will die."
 				+ " Run around the arena and try to cut in front of enemies so they'll crash into your trail!"
 				+ " Also, don't stand still! You'll die.",
@@ -124,7 +121,7 @@ public enum GameInfo {
 		"Respawn",
 		ChatColor.YELLOW + "Varies",
 		"Main",
-		"Two teams are spawned equidistant from each other, equipped with basic PVP gear."
+		"Two teams are spawned away from each other, equipped with a bow."
 				+ " Battle it out with the opposing team, but be careful! When you die, your skull"
 				+ " will drop and you will be put in a temporary spectator mode. If your team is able"
 				+ " to retrieve (pick up) your skull, you will respawn! However, if your skull gets"
@@ -142,7 +139,8 @@ public enum GameInfo {
 		"Main",
 		"2 teams are spawned on floating airships. Each team will have a certain amount of "
 				+ "reinforcements. Whenever someone dies by the hand of an enemy, the team's reinforcements"
-				+ " drop down by 1.",
+				+ " drop down by 1." + " Teams can fire cannons to destroy the other team's ship. Use the "
+				+ "fire extinguisher to put out deadly fires!",
 		"Goal",
 		"Be the last team with reinforcements!",
 		"Tip",
@@ -169,12 +167,13 @@ public enum GameInfo {
 		"Main",
 		"Everyone gets spawned in an arena, and a few players get randomly selected to have the potato. "
 				+ " While the potato is in your inventory, you will be set on fire and lose health. The aim is to get rid "
-				+ " of the potato as quickly as possible by throwing it using right click. Once the potato hits another person, "
-				+ " they will get the potato. You will stop being on fire, and you have to run around the arena, avoiding getting the potato again.",
+				+ " of the potato as quickly as possible by hitting another player with it."
+				+ " They will then get the potato. You will stop being on fire, and you have to run around the arena,"
+				+ " avoiding getting the potato again.",
 		"Goal",
 		"Be the last person standing!",
 		"Tip",
-		"Keep moving to make yourself harder to hit from others that have the potato!"),
+		"Run away from people with the potato! When they die the nearest player will get their potato!"),
 	Infection(
 		"Teams",
 		ChatColor.YELLOW + "2",
@@ -207,7 +206,7 @@ public enum GameInfo {
 		"Main",
 		"Teams are spawned in their waiting areas, while one member of their team is randomly selected to go into the arena."
 				+ " They then fight the other 3 people in the arena from the other teams, while avoiding dying. If the member in the"
-				+ " arena dies, another member of the team is randomly selected to fight. If you are alive and your team wins you will be awarded points!",
+				+ " arena dies, another member of the team is randomly selected to fight.",
 		"Goal",
 		"Be the last team standing!",
 		"Tip",
@@ -232,12 +231,13 @@ public enum GameInfo {
 		ChatColor.RED + "No",
 		"Main",
 		"Everyone is spawned in a maze, with one person as the Minotaur. The Minotaur is equipped"
-				+ " with iron armour and a sword, and has to kill everyone. Everyone else has to find chests scattered"
+				+ " with diamond armor and a sword, and has to kill everyone. Everyone else has to find chests scattered"
 				+ " around the map, and group together to kill the Minotaur.",
 		"Goal",
 		"Minotaur- Kill Humans. Humans- Group together and slay the Minotaur",
 		"Tip",
-		"Teamwork is key"),
+		"Minotaur- Try to split up groups of humans, they will be easier to take on 1 on 1."
+				+ " Humans- Teamwork is key, stick together!"),
 	Laser_Tag(
 		"Teams",
 		ChatColor.YELLOW + "2",
@@ -245,13 +245,57 @@ public enum GameInfo {
 		ChatColor.GREEN + "Yes",
 		"Main",
 		"All players are equipped with guns (hoes) that fire lasers. Each"
-				+ " team starts with 250 points. If you shoot a player on the other team they lose a"
-				+ " point. If you shoot one of the enemies two bases (redsone lamps) they will lose 5 points." ,
+				+ " team starts with up to 100 points. If you shoot a player on the other team they lose a"
+				+ " point. If you shoot one of the enemies two bases (redsone lamps) they will lose 5 points.",
 		"Goal",
 		"Reduce the other team's points to 0!",
 		"Tip",
-		"Make use of cover, and remember your gun has a 2 second cooldown after being shot.");
-	
+		"Make use of cover, and remember your gun has a 2 second cooldown after being shot."),
+	Tiers(
+		"Teams",
+		ChatColor.YELLOW + "4",
+		"Respawn",
+		ChatColor.GREEN + "Yes",
+		"Main",
+		"All teams start with really good armor and swords. When one member of the team gets a kill,"
+				+ " they advance a tier, lowering the power of their weapons and armor.",
+		"Goal",
+		"Advance to the top tier before any other team!",
+		"Tip",
+		"Team up and take on people who are alone. They will be easier to take on and everyone on your team tiers up!"),
+	Storm_The_Castle(
+		"Teams",
+		ChatColor.YELLOW + "4",
+		"Respawn",
+		ChatColor.GREEN + "Yes",
+		"Main",
+		"There are two teams: Barbarians (attacking) and Knights (defending)."
+				+ " The barbarians have to go through the stages of attack to win, while the knights have to stop them."
+				+ " Barbarians have reinforcements, which decrease every kill the Knights get, and when they run out the Knights win."
+				+ " First Stage: Barbarians must place TNT at the wall to try to blow it up."
+				+ " Second Stage: Barbarians must take inhibitors (beacons) to the gold blocks near the Crystal (Ender Crystal)."
+				+ " Third Stage: Barbarians must attack the Crystal to destroy it."
+				+ " Final Stage: Knights must make a last stand. They will not respawn. Barbarians win when all knights are eliminated.",
+		"Whenever the barbarians complete an objective, they will get more reinforcements. Only exception is the Fourth Stage."
+				+ "Finally, the Barbarians can find a bomb and place it near the Knights' cache (chests)"
+				+ " and detonate it to cripple them (They will spawn with less armor)",
+		"Goal",
+		"Barbarians- Go through the stages without running out of reinforcements Knights- Deplete all the Barbarians' reinforcements",
+		"Tip",
+		"Barbarians- Destroy the cache and work together to lead people to the objective. "
+				+ "Knights- Spread out, you outgear the barbarians, and you can cover more ground that way."),
+	Giant_Stomp(
+		"Teams",
+		ChatColor.RED + "None",
+		"Respawn",
+		ChatColor.RED + "No",
+		"Main",
+		"A giant zombie is in the center that jumps up and down. When it lands, it creates a large shockwave that will launch people away."
+				+ " Players can also use the knockback sword to hit people off.",
+		"Goal",
+		"Be the last person on the platform.",
+		"Tip",
+		"Keep jumping - you can jump over the shockwave. Also, if you sneak and block with the sword, the shockwave does less knockback.");
 
 	public String[]	info;
 

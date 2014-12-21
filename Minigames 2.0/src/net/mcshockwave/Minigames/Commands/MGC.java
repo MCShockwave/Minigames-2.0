@@ -3,18 +3,23 @@ package net.mcshockwave.Minigames.Commands;
 import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.SQLTable.Rank;
 import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Game.GameMap;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Shop.ShopUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.material.MaterialData;
 
 public class MGC implements CommandExecutor {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
@@ -46,7 +51,7 @@ public class MGC implements CommandExecutor {
 			}
 			if (args[0].equalsIgnoreCase("loadworld")) {
 				Game g = Game.valueOf(args[1]);
-				String map = g.maplist.get(0);
+				GameMap map = g.maplist.get(0);
 				Minigames.resetGameWorld(g, map);
 			}
 			if (args[0].equalsIgnoreCase("updateMap")) {
@@ -55,7 +60,7 @@ public class MGC implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("updateAll")) {
 				for (Game g : Game.values()) {
 					if (g.maplist.size() > 0 && !g.maplist.get(0).equals("Default")) {
-						for (String map : g.maplist) {
+						for (GameMap map : g.maplist) {
 							String mapname = g.name() + "-" + map;
 							Minigames.updateMap(mapname);
 						}
@@ -68,7 +73,7 @@ public class MGC implements CommandExecutor {
 						continue;
 					}
 					Minigames.send(p, "§6§l" + g.name);
-					for (String s : g.maplist) {
+					for (GameMap s : g.maplist) {
 						Minigames.send(ChatColor.GRAY, p, "%s", s);
 					}
 				}
@@ -80,11 +85,30 @@ public class MGC implements CommandExecutor {
 				p.sendMessage("§cUpdated maps for all games");
 			}
 			if (args[0].equalsIgnoreCase("nextMap")) {
-				Minigames.nextMap = args[1];
-				p.sendMessage("§6Set next map to " + args[1]);
+				GameMap gm = Game.getMapForGame(Minigames.currentGame, args[1]);
+				if (gm != null) {
+					Minigames.nextMap = gm;
+					p.sendMessage("§6Set next map to " + gm);
+				} else {
+					p.sendMessage("§cUnknown Map for game " + Minigames.currentGame.name + ": " + args[1]);
+				}
+			}
+
+			if (args[0].equalsIgnoreCase("inspect")) {
+				Block b = p.getTargetBlock(null, 10);
+				if (b != null) {
+					p.sendMessage("§6Block: (" + b.getType().name() + ")");
+					p.sendMessage("§7 " + b.getLocation());
+					p.sendMessage("§7 Data: " + b.getData());
+					p.sendMessage("§6BlockState: " + b.getState().getClass().getCanonicalName());
+					BlockState bs = b.getState();
+					p.sendMessage("§7 RawData: " + bs.getRawData());
+					p.sendMessage("§6 MaterialData: " + bs.getData().getClass().getCanonicalName());
+					MaterialData md = b.getState().getData();
+					p.sendMessage("§7  Data: " + md.getData());
+				}
 			}
 		}
 		return false;
 	}
-
 }

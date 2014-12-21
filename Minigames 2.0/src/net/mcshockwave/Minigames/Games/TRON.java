@@ -8,10 +8,14 @@ import net.mcshockwave.Minigames.Handlers.IMinigame;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -21,10 +25,10 @@ import java.util.HashMap;
 
 public class TRON implements IMinigame {
 
-	HashMap<Block, Byte>		blocks			= new HashMap<Block, Byte>();
-	HashMap<Block, String>		blockPlayers	= new HashMap<Block, String>();
+	HashMap<Block, Byte>		blocks			= new HashMap<>();
+	HashMap<Block, String>		blockPlayers	= new HashMap<>();
 
-	HashMap<Player, BukkitTask>	lmt				= new HashMap<Player, BukkitTask>();
+	HashMap<Player, BukkitTask>	lmt				= new HashMap<>();
 
 	@Override
 	public void onGameStart() {
@@ -76,13 +80,12 @@ public class TRON implements IMinigame {
 		final Block w = p.getLocation().getBlock().getRelative(BlockFace.DOWN);
 
 		if (Minigames.alivePlayers.contains(p.getName()) && w != null) {
-			byte tc = getTeamColor(p);
-			// list.contains doesn't work
-			if (w.getData() != 4 && w.getData() != 5) {
+			DyeColor tc = getTeamColor(p);
+			if (w.getData() != DyeColor.GREEN.getWoolData() && w.getData() != DyeColor.YELLOW.getWoolData()) {
 				blocks.put(w, w.getData());
 				blockPlayers.put(w, p.getName());
 				setMoveTime(p, 3);
-				w.setData(tc);
+				w.setData(tc.getWoolData());
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 					public void run() {
 						w.setData(blocks.get(w));
@@ -90,31 +93,49 @@ public class TRON implements IMinigame {
 						blockPlayers.remove(w);
 					}
 				}, 200);
-			} else if (w.getData() != getTeamColor(p)) {
+			} else if (w.getData() != tc.getWoolData()) {
 				Player k = null;
 				if (blockPlayers.containsKey(w)) {
 					String kn = blockPlayers.get(w);
 					k = Bukkit.getPlayer(kn) == null ? null : Bukkit.getPlayer(kn);
 				}
 				if (k != null) {
-					p.damage(p.getMaxHealth(), k);
+					EntityDamageByEntityEvent ev = new EntityDamageByEntityEvent(k, p, DamageCause.CUSTOM,
+							p.getMaxHealth());
+					p.setLastDamageCause(ev);
+					p.damage(p.getMaxHealth());
 				} else
 					p.damage(p.getMaxHealth());
 			}
 		}
 	}
 
-	public byte getTeamColor(Player p) {
+	public DyeColor getTeamColor(Player p) {
 		GameTeam gt = Game.getTeam(p);
 		if (gt != null) {
 			if (gt.color == ChatColor.GREEN) {
-				return 5;
+				return DyeColor.GREEN;
 			}
 			if (gt.color == ChatColor.YELLOW) {
-				return 4;
+				return DyeColor.YELLOW;
 			}
 		}
-		return 15;
+		return DyeColor.BLACK;
+	}
+
+	@EventHandler
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		Entity ee = event.getEntity();
+		Entity de = event.getDamager();
+
+		if (ee instanceof Player && de instanceof Player) {
+			// Player p = (Player) ee;
+			// Player d = (Player) de;
+
+			if (event.getCause() != DamageCause.CUSTOM) {
+				event.setCancelled(true);
+			}
+		}
 	}
 
 }

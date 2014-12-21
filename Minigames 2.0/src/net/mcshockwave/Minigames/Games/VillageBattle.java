@@ -565,7 +565,7 @@ public class VillageBattle implements IMinigame {
 							p.getInventory().setItem(slot, it);
 						}
 					}
-				}, 60);
+				}, 20);
 
 				Arrow ar = p.launchProjectile(Arrow.class);
 				ar.setVelocity(ar.getVelocity().multiply(3));

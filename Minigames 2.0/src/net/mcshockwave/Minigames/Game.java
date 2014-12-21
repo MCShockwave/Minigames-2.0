@@ -102,7 +102,7 @@ public enum Game {
 		9,
 		10,
 		false,
-		false,
+		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
 	Dogtag(
 		new Dogtag(),
@@ -226,11 +226,10 @@ public enum Game {
 	public boolean			canRespawn, allowPVP;
 	public ItemStack		icon		= null;
 
-	public List<String>		maplist		= new ArrayList<>();
+	public List<GameMap>	maplist		= new ArrayList<>();
 
 	public boolean isEnabled() {
-		return !Arrays.asList(disabled).contains(this)
-				&& (maplist.size() > 1 || maplist.size() > 0 && !maplist.get(0).equalsIgnoreCase("Default"));
+		return !Arrays.asList(disabled).contains(this) && maplist.size() > 0;
 	}
 
 	Game(IMinigame mclass, Material icon, int iconData, int time, boolean canRespawn, boolean allowPVP, GameTeam[] teams) {
@@ -251,12 +250,9 @@ public enum Game {
 		} else
 			this.maplist = new ArrayList<>();
 		List<String> maps = SQLTable.MinigameMaps.getAll("Game", name(), "Name");
-		if (maps.size() < 1) {
-			this.maplist.add("Default");
-		} else {
-			for (String s : maps) {
-				this.maplist.add(s);
-			}
+		for (String s : maps) {
+			GameMap gm = new GameMap(s, this);
+			this.maplist.add(gm);
 		}
 	}
 
@@ -300,6 +296,47 @@ public enum Game {
 			}
 
 			return ret;
+		}
+	}
+
+	public static GameMap getMapForGame(Game g, String name) {
+		for (GameMap gm : g.maplist) {
+			if (gm.name.equalsIgnoreCase(name)) {
+				return gm;
+			}
+		}
+		return null;
+	}
+
+	public static class GameMap {
+		public String	name;
+		public Game		g;
+
+		public boolean	canBeNight	= false;
+		public boolean	canRain		= false;
+
+		public GameMap(String name, Game g) {
+			this.name = name;
+			this.g = g;
+			updateOptions();
+		}
+
+		public void updateOptions() {
+			String where = "Game='" + g.name() + "' AND Name='" + name + "'";
+			int ni = SQLTable.MinigameMaps.getIntWhere(where, "Night");
+			int ra = SQLTable.MinigameMaps.getIntWhere(where, "Weather");
+
+			canBeNight = ni == 1;
+			canRain = ra == 1;
+		}
+
+		public String getWorldName() {
+			return g.name() + "-" + name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
 		}
 	}
 

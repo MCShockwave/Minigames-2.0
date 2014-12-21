@@ -33,7 +33,7 @@ public class GiantStomp implements IMinigame {
 	@Override
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
-		
+
 		for (Player p : Minigames.getOptedIn()) {
 			giveItems(p);
 		}
@@ -56,7 +56,7 @@ public class GiantStomp implements IMinigame {
 					giant.teleport(tp);
 				}
 			}
-		}, 2L, 2L);
+		}, 100L, 2L);
 	}
 
 	private void giveItems(Player p) {

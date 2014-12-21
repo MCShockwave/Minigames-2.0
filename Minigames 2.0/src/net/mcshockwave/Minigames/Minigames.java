@@ -7,7 +7,9 @@ import net.mcshockwave.MCS.Commands.VanishCommand;
 import net.mcshockwave.MCS.Stats.Statistics;
 import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.MCS.Utils.SchedulerUtils;
+import net.mcshockwave.Minigames.Game.GameMap;
 import net.mcshockwave.Minigames.Game.GameTeam;
 import net.mcshockwave.Minigames.Commands.Force;
 import net.mcshockwave.Minigames.Commands.MGC;
@@ -28,6 +30,7 @@ import net.mcshockwave.Minigames.Utils.TeleportUtils;
 import net.mcshockwave.Minigames.worlds.FileElements;
 import net.mcshockwave.Minigames.worlds.Multiworld;
 import net.mcshockwave.Minigames.worlds.WorldFileUtils;
+import net.minecraft.server.v1_7_R4.PacketPlayOutGameStateChange;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -76,7 +79,7 @@ public class Minigames extends JavaPlugin {
 	public static Game						gameBefore		= null;
 	public static Game						currentGame		= null;
 	public static boolean					gameForced		= false;
-	public static String					currentMap		= null;
+	public static GameMap					currentMap		= null;
 
 	public static boolean					countingDown	= false, started = false, canOpenShop = false;
 
@@ -90,6 +93,10 @@ public class Minigames extends JavaPlugin {
 	public static HashMap<Player, GameTeam>	selectedTeam	= new HashMap<>();
 
 	public static Objective					sidebar			= null;
+
+	public static boolean					isMapNight		= false;
+	public static float						weatherStage	= 0f;
+	public static BukkitTask				weatherTask		= null;
 
 	public void onEnable() {
 		ins = this;
@@ -145,7 +152,6 @@ public class Minigames extends JavaPlugin {
 			return;
 		}
 
-		// TODO temp
 		currentGame = Game.values()[rand.nextInt(Game.values().length)];
 		if (currentGame == gameBefore || !currentGame.isEnabled()) {
 			startCount();
@@ -206,22 +212,40 @@ public class Minigames extends JavaPlugin {
 
 								resetGameWorld(currentGame, currentMap);
 
-								broadcast("Map chosen: %s", "§l" + currentMap);
+								if (currentMap.canBeNight && rand.nextInt(4) == 0) {
+									isMapNight = true;
+								}
+								if (currentMap.canRain && rand.nextInt(4) == 0) {
+									weatherStage = rand.nextFloat();
+								}
+								broadcast("Map chosen: %s" + (isMapNight ? " (Night)" : ""), "§l" + currentMap);
+								if (weatherStage > 0) {
+									String name = "";
+									if (weatherStage > 0.8f) {
+										name = "Heavy";
+									} else if (weatherStage > 0.4f) {
+										name = "Medium";
+									} else {
+										name = "Light";
+									}
+									broadcast("Weather: %s", name);
+								}
 							}
 							if (b == 5) {
 								try {
-									Game.getLocation("lobby").getChunk().load();
+									Game.getLocation("lobby").getChunk().load(true);
 									if (currentGame.isTeamGame()) {
 										for (GameTeam gt : currentGame.teams) {
-											Game.getSpawn(gt).getChunk().load();
+											Game.getSpawn(gt).getChunk().load(true);
 										}
 									} else
-										Game.getFFASpawn().getChunk().load();
+										Game.getFFASpawn().getChunk().load(true);
 								} catch (Exception e) {
+									e.printStackTrace();
 								}
 							}
 							if (b <= 5) {
-								SoundUtils.playSoundToAll(Sound.ORB_PICKUP, 1, (b * 2) / 5);
+								SoundUtils.playSoundToAll(Sound.ORB_PICKUP, 1, (float) ((float) ((b * 2)) / 5f));
 							}
 						}
 					}, time));
@@ -270,6 +294,12 @@ public class Minigames extends JavaPlugin {
 		if (currentGame != null) {
 			HandlerList.unregisterAll(currentGame.mclass);
 			currentGame.mclass.onGameEnd();
+		}
+
+		isMapNight = false;
+		weatherStage = 0;
+		if (weatherTask != null) {
+			weatherTask.cancel();
 		}
 
 		try {
@@ -399,7 +429,7 @@ public class Minigames extends JavaPlugin {
 				defaultSidebar = false;
 
 				explode = false;
-				TeleportUtils.spread(new Location(Multiworld.getLobby(), 0, 103, 0), 5,
+				TeleportUtils.spread(new Location(Multiworld.getLobby(), 0, 102, 0), 1,
 						getOptedIn().toArray(new Player[0]));
 
 				for (Player p : getOptedIn()) {
@@ -467,18 +497,18 @@ public class Minigames extends JavaPlugin {
 		util.execute();
 	}
 
-	public static boolean	gameWorldDone	= false;
+	static int	gameWorldDone	= 0;
 
-	public static void resetGameWorld(final Game g, final String world) {
+	public static void resetGameWorld(final Game g, final GameMap map) {
 		try {
-			final String mapname = g.name() + "-" + world;
+			final String mapname = g.name() + "-" + map;
 			final String fileName = "Maps" + File.separator + mapname;
 
 			System.out.println("Deleting game world file...");
 			Multiworld.deleteWorld("Game");
 
 			if (Multiworld.getGame() != null) {
-				resetGameWorld(g, world);
+				resetGameWorld(g, map);
 				return;
 			}
 
@@ -526,18 +556,22 @@ public class Minigames extends JavaPlugin {
 
 					System.out.println("Done resetting world! (name " + mapname + ") (fileName " + fileName + ")");
 
-					gameWorldDone = true;
+					gameWorldDone = -1;
 				}
 			}, 80l);
 		} catch (Exception e) {
-			gameWorldDone = false;
-			resetGameWorld(g, world);
+			gameWorldDone++;
+			resetGameWorld(g, map);
 		}
 	}
 
 	public static void start() {
-		if (!gameWorldDone) {
+		if (gameWorldDone >= 0) {
 			broadcast("Loading map...");
+			if (gameWorldDone > 20) {
+				resetGameWorld(currentGame, currentMap);
+				gameWorldDone = 0;
+			}
 			Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 				public void run() {
 					start();
@@ -546,7 +580,7 @@ public class Minigames extends JavaPlugin {
 			return;
 		}
 
-		gameWorldDone = false;
+		gameWorldDone = 0;
 		resetScoreboard();
 
 		countingDown = false;
@@ -681,7 +715,18 @@ public class Minigames extends JavaPlugin {
 		if (FileElements.has("time", "Game")) {
 			Multiworld.getGame().setTime(Game.getInt("time"));
 		} else {
-			Multiworld.getGame().setTime(5000);
+			Multiworld.getGame().setTime(isMapNight ? 18000 : 5000);
+		}
+
+		if (weatherStage > 0) {
+			weatherTask = new BukkitRunnable() {
+				public void run() {
+					PacketPlayOutGameStateChange gsc = new PacketPlayOutGameStateChange(7, weatherStage);
+					for (Player p : Bukkit.getOnlinePlayers()) {
+						PacketUtils.sendPacket(p, gsc);
+					}
+				}
+			}.runTaskTimer(ins, 0, 20);
 		}
 
 		SoundUtils.playSoundToAll(Sound.AMBIENCE_THUNDER, 1, 0.75f);
@@ -728,7 +773,7 @@ public class Minigames extends JavaPlugin {
 		String b = ChatColor.GRAY + mes;
 		Object[] format = form;
 		for (int i = 0; i < format.length; i++) {
-			String s = format[i].toString();
+			String s = format[i] + "";
 			format[i] = color + ChatColor.ITALIC.toString() + s + ChatColor.GRAY;
 		}
 		b = String.format(b, format);
@@ -1005,7 +1050,7 @@ public class Minigames extends JavaPlugin {
 	public static boolean						defaultSidebar	= false;
 	public static HashMap<GameTeam, GameScore>	sidebar_left	= new HashMap<>();
 
-	public static String						nextMap			= null;
+	public static GameMap						nextMap			= null;
 
 	public static void showDefaultSidebar() {
 		defaultSidebar = true;
