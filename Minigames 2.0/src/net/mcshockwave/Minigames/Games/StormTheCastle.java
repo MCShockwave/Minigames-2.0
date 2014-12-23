@@ -16,6 +16,7 @@ import net.mcshockwave.Minigames.worlds.Multiworld;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -246,6 +247,10 @@ public class StormTheCastle implements IMinigame {
 	private void giveItems(Player p) {
 		Minigames.clearInv(p);
 		Minigames.milkPlayer(p);
+		
+		if (p.getGameMode() != GameMode.SURVIVAL) {
+			p.setGameMode(GameMode.SURVIVAL);
+		}
 
 		GameTeam gt = Game.getTeam(p);
 		PlayerInventory pi = p.getInventory();

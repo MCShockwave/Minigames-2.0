@@ -92,6 +92,9 @@ public class BuildAndFight implements IMinigame {
 	}
 
 	public void giveKit(Player p, int data) {
+		if (p.getGameMode() != GameMode.SURVIVAL) {
+			p.setGameMode(GameMode.SURVIVAL);
+		}
 		if (building) {
 			p.getInventory().addItem(
 					new ItemStack(Minigames.hasItem(p, ShopItem.Builder) ? Material.STAINED_GLASS : Material.WOOL, 64,

@@ -6,6 +6,7 @@ import net.mcshockwave.Minigames.Handlers.IMinigame;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -24,6 +25,9 @@ public class Spleef implements IMinigame {
 		
 		for (Player p : Minigames.getOptedIn()) {
 			p.getInventory().addItem(new ItemStack(Material.DIAMOND_SPADE));
+			if (p.getGameMode() != GameMode.SURVIVAL) {
+				p.setGameMode(GameMode.SURVIVAL);
+			}
 		}
 		Minigames.broadcast("You have %s seconds of invincibility!", invincibilityTime);
 		invin = System.currentTimeMillis() + (invincibilityTime * 1000);

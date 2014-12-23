@@ -321,13 +321,6 @@ public class DefaultListener implements Listener {
 				return;
 			}
 
-			if (Minigames.started && !Minigames.alivePlayers.contains(p.getName())
-					&& !Minigames.deadPlayers.contains(p.getName())) {
-				event.setCancelled(false);
-				Minigames.setDead(p, true);
-				return;
-			}
-
 			if (!Minigames.alivePlayers.contains(p.getName())) {
 				if (Game.getTeam(p) != null) {
 					Minigames.alivePlayers.add(p.getName());
@@ -348,11 +341,11 @@ public class DefaultListener implements Listener {
 		Entity de = event.getDamager();
 
 		if (pe instanceof Player && de instanceof Player) {
-			// Player p = (Player) pe;
+			Player p = (Player) pe;
 			Player d = (Player) de;
 
-			if (!Minigames.alivePlayers.contains(d.getName()) || Minigames.optedOut.contains(d.getName())
-					|| Minigames.started && !Minigames.currentGame.allowPVP) {
+			if (!Minigames.alivePlayers.contains(d.getName()) || !Minigames.alivePlayers.contains(p.getName())
+					|| Minigames.optedOut.contains(d.getName()) || Minigames.started && !Minigames.currentGame.allowPVP) {
 				event.setCancelled(true);
 			} else
 				event.setCancelled(false);

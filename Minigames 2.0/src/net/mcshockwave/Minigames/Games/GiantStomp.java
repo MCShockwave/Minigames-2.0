@@ -52,7 +52,7 @@ public class GiantStomp implements IMinigame {
 				if (giant.getLocation().getBlockX() != spawn.getBlockX()
 						&& giant.getLocation().getBlockZ() != spawn.getBlockZ()) {
 					Location tp = spawn.clone();
-					tp.setY(giant.getLocation().getY());
+					tp.setY(giant.getLocation().getY() < spawn.getY() ? spawn.getY() + 1 : giant.getLocation().getY());
 					giant.teleport(tp);
 				}
 			}

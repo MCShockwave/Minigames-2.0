@@ -77,7 +77,6 @@ public class Minigames extends JavaPlugin {
 
 	public static ArrayList<String>			optedOut		= new ArrayList<String>();
 	public static ArrayList<String>			alivePlayers	= new ArrayList<String>();
-	public static ArrayList<String>			deadPlayers		= new ArrayList<String>();
 
 	public static Game						gameBefore		= null;
 	public static Game						currentGame		= null;
@@ -436,13 +435,15 @@ public class Minigames extends JavaPlugin {
 				defaultSidebar = false;
 
 				explode = false;
-				TeleportUtils.spread(new Location(Multiworld.getLobby(), 0, 102, 0), 1,
-						getOptedIn().toArray(new Player[0]));
 
 				for (Player p : getOptedIn()) {
 					Minigames.milkPlayer(p);
 					p.setFlying(false);
 					p.setAllowFlight(false);
+					p.teleport(Multiworld.getLobby().getSpawnLocation());
+					if (p.getGameMode() != GameMode.ADVENTURE) {
+						p.setGameMode(GameMode.ADVENTURE);
+					}
 				}
 
 				if (currentGame.isTeamGame()) {
@@ -485,7 +486,6 @@ public class Minigames extends JavaPlugin {
 					}
 				}
 				alivePlayers.clear();
-				deadPlayers.clear();
 				gameBefore = currentGame;
 				currentGame = null;
 				countingDown = false;
@@ -620,8 +620,8 @@ public class Minigames extends JavaPlugin {
 				}
 			}
 			alivePlayers.add(p.getName());
-			if (p.getGameMode() != GameMode.SURVIVAL) {
-				p.setGameMode(GameMode.SURVIVAL);
+			if (p.getGameMode() != GameMode.ADVENTURE) {
+				p.setGameMode(GameMode.ADVENTURE);
 			}
 			clearInv(p);
 			p.setFallDistance(0);
@@ -899,7 +899,6 @@ public class Minigames extends JavaPlugin {
 	public static void setDead(Player p, boolean sendDeath) {
 		if (alivePlayers.contains(p.getName())) {
 			alivePlayers.remove(p.getName());
-			deadPlayers.add(p.getName());
 
 			if (sendDeath) {
 				sendDeathToGame(p);
