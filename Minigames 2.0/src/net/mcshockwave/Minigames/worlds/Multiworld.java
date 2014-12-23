@@ -71,6 +71,8 @@ public class Multiworld {
 		return Bukkit.getWorld("Game");
 	}
 
+	public static int	tries	= 0;
+
 	public static void deleteWorld(final String w) {
 		if (Bukkit.getWorld(w) != null) {
 			World wld = Bukkit.getWorld(w);
@@ -89,7 +91,10 @@ public class Multiworld {
 			System.out.println("Unloaded world");
 		} else {
 			System.err.println("Couldn't unload world");
-			deleteWorld(w);
+			if (++tries < 20) {
+				deleteWorld(w);
+			}
+			tries = 0;
 		}
 		Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 			public void run() {
