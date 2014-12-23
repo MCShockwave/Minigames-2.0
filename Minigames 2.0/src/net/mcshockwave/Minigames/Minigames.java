@@ -3,6 +3,8 @@ package net.mcshockwave.Minigames;
 import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.SQLTable.Rank;
+import net.mcshockwave.MCS.Challenges.Challenge.ChallengeType;
+import net.mcshockwave.MCS.Challenges.ChallengeManager;
 import net.mcshockwave.MCS.Commands.VanishCommand;
 import net.mcshockwave.MCS.Stats.Statistics;
 import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
@@ -43,6 +45,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -320,6 +323,8 @@ public class Minigames extends JavaPlugin {
 				final String name = currentGame.name;
 				final int points = pointsOnWin;
 
+				ChallengeManager.incrChallenge(ChallengeType.Win_Solo_Minigame, null, currentGame.name(), winName, 1,
+						false);
 				Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 					public void run() {
 						PointsUtils.addPoints(win, points, "winning " + name);
@@ -352,6 +357,8 @@ public class Minigames extends JavaPlugin {
 						final String name = currentGame.name;
 						final int points = pointsOnWin;
 
+						ChallengeManager.incrChallenge(ChallengeType.Win_Team_Minigame, null, currentGame.name(),
+								w.getName(), 1, false);
 						Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 							public void run() {
 								PointsUtils.addPoints(w, points, "winning " + name);
@@ -568,7 +575,10 @@ public class Minigames extends JavaPlugin {
 	public static void start() {
 		if (gameWorldDone >= 0) {
 			broadcast("Loading map...");
-			if (gameWorldDone > 20) {
+			if (gameWorldDone > 2) {
+				// temp fix
+				new WorldCreator("Game").environment(Environment.NORMAL).generateStructures(false).type(WorldType.FLAT)
+						.createWorld();
 				resetGameWorld(currentGame, currentMap);
 				gameWorldDone = 0;
 			}

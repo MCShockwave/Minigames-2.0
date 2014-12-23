@@ -2,6 +2,8 @@ package net.mcshockwave.Minigames;
 
 import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.SQLTable;
+import net.mcshockwave.MCS.Challenges.Challenge.ChallengeModifier;
+import net.mcshockwave.MCS.Challenges.ChallengeManager;
 import net.mcshockwave.MCS.Currency.LevelUtils;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
@@ -159,6 +161,11 @@ public class DefaultListener implements Listener {
 
 			if (Minigames.defaultSidebar) {
 				Minigames.updateDefaultSidebar();
+			}
+
+			if (p.getKiller() != null) {
+				ChallengeManager.incrChallenge(ChallengeModifier.Minigame_Kills, null, p.getKiller().getName(), 1,
+						false);
 			}
 
 			// SO IT WONT BREAK K?
