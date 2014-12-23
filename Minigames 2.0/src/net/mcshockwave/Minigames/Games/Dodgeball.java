@@ -11,6 +11,7 @@ import net.mcshockwave.Minigames.worlds.Multiworld;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -59,6 +60,9 @@ public class Dodgeball implements IMinigame {
 				canBeHit.add(p);
 			}
 			p.getInventory().setItem(8, getClay(5, Game.getTeam(p)));
+			if (p.getGameMode() != GameMode.SURVIVAL) {
+				p.setGameMode(GameMode.SURVIVAL);
+			}
 		}
 		sn = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
 			public void run() {
@@ -224,7 +228,7 @@ public class Dodgeball implements IMinigame {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		event.setCancelled(false);
