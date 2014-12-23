@@ -902,10 +902,6 @@ public class Minigames extends JavaPlugin {
 				// Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(p).removePlayer(p);
 			}
 
-			if (defaultSidebar) {
-				updateDefaultSidebar();
-			}
-
 			clearInv(p);
 
 			checkDone();

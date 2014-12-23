@@ -157,6 +157,10 @@ public class DefaultListener implements Listener {
 				Minigames.sendDeathToGame(p);
 			}
 
+			if (Minigames.defaultSidebar) {
+				Minigames.updateDefaultSidebar();
+			}
+
 			// SO IT WONT BREAK K?
 			try {
 				if (p.getKiller() != null) {
