@@ -30,7 +30,7 @@ public class Infection implements IMinigame {
 	@Override
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
-		
+
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
 		}
@@ -61,15 +61,11 @@ public class Infection implements IMinigame {
 			return;
 		if (e.gt.color == ChatColor.YELLOW && e.gt.team.getPlayers().size() <= 2) {
 			for (OfflinePlayer op : e.gt.team.getPlayers()) {
-				if (op.isOnline() && op.getPlayer() != e.p) {
+				if (op.isOnline() && !op.getPlayer().equals(e.p)) {
 					Minigames.stop(op.getPlayer());
 					return;
 				}
 			}
-		}
-		if (e.gt.color == ChatColor.YELLOW && e.gt.team.getPlayers().size() < 2) {
-			Minigames.stop(null);
-			return;
 		}
 
 		if (e.gt != null && e.gt.color == ChatColor.YELLOW) {

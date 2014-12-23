@@ -511,8 +511,12 @@ public class Minigames extends JavaPlugin {
 			final String mapname = g.name() + "-" + map;
 			final String fileName = "Maps" + File.separator + mapname;
 
-			System.out.println("Deleting game world file...");
-			Multiworld.deleteWorld("Game");
+			try {
+				System.out.println("Deleting game world file...");
+				Multiworld.deleteWorld("Game");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			if (Multiworld.getGame() != null) {
 				resetGameWorld(g, map);
@@ -576,11 +580,11 @@ public class Minigames extends JavaPlugin {
 		if (gameWorldDone >= 0) {
 			broadcast("Loading map...");
 			if (gameWorldDone > 2) {
-				// temp fix
+				gameWorldDone = 0;
+
 				new WorldCreator("Game").environment(Environment.NORMAL).generateStructures(false).type(WorldType.FLAT)
 						.createWorld();
 				resetGameWorld(currentGame, currentMap);
-				gameWorldDone = 0;
 			}
 			Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 				public void run() {

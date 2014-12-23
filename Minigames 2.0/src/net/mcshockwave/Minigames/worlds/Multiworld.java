@@ -3,6 +3,7 @@ package net.mcshockwave.Minigames.worlds;
 import net.mcshockwave.Minigames.Minigames;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
@@ -71,20 +72,23 @@ public class Multiworld {
 	}
 
 	public static void deleteWorld(final String w) {
+		if (Bukkit.getWorld(w) != null) {
+			World wld = Bukkit.getWorld(w);
+			for (Entity e : wld.getEntities()) {
+				if (e instanceof Player) {
+					e.teleport(getLobby().getSpawnLocation());
+				} else {
+					e.remove();
+				}
+			}
+			for (Chunk c : wld.getLoadedChunks()) {
+				c.unload(false, false);
+			}
+		}
 		if (Bukkit.unloadWorld(w, false)) {
 			System.out.println("Unloaded world");
 		} else {
 			System.err.println("Couldn't unload world");
-			if (Bukkit.getWorld(w) != null) {
-				World wld = Bukkit.getWorld(w);
-				for (Entity e : wld.getEntities()) {
-					if (e instanceof Player) {
-						e.teleport(getLobby().getSpawnLocation());
-					} else {
-						e.remove();
-					}
-				}
-			}
 			deleteWorld(w);
 		}
 		Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
