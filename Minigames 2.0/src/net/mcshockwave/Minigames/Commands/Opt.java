@@ -21,6 +21,10 @@ public class Opt implements CommandExecutor {
 
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
+			
+			if (!SQLTable.hasRank(p.getName(), Rank.JR_MOD)) {
+				MCShockwave.send(p, "%s is disabled for non-staff due to buggy-ness", "/opt");
+			}
 
 			if (!SQLTable.hasRank(p.getName(), Rank.IRON)) {
 				MCShockwave.send(p, "You must be %s to use /opt! Buy it at buy.mcshockwave.net", "Iron+");
