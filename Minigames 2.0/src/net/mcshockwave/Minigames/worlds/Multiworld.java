@@ -7,6 +7,8 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 
@@ -73,6 +75,17 @@ public class Multiworld {
 			System.out.println("Unloaded world");
 		} else {
 			System.err.println("Couldn't unload world");
+			if (Bukkit.getWorld(w) != null) {
+				World wld = Bukkit.getWorld(w);
+				for (Entity e : wld.getEntities()) {
+					if (e instanceof Player) {
+						e.teleport(getLobby().getSpawnLocation());
+					} else {
+						e.remove();
+					}
+				}
+			}
+			deleteWorld(w);
 		}
 		Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 			public void run() {
@@ -80,6 +93,7 @@ public class Multiworld {
 					System.out.println("Deleted world!");
 				} else {
 					System.err.println("Couldn't delete world");
+					deleteWorld(w);
 				}
 			}
 		}, 10l);
