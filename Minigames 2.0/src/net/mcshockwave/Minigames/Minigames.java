@@ -568,6 +568,8 @@ public class Minigames extends JavaPlugin {
 					WorldFileUtils.set("Game", WorldFileUtils.get(fileName));
 
 					System.out.println("Done resetting world! (name " + mapname + ") (fileName " + fileName + ")");
+					
+					Multiworld.getGame().setAutoSave(false);
 
 					gameWorldDone = -1;
 				}

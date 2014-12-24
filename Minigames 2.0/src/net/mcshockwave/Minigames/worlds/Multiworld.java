@@ -86,26 +86,33 @@ public class Multiworld {
 			for (Chunk c : wld.getLoadedChunks()) {
 				c.unload(false, false);
 			}
-		}
-		if (Bukkit.unloadWorld(w, false)) {
-			System.out.println("Unloaded world");
-		} else {
-			System.err.println("Couldn't unload world");
-			if (++tries < 20) {
-				deleteWorld(w);
+			if (Bukkit.unloadWorld(w, false)) {
+				System.out.println("Unloaded world");
+			} else {
+				System.err.println("Couldn't unload world");
+				if (++tries < 20) {
+					deleteWorld(w);
+				}
+				System.err.println("UNLOADING WORLD FAILED");
+				tries = 0;
 			}
-			tries = 0;
+			new File(wld.getWorldFolder().getPath() + File.separatorChar + "session.lock").delete();
 		}
 		Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
+			int	tries	= 0;
+
 			public void run() {
 				if (delete(new File(w))) {
 					System.out.println("Deleted world!");
 				} else {
 					System.err.println("Couldn't delete world");
-					deleteWorld(w);
+					if (++tries < 20) {
+						run();
+					}
+					System.err.println("DELETING WORLD FAILED");
 				}
 			}
-		}, 10l);
+		}, 20l);
 	}
 
 	public static void deleteWorld(World w) {
@@ -126,13 +133,13 @@ public class Multiworld {
 		File source = new File(s);
 		File target = new File(t);
 		try {
-			copyTest(source, target);
+			copyTo(source, target);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void copyTest(File src, File dest) throws IOException {
+	public static void copyTo(File src, File dest) throws IOException {
 		if (src.isDirectory()) {
 
 			if (!dest.exists()) {
@@ -144,7 +151,7 @@ public class Multiworld {
 			for (String file : files) {
 				File srcFile = new File(src, file);
 				File destFile = new File(dest, file);
-				copyTest(srcFile, destFile);
+				copyTo(srcFile, destFile);
 			}
 
 		} else {
