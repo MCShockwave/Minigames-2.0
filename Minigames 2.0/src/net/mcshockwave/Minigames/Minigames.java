@@ -196,6 +196,12 @@ public class Minigames extends JavaPlugin {
 									}
 								}
 								canOpenShop = true;
+
+								try {
+									Multiworld.deleteWorld("Game");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
 							if (b == 15) {
 								for (Method m : currentGame.mclass.getClass().getMethods()) {
@@ -513,16 +519,13 @@ public class Minigames extends JavaPlugin {
 			final String mapname = g.name() + "-" + map;
 			final String fileName = "Maps" + File.separator + mapname;
 
-			try {
-				System.out.println("Deleting game world file...");
-				Multiworld.deleteWorld("Game");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
 			if (Multiworld.getGame() != null) {
-				resetGameWorld(g, map);
-				return;
+				try {
+					System.out.println("Deleting game world file...");
+					Multiworld.deleteWorld("Game");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 
 			Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
@@ -568,7 +571,7 @@ public class Minigames extends JavaPlugin {
 					WorldFileUtils.set("Game", WorldFileUtils.get(fileName));
 
 					System.out.println("Done resetting world! (name " + mapname + ") (fileName " + fileName + ")");
-					
+
 					Multiworld.getGame().setAutoSave(false);
 
 					gameWorldDone = -1;

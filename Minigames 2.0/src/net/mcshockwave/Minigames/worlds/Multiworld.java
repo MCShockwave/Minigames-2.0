@@ -71,8 +71,6 @@ public class Multiworld {
 		return Bukkit.getWorld("Game");
 	}
 
-	public static int	tries	= 0;
-
 	public static void deleteWorld(final String w) {
 		if (Bukkit.getWorld(w) != null) {
 			World wld = Bukkit.getWorld(w);
@@ -89,26 +87,15 @@ public class Multiworld {
 			if (Bukkit.unloadWorld(w, false)) {
 				System.out.println("Unloaded world");
 			} else {
-				System.err.println("Couldn't unload world");
-				if (++tries < 20) {
-					deleteWorld(w);
-				}
 				System.err.println("UNLOADING WORLD FAILED");
-				tries = 0;
 			}
 			new File(wld.getWorldFolder().getPath() + File.separatorChar + "session.lock").delete();
 		}
 		Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
-			int	tries	= 0;
-
 			public void run() {
 				if (delete(new File(w))) {
 					System.out.println("Deleted world!");
 				} else {
-					System.err.println("Couldn't delete world");
-					if (++tries < 20) {
-						run();
-					}
 					System.err.println("DELETING WORLD FAILED");
 				}
 			}
