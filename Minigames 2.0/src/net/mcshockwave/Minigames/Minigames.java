@@ -43,9 +43,9 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
-import org.bukkit.World.Environment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -124,6 +124,8 @@ public class Minigames extends JavaPlugin {
 		}
 
 		resetScoreboard();
+
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "save-off");
 	}
 
 	public static void resetScoreboard() {
