@@ -25,8 +25,24 @@ import java.util.Random;
 
 public class Multiworld {
 
-	public static WorldCreator[]	worlds	= { wc("Lobby", Environment.NORMAL, WorldType.FLAT),
-			wc("Game", Environment.NORMAL, WorldType.FLAT) };
+	public static int				worldID		= 0;
+	public static String			worldName	= "Game";
+
+	public static WorldCreator[]	worlds		= new WorldCreator[2];
+
+	static {
+		loadWorldGenerators();
+	}
+
+	public static void loadWorldGenerators() {
+		worlds[0] = wc("Lobby", Environment.NORMAL, WorldType.FLAT);
+		worlds[1] = wc(worldName, Environment.NORMAL, WorldType.FLAT);
+	}
+
+	public static void resetGameName() {
+		worldName = "Game" + ++worldID;
+		loadWorldGenerators();
+	}
 
 	private static WorldCreator wc(String name, Environment env, WorldType wt) {
 		WorldCreator wc = new WorldCreator(name);
@@ -68,7 +84,7 @@ public class Multiworld {
 	}
 
 	public static World getGame() {
-		return Bukkit.getWorld("Game");
+		return Bukkit.getWorld(worldName);
 	}
 
 	public static void deleteWorld(final String w) {
@@ -89,7 +105,6 @@ public class Multiworld {
 			} else {
 				System.err.println("UNLOADING WORLD FAILED");
 			}
-			new File(wld.getWorldFolder().getPath() + File.separatorChar + "session.lock").delete();
 		}
 		Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
 			public void run() {

@@ -198,22 +198,13 @@ public class Minigames extends JavaPlugin {
 								canOpenShop = true;
 
 								try {
-									Multiworld.deleteWorld("Game");
+									Multiworld.deleteWorld(Multiworld.worldName);
+									Multiworld.resetGameName();
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
 							}
 							if (b == 15) {
-								for (Method m : currentGame.mclass.getClass().getMethods()) {
-									if (m.isAnnotationPresent(PreGame.class)) {
-										try {
-											m.invoke(this);
-										} catch (Exception e) {
-										}
-									}
-								}
-							}
-							if (b == 10) {
 								if (nextMap != null && currentGame.maplist.contains(nextMap)) {
 									currentMap = nextMap;
 									nextMap = null;
@@ -239,6 +230,16 @@ public class Minigames extends JavaPlugin {
 										name = "Light";
 									}
 									broadcast("Weather: %s", name);
+								}
+							}
+							if (b == 10) {
+								for (Method m : currentGame.mclass.getClass().getMethods()) {
+									if (m.isAnnotationPresent(PreGame.class)) {
+										try {
+											m.invoke(this);
+										} catch (Exception e) {
+										}
+									}
 								}
 							}
 							if (b == 5) {
@@ -522,7 +523,7 @@ public class Minigames extends JavaPlugin {
 			if (Multiworld.getGame() != null) {
 				try {
 					System.out.println("Deleting game world file...");
-					Multiworld.deleteWorld("Game");
+					Multiworld.deleteWorld(Multiworld.worldName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -532,10 +533,10 @@ public class Minigames extends JavaPlugin {
 				public void run() {
 					System.out.println("Copying world files...");
 
-					Multiworld.copyWorld(fileName, "Game");
+					Multiworld.copyWorld(fileName, Multiworld.worldName);
 					System.out.println("Copied world " + mapname + " (" + fileName + ") to Game");
 				}
-			}, 30l);
+			}, 60l);
 
 			Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 				public void run() {
@@ -547,7 +548,7 @@ public class Minigames extends JavaPlugin {
 
 					System.out.println("Loading arena world...");
 
-					World w = new WorldCreator("Game").type(WorldType.FLAT).createWorld();
+					World w = new WorldCreator(Multiworld.worldName).type(WorldType.FLAT).createWorld();
 
 					System.out.println("Setting gamerules...");
 
@@ -568,7 +569,7 @@ public class Minigames extends JavaPlugin {
 
 					System.out.println("Copying text file...");
 
-					WorldFileUtils.set("Game", WorldFileUtils.get(fileName));
+					WorldFileUtils.set(Multiworld.worldName, WorldFileUtils.get(fileName));
 
 					System.out.println("Done resetting world! (name " + mapname + ") (fileName " + fileName + ")");
 
@@ -589,7 +590,7 @@ public class Minigames extends JavaPlugin {
 			if (gameWorldDone > 2) {
 				gameWorldDone = 0;
 
-				new WorldCreator("Game").environment(Environment.NORMAL).generateStructures(false).type(WorldType.FLAT)
+				new WorldCreator(Multiworld.worldName).environment(Environment.NORMAL).generateStructures(false).type(WorldType.FLAT)
 						.createWorld();
 				resetGameWorld(currentGame, currentMap);
 			}
@@ -733,7 +734,7 @@ public class Minigames extends JavaPlugin {
 		sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		Sidebar.setDisplayName(currentGame.name);
 
-		if (FileElements.has("time", "Game")) {
+		if (FileElements.has("time", Multiworld.worldName)) {
 			Multiworld.getGame().setTime(Game.getInt("time"));
 		} else {
 			Multiworld.getGame().setTime(isMapNight ? 18000 : 5000);
