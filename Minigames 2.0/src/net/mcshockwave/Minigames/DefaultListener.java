@@ -153,10 +153,12 @@ public class DefaultListener implements Listener {
 
 		event.setDeathMessage("");
 		if (!Minigames.optedOut.contains(p.getName()) && Minigames.currentGame != null && Minigames.started) {
-			if (!Minigames.currentGame.canRespawn) {
-				Minigames.setDead(p, true);
-			} else {
-				Minigames.sendDeathToGame(p);
+			if (!Minigames.explode) {
+				if (!Minigames.currentGame.canRespawn) {
+					Minigames.setDead(p, true);
+				} else {
+					Minigames.sendDeathToGame(p);
+				}
 			}
 
 			if (Minigames.defaultSidebar) {
