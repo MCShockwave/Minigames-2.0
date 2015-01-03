@@ -82,7 +82,7 @@ public class GiantStomp implements IMinigame {
 		if (event.getEntityType() == EntityType.GIANT) {
 			event.setCancelled(true);
 			if (event.getCause() == DamageCause.FALL) {
-				ShockwaveUtils.makeShockwave(giant.getLocation(), 25);
+				ShockwaveUtils.makeShockwave(giant.getLocation(), 40);
 			}
 		}
 	}
