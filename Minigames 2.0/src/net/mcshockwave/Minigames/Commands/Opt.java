@@ -24,6 +24,7 @@ public class Opt implements CommandExecutor {
 			
 			if (!SQLTable.hasRank(p.getName(), Rank.JR_MOD)) {
 				MCShockwave.send(p, "%s is disabled for non-staff due to buggy-ness", "/opt");
+				return false;
 			}
 
 			if (!SQLTable.hasRank(p.getName(), Rank.IRON)) {
