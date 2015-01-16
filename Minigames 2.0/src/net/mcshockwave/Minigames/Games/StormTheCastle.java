@@ -2,6 +2,7 @@ package net.mcshockwave.Minigames.Games;
 
 import net.mcshockwave.MCS.Utils.CooldownUtils;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.MiscUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
 import net.mcshockwave.Minigames.Game;
@@ -75,14 +76,20 @@ public class StormTheCastle implements IMinigame {
 
 	@Override
 	public void onGameStart() {
-		maxCache = 0;
-		while (Game.hasElement("cache-" + (++maxCache))) {
-		}
-		maxCache -= 2;
-		cacheLocId = rand.nextInt(maxCache) + 1;
-		cacheLoc = Game.getLocation("cache-" + cacheLocId);
+		try {
+			maxCache = 0;
+			while (Game.hasElement("cache-" + (++maxCache))) {
+			}
+			maxCache -= 1;
+			cacheLocId = rand.nextInt(maxCache) + 1;
+			cacheLoc = Game.getLocation("cache-" + cacheLocId);
 
-		placeCache(cacheLoc);
+			placeCache(cacheLoc);
+		} catch (Exception t) {
+			t.printStackTrace();
+			MiscUtils.printStackTrace(t);
+			onGameStart();
+		}
 
 		spawnNewC4();
 
@@ -247,7 +254,7 @@ public class StormTheCastle implements IMinigame {
 	private void giveItems(Player p) {
 		Minigames.clearInv(p);
 		Minigames.milkPlayer(p);
-		
+
 		if (p.getGameMode() != GameMode.SURVIVAL) {
 			p.setGameMode(GameMode.SURVIVAL);
 		}
