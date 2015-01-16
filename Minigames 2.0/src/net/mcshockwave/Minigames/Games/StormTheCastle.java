@@ -453,6 +453,16 @@ public class StormTheCastle implements IMinigame {
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
 		Entity ee = event.getEntity();
+		
+		if (event instanceof EntityDamageByEntityEvent && ee.getType() == EntityType.ENDER_CRYSTAL) {
+			Entity de = ((EntityDamageByEntityEvent) event).getDamager();
+			if (de instanceof Player) {
+				if (!Minigames.alivePlayers.contains(((Player) de).getName())) {
+					event.setCancelled(true);
+					return;
+				}
+			}
+		}
 
 		if (ee.getType() == EntityType.ENDER_CRYSTAL) {
 			event.setCancelled(true);
