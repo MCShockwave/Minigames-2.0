@@ -9,6 +9,7 @@ import net.mcshockwave.MCS.Commands.VanishCommand;
 import net.mcshockwave.MCS.Stats.Statistics;
 import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.MiscUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
 import net.mcshockwave.MCS.Utils.SchedulerUtils;
 import net.mcshockwave.Minigames.Game.GameMap;
@@ -236,8 +237,9 @@ public class Minigames extends JavaPlugin {
 								for (Method m : currentGame.mclass.getClass().getMethods()) {
 									if (m.isAnnotationPresent(PreGame.class)) {
 										try {
-											m.invoke(this);
+											m.invoke(currentGame.mclass);
 										} catch (Exception e) {
+											MiscUtils.printStackTrace(e);
 										}
 									}
 								}
@@ -590,8 +592,8 @@ public class Minigames extends JavaPlugin {
 			if (gameWorldDone > 2) {
 				gameWorldDone = 0;
 
-				new WorldCreator(Multiworld.worldName).environment(Environment.NORMAL).generateStructures(false).type(WorldType.FLAT)
-						.createWorld();
+				new WorldCreator(Multiworld.worldName).environment(Environment.NORMAL).generateStructures(false)
+						.type(WorldType.FLAT).createWorld();
 				resetGameWorld(currentGame, currentMap);
 			}
 			Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
@@ -1043,6 +1045,7 @@ public class Minigames extends JavaPlugin {
 			MCShockwave.updateTab(p2);
 		}
 		p.setCompassTarget(p.getWorld().getSpawnLocation());
+		p.setLevel(0);
 	}
 
 	public static void milkPlayer(Player p) {

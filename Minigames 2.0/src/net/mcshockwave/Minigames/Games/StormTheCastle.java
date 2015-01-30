@@ -173,15 +173,18 @@ public class StormTheCastle implements IMinigame {
 	}
 
 	public void spawnNewC4() {
-		int bombLoc = 0;
-		while ((bombLoc = rand.nextInt(maxCache)) == cacheLocId) {
+		try {
+			int bombLoc = 0;
+			while ((bombLoc = rand.nextInt(maxCache)) == cacheLocId) {
+			}
+			Location l = Game.getLocation("cache-" + bombLoc);
+			l.getWorld().dropItemNaturally(
+					l,
+					ItemMetaUtils.setLore(ItemMetaUtils.setItemName(new ItemStack(Material.REDSTONE_COMPARATOR),
+							"§fRemote Explosive"), "§7Place near the Knights' cache", "§7and trigger to blow up"));
+		} catch (Exception e) {
+			spawnNewC4();
 		}
-		Location l = Game.getLocation("cache-" + bombLoc);
-		l.getWorld().dropItemNaturally(
-				l,
-				ItemMetaUtils.setLore(
-						ItemMetaUtils.setItemName(new ItemStack(Material.REDSTONE_COMPARATOR), "§fRemote Explosive"),
-						"§7Place near the Knights' cache", "§7and trigger to blow up"));
 	}
 
 	public void cleanObjectives() {
@@ -453,7 +456,7 @@ public class StormTheCastle implements IMinigame {
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
 		Entity ee = event.getEntity();
-		
+
 		if (event instanceof EntityDamageByEntityEvent && ee.getType() == EntityType.ENDER_CRYSTAL) {
 			Entity de = ((EntityDamageByEntityEvent) event).getDamager();
 			if (de instanceof Player) {
