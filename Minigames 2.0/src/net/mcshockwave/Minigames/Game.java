@@ -179,7 +179,7 @@ public enum Game {
 		new LaserTag(),
 		Material.DIAMOND_HOE,
 		0,
-		10,
+		12,
 		true,
 		true,
 		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),

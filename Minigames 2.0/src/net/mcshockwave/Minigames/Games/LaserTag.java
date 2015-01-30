@@ -40,7 +40,7 @@ public class LaserTag implements IMinigame {
 
 	public Block		yb1, yb2, gb1, gb2;
 
-	public int			neededPoints	= 100, maxCharge = 1000, maxBaseHealth = 25;
+	public int			neededPoints	= 0, maxCharge = 1000, maxBaseHealth = 50;
 	public BukkitTask	charge			= null;
 
 	GameScore			yscore, gscore, needed;
@@ -58,9 +58,9 @@ public class LaserTag implements IMinigame {
 			baseHealth.put(b, maxBaseHealth);
 		}
 
+		needed = Sidebar.getNewScore("§c - NEEDED -", neededPoints);
 		yscore = Sidebar.getNewScore("§eYellow Points", 0);
 		gscore = Sidebar.getNewScore("§aGreen Points", 0);
-		needed = Sidebar.getNewScore("§c - NEEDED -", neededPoints);
 
 		charge = new BukkitRunnable() {
 			@SuppressWarnings("deprecation")
@@ -71,14 +71,14 @@ public class LaserTag implements IMinigame {
 					if (p.getLevel() <= 0) {
 						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
 					} else {
-						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 0));
+						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 1));
 					}
 					int lvlSet = p.getLevel();
 					if (lvlSet > 0) {
 						for (Block b : Game.getTeam(p).color == ChatColor.GREEN ? new Block[] { yb1, yb2 }
 								: new Block[] { gb1, gb2 }) {
-							if (b.getLocation().distanceSquared(p.getLocation()) < 7 * 7) {
-								lvlSet -= 2;
+							if (b.getLocation().distanceSquared(p.getLocation()) < 10 * 10) {
+								lvlSet -= 1;
 							}
 						}
 					}
@@ -159,7 +159,7 @@ public class LaserTag implements IMinigame {
 						rep = maxDis;
 						if (c.getLevel() > 0) {
 							c.damage(0);
-							int dmg = rand.nextInt(100) + 50;
+							int dmg = rand.nextInt(50) + 150;
 							int lvlSet = c.getLevel() - dmg;
 							if (lvlSet <= 0) {
 								disableMsgs(c, p);
@@ -187,7 +187,7 @@ public class LaserTag implements IMinigame {
 						Minigames.broadcast(Game.getTeam(p).color, "%s destroyed the %s base!", p.getName(),
 								(Game.getTeam(p).color == ChatColor.GREEN ? "§e§oYellow" : "§a§oGreen"));
 						hit.setType(Material.OBSIDIAN);
-						addPoints(Game.getTeam(p), 100);
+						addPoints(Game.getTeam(p), 200);
 						hp = 0;
 						CooldownUtils.addCooldown("LT-Base", hit.getLocation().toString(), 600, new Runnable() {
 							public void run() {
