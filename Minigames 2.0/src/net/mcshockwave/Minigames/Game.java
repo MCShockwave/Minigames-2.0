@@ -1,6 +1,6 @@
 package net.mcshockwave.Minigames;
 
-import net.mcshockwave.MCS.SQLTable;
+import net.mcshockwave.MCS.SQLTable; 
 import net.mcshockwave.Minigames.Games.Airships;
 import net.mcshockwave.Minigames.Games.Boarding;
 import net.mcshockwave.Minigames.Games.Brawl;
@@ -20,6 +20,7 @@ import net.mcshockwave.Minigames.Games.Minotaur;
 import net.mcshockwave.Minigames.Games.Siege;
 import net.mcshockwave.Minigames.Games.Spleef;
 import net.mcshockwave.Minigames.Games.StormTheCastle;
+import net.mcshockwave.Minigames.Games.Target;
 import net.mcshockwave.Minigames.Games.TRON;
 import net.mcshockwave.Minigames.Games.Tiers;
 import net.mcshockwave.Minigames.Games.VillageBattle;
@@ -214,7 +215,15 @@ public enum Game {
 		0,
 		6,
 		false,
-		true);
+		true),
+		Target(
+				new Target(),
+				Material.REDSTONE_BLOCK,
+				0,
+				8,
+				true,
+				true,
+				new GameTeam[] {new GameTeam("Green", ChatColor.AQUA), new GameTeam("Yellow", ChatColor.YELLOW)});
 
 	public static Game[]	disabled	= { Game.Ghostbusters };
 
