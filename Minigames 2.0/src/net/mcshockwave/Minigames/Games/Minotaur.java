@@ -86,7 +86,7 @@ public class Minotaur implements IMinigame {
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				for (Player p : Minigames.getOptedIn()) {
-					p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 254));
+					p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 600, 254));
 					Minigames.send(ChatColor.RED, p, "You have %s seconds of invincibility!", "30");
 				}
 			}
