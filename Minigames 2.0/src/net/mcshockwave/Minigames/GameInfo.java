@@ -295,7 +295,18 @@ public enum GameInfo {
 		"Goal",
 		"Be the last person on the platform.",
 		"Tip",
-		"Keep jumping - you can jump over the shockwave. Also, if you sneak and block with the sword, the shockwave does less knockback.");
+		"Keep jumping - you can jump over the shockwave. Also, if you sneak and block with the sword, the shockwave does less knockback."),
+		Target(
+				"Teams",
+				ChatColor.YELLOW + "2",
+				"Respawn",
+				ChatColor.YELLOW + "Variable", 
+				"Main",
+				"A target is picked for each team, when the target is killed by the other team a new one is picked and the target is eliminated",
+				"Goal",
+				"Kill all of the other team",
+				"Tip",
+				"If you're the target stay out of the action, but near teammates");
 
 	public String[]	info;
 
