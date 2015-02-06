@@ -69,6 +69,8 @@ public class Minotaur implements IMinigame {
 		}
 		return null;
 	}
+	
+	public long startTime = 0;
 
 	@Override
 	public void onGameStart() {
@@ -85,8 +87,8 @@ public class Minotaur implements IMinigame {
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
+				startTime = System.currentTimeMillis();
 				for (Player p : Minigames.getOptedIn()) {
-					p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 600, 254));
 					Minigames.send(ChatColor.RED, p, "You have %s seconds of invincibility!", "30");
 				}
 			}
@@ -111,6 +113,13 @@ public class Minotaur implements IMinigame {
 			Bukkit.broadcastMessage(ChatColor.RED + "The Minotaur Died!");
 		} else {
 			Minigames.broadcastDeath(e.p, e.k, "%s killed themselves", "%s was killed by the Minotaur (%s)");
+		}
+	}
+	
+	@EventHandler
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		if (event.getEntity() instanceof Player && System.currentTimeMillis() < startTime + 30000) {
+			event.setCancelled(true);
 		}
 	}
 
