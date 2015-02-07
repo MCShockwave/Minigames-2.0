@@ -53,7 +53,7 @@ public class Target implements IMinigame {
 					e.k.setMaxHealth(20);
 					e.k.setHealth(20);
 				} else {
-					Minigames.send(e.gt.color, e.k, "+1 heart for killing %s", e.k.getName());
+					Minigames.send(e.gt.color, e.k, "+1 heart for killing %s", e.p.getName());
 					e.k.setMaxHealth(e.k.getMaxHealth() + 2);
 					e.k.setHealth(e.k.getMaxHealth());
 				}

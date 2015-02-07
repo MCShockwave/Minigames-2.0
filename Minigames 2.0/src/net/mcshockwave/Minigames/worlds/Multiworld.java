@@ -27,10 +27,12 @@ public class Multiworld {
 
 	public static int				worldID		= 0;
 	public static String			worldName	= "Game";
+	static Random					rand		= new Random();
 
 	public static WorldCreator[]	worlds		= new WorldCreator[2];
 
 	static {
+		resetGameName();
 		loadWorldGenerators();
 	}
 
@@ -40,7 +42,8 @@ public class Multiworld {
 	}
 
 	public static void resetGameName() {
-		worldName = "Game" + ++worldID;
+		worldID = rand.nextInt(100000000);
+		worldName = "Game" + worldID;
 		loadWorldGenerators();
 	}
 
