@@ -17,11 +17,13 @@ public class Target implements IMinigame {
 
 	@Override
 	public void onGameStart() {
-		for (GameTeam gt : Game.Target.teams) {
-			selectTarget(gt);
-		}
+		Minigames.showDefaultSidebar();
+		
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
+		}
+		for (GameTeam gt : Game.Target.teams) {
+			selectTarget(gt);
 		}
 	}
 
@@ -36,6 +38,7 @@ public class Target implements IMinigame {
 			Minigames.setDead(e.p, false);
 			e.p.setMaxHealth(20);
 			e.p.setHealth(e.p.getMaxHealth());
+			selectTarget(e.gt);
 		} else {
 			giveKit(e.p);
 		}

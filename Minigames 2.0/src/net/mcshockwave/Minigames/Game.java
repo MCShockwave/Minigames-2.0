@@ -223,7 +223,7 @@ public enum Game {
 				8,
 				true,
 				true,
-				new GameTeam[] {new GameTeam("Green", ChatColor.AQUA), new GameTeam("Yellow", ChatColor.YELLOW)});
+				new GameTeam[] {new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW)});
 
 	public static Game[]	disabled	= { Game.Ghostbusters };
 
