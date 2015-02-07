@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Tiers implements IMinigame {
 
@@ -280,6 +281,23 @@ public class Tiers implements IMinigame {
 			ItemMetaUtils.addEnchantment(it, e, l);
 		}
 		return it;
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		GameTeam win = null;
+		int sco = 0;
+		boolean tie = false;
+		for (Entry<GameTeam, GameScore> ts : tiers.entrySet()) {
+			if (ts.getValue().getVal() > sco) {
+				tie = false;
+				win = ts.getKey();
+				sco = ts.getValue().getVal();
+			} else if (ts.getValue().getVal() == sco) {
+				tie = true;
+			}
+		}
+		return tie ? null : win;
 	}
 
 }

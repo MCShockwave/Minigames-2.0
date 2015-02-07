@@ -636,13 +636,11 @@ public class Minigames extends JavaPlugin {
 			}
 			p.setFallDistance(0);
 			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10, 100));
-			Minigames.resetPlayer(p);
+			resetPlayer(p);
+			currentGame.mclass.giveKit(p);
 		}
-
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			sendAll(p, getBroadcastMessage("%s has started!", currentGame.name),
-					getBroadcastMessage("You will earn %s points if you win", pointsOnWin));
-		}
+		broadcastAll(getBroadcastMessage("%s has started!", currentGame.name),
+				getBroadcastMessage("You will earn %s points if you win", pointsOnWin));
 
 		Bukkit.getPluginManager().registerEvents(currentGame.mclass, ins);
 
@@ -670,6 +668,42 @@ public class Minigames extends JavaPlugin {
 
 			while (noteam.size() > 0) {
 				Player p = noteam.get(rand.nextInt(noteam.size()));
+
+				if (currentGame == Game.Ghostbusters) {
+					int max = getOptedIn().size() / 4 + 1;
+					if (tid == 0 && ts[0].getPlayers().size() >= max) {
+						tid = 1;
+					}
+				} else if (currentGame == Game.Infection) {
+					int max = getOptedIn().size() > 6 ? 3 : 1;
+					if (tid == 0 && ts[0].getPlayers().size() >= max) {
+						tid = 1;
+					}
+				} else if (currentGame == Game.Minotaur) {
+					if (ts[1].getPlayers().size() < 1) {
+						tid = 1;
+					} else {
+						tid = 0;
+					}
+				} else if (currentGame == Game.Airstrike) {
+					if (ts[0].getPlayers().size() <= 3) {
+						tid = 0;
+					} else {
+						tid = 1;
+					}
+				} else {
+					for (int i = 0; i < tsal.size(); i++) {
+						Team t = ts[i];
+						if (ts[tid].getSize() > t.getSize() + 1) {
+							tid = i - 1;
+						}
+					}
+					tid++;
+					if (tid >= tsal.size()) {
+						tid = 0;
+					}
+				}
+
 				Team t = null;
 				for (Entry<Player, GameTeam> e : selectedTeam.entrySet()) {
 					if (e.getValue() == Game.getTeam(ts[tid])) {
@@ -692,28 +726,6 @@ public class Minigames extends JavaPlugin {
 						p.teleport(Game.getSpawn(gt));
 						send(gt.color, p, "You are on %s!", gt.name);
 						break;
-					}
-				}
-				if (currentGame == Game.Ghostbusters) {
-					int max = getOptedIn().size() / 4 + 1;
-					if (tid == 0 && ts[0].getPlayers().size() >= max) {
-						tid = 1;
-					}
-				} else if (currentGame == Game.Infection) {
-					int max = getOptedIn().size() > 6 ? 3 : 1;
-					if (tid == 0 && ts[0].getPlayers().size() >= max) {
-						tid = 1;
-					}
-				} else if (currentGame == Game.Minotaur) {
-					if (ts[1].getPlayers().size() < 1) {
-						ts[1].addPlayer(p);
-					} else {
-						ts[0].addPlayer(p);
-					}
-				} else {
-					tid++;
-					if (tid >= tsal.size()) {
-						tid = 0;
 					}
 				}
 			}
@@ -775,13 +787,25 @@ public class Minigames extends JavaPlugin {
 		currentGame.mclass.onGameStart();
 		timer.add(Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 			public void run() {
-				if (currentGame == Game.Storm_The_Castle) {
-					Minigames.broadcast(ChatColor.GREEN, "Times up, the %s win!", "Knights");
-					stop(Game.Storm_The_Castle.getTeam("Knights").team);
-				} else {
-					Minigames.broadcast(ChatColor.GREEN, "Times up! Ending %s!", "game");
-					stop(null);
+				Minigames.broadcast(ChatColor.GREEN, "Times up! Ending %s!", "game");
+				Object winner = currentGame.mclass.determineWinner(currentGame);
+				if (winner == null && currentGame.isTeamGame() && !currentGame.canRespawn) {
+					int maxPl = 0;
+					boolean tie = false;
+					for (GameTeam gt : currentGame.teams) {
+						if (gt.getPlayers().size() > maxPl) {
+							tie = false;
+							maxPl = gt.getPlayers().size();
+							winner = gt.team;
+						} else if (gt.getPlayers().size() == maxPl) {
+							tie = true;
+						}
+					}
+					if (tie) {
+						winner = null;
+					}
 				}
+				stop(winner);
 			}
 		}, time * 1200));
 	}

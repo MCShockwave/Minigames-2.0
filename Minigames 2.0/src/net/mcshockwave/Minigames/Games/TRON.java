@@ -138,4 +138,13 @@ public class TRON implements IMinigame {
 		}
 	}
 
+	@Override
+	public void giveKit(Player p) {
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
+	}
+
 }

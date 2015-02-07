@@ -14,7 +14,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -52,18 +51,6 @@ public class BuildAndFight implements IMinigame {
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
-				for (OfflinePlayer op : Game.Build_and_Fight.teams[0].team.getPlayers()) {
-					if (op instanceof Player) {
-						Player p = (Player) op;
-						giveKit(p, 13);
-					}
-				}
-				for (OfflinePlayer op : Game.Build_and_Fight.teams[1].team.getPlayers()) {
-					if (op instanceof Player) {
-						Player p = (Player) op;
-						giveKit(p, 4);
-					}
-				}
 				building = true;
 				Minigames.broadcast("You have %s to build a fort, then fight!", "1 minute");
 			}
@@ -73,17 +60,10 @@ public class BuildAndFight implements IMinigame {
 				building = false;
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.RED, "Times up! You may now %s!",
 						"fight"));
-				Minigames.clearInv(Minigames.getOptedIn().toArray(new Player[0]));
-				for (OfflinePlayer op : Game.Build_and_Fight.teams[0].team.getPlayers()) {
-					if (op instanceof Player) {
-						Player p = (Player) op;
-						giveKit(p, 13);
-					}
-				}
-				for (OfflinePlayer op : Game.Build_and_Fight.teams[1].team.getPlayers()) {
-					if (op instanceof Player) {
-						Player p = (Player) op;
-						giveKit(p, 4);
+				for (String al : Minigames.alivePlayers) {
+					if (Bukkit.getPlayer(al) != null) {
+						Player p = Bukkit.getPlayer(al);
+						giveKit(p);
 					}
 				}
 				BlockUtils.load(Game.getLocation("bridge-corner-1"), "baf-bridge", 0.1, false);
@@ -91,14 +71,15 @@ public class BuildAndFight implements IMinigame {
 		}, 1200);
 	}
 
-	public void giveKit(Player p, int data) {
+	public void giveKit(Player p) {
+		Minigames.clearInv(p);
 		if (p.getGameMode() != GameMode.SURVIVAL) {
 			p.setGameMode(GameMode.SURVIVAL);
 		}
 		if (building) {
 			p.getInventory().addItem(
 					new ItemStack(Minigames.hasItem(p, ShopItem.Builder) ? Material.STAINED_GLASS : Material.WOOL, 64,
-							(short) data));
+							(short) Game.getWoolColor(Game.getTeam(p))));
 			p.getInventory().addItem(new ItemStack(Material.SHEARS));
 		} else {
 			p.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
@@ -230,6 +211,12 @@ public class BuildAndFight implements IMinigame {
 			}
 		}
 		e.remove();
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

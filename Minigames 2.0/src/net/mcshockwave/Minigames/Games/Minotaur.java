@@ -69,20 +69,27 @@ public class Minotaur implements IMinigame {
 		}
 		return null;
 	}
-	
-	public long startTime = 0;
+
+	public long	startTime	= 0;
 
 	@Override
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
-		
+
 		Minigames.broadcast(ChatColor.RED, "%s is the minotaur!", getMino().getName());
 
 		PlayerInventory pi = getMino().getInventory();
-		pi.setHelmet(new ItemStack(Material.DIAMOND_HELMET));
-		pi.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
-		pi.setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS));
-		pi.setBoots(new ItemStack(Material.DIAMOND_BOOTS));
+		if (Minigames.getOptedIn().size() > 12) {
+			pi.setHelmet(new ItemStack(Material.DIAMOND_HELMET));
+			pi.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
+			pi.setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS));
+			pi.setBoots(new ItemStack(Material.DIAMOND_BOOTS));
+		} else {
+			pi.setHelmet(new ItemStack(Material.IRON_HELMET));
+			pi.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
+			pi.setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+			pi.setBoots(new ItemStack(Material.IRON_BOOTS));
+		}
 		pi.setItem(0, new ItemStack(Material.DIAMOND_SWORD));
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
@@ -115,12 +122,21 @@ public class Minotaur implements IMinigame {
 			Minigames.broadcastDeath(e.p, e.k, "%s killed themselves", "%s was killed by the Minotaur (%s)");
 		}
 	}
-	
+
 	@EventHandler
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		if (event.getEntity() instanceof Player && System.currentTimeMillis() < startTime + 30000) {
 			event.setCancelled(true);
 		}
+	}
+
+	@Override
+	public void giveKit(Player p) {
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return g.getTeam("Humans").team;
 	}
 
 }

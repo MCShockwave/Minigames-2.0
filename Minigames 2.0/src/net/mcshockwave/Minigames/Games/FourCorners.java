@@ -50,26 +50,6 @@ public class FourCorners implements IMinigame {
 		}
 
 		setCorners();
-
-		for (Player p : Minigames.getOptedIn()) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 3));
-
-			if (Minigames.hasItem(p, ShopItem.Hacker)) {
-				p.getInventory().setItem(8,
-						ItemMetaUtils.setItemName(new ItemStack(Material.NETHER_STAR), "§rRight-click to hack corner"));
-			}
-			if (Minigames.hasItem(p, ShopItem.Virus)) {
-				final Player p2 = p;
-				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-					public void run() {
-						giveVirus(p2, null);
-					}
-				}, 50);
-			}
-			if (Minigames.hasItem(p, ShopItem.Quickfoot)) {
-				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, 1));
-			}
-		}
 	}
 
 	@Override
@@ -251,6 +231,32 @@ public class FourCorners implements IMinigame {
 				giveVirus(p, d);
 			}
 		}
+	}
+
+	@Override
+	public void giveKit(Player p) {
+		p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 3));
+
+		if (Minigames.hasItem(p, ShopItem.Hacker)) {
+			p.getInventory().setItem(8,
+					ItemMetaUtils.setItemName(new ItemStack(Material.NETHER_STAR), "§rRight-click to hack corner"));
+		}
+		if (Minigames.hasItem(p, ShopItem.Virus)) {
+			final Player p2 = p;
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				public void run() {
+					giveVirus(p2, null);
+				}
+			}, 50);
+		}
+		if (Minigames.hasItem(p, ShopItem.Quickfoot)) {
+			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100000000, 1));
+		}
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
 	}
 
 }

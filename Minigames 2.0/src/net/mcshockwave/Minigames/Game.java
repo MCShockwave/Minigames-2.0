@@ -1,7 +1,8 @@
 package net.mcshockwave.Minigames;
 
-import net.mcshockwave.MCS.SQLTable; 
+import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.Minigames.Games.Airships;
+import net.mcshockwave.Minigames.Games.Airstrike;
 import net.mcshockwave.Minigames.Games.Boarding;
 import net.mcshockwave.Minigames.Games.Brawl;
 import net.mcshockwave.Minigames.Games.BuildAndFight;
@@ -20,8 +21,8 @@ import net.mcshockwave.Minigames.Games.Minotaur;
 import net.mcshockwave.Minigames.Games.Siege;
 import net.mcshockwave.Minigames.Games.Spleef;
 import net.mcshockwave.Minigames.Games.StormTheCastle;
-import net.mcshockwave.Minigames.Games.Target;
 import net.mcshockwave.Minigames.Games.TRON;
+import net.mcshockwave.Minigames.Games.Target;
 import net.mcshockwave.Minigames.Games.Tiers;
 import net.mcshockwave.Minigames.Games.VillageBattle;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
@@ -216,14 +217,22 @@ public enum Game {
 		6,
 		false,
 		true),
-		Target(
-				new Target(),
-				Material.REDSTONE_BLOCK,
-				0,
-				8,
-				true,
-				true,
-				new GameTeam[] {new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW)});
+	Target(
+		new Target(),
+		Material.REDSTONE_BLOCK,
+		0,
+		8,
+		true,
+		true,
+		new GameTeam[] { new GameTeam("Green", ChatColor.GREEN), new GameTeam("Yellow", ChatColor.YELLOW) }),
+	Airstrike(
+		new Airstrike(),
+		Material.SKULL_ITEM,
+		4,
+		8,
+		false,
+		true,
+		new GameTeam[] { new GameTeam("Shooters", ChatColor.RED), new GameTeam("Runners", ChatColor.AQUA) });
 
 	public static Game[]	disabled	= { Game.Ghostbusters };
 

@@ -234,4 +234,13 @@ public class Dodgeball implements IMinigame {
 		event.setCancelled(false);
 	}
 
+	@Override
+	public void giveKit(Player p) {
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
+	}
+
 }

@@ -44,7 +44,7 @@ public class Dogtag implements IMinigame {
 	@Override
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
-		
+
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
 		}
@@ -264,7 +264,7 @@ public class Dogtag implements IMinigame {
 
 			mines.put(b, Game.getTeam(p));
 			Minigames.send(p, "Placed %s at location!", "mine");
-			
+
 			for (Player tm : Game.getTeam(p).getPlayers()) {
 				PacketUtils.setBlockFromPacket(tm, b, Material.TNT, 0);
 			}
@@ -284,6 +284,11 @@ public class Dogtag implements IMinigame {
 				p.damage(p.getHealth());
 			}
 		}
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
 	}
 
 }

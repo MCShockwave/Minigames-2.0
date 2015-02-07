@@ -40,7 +40,7 @@ public class Gladiators implements IMinigame {
 	@Override
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
-		
+
 		for (GameTeam gt : Game.Gladiators.teams) {
 			selectRandom(gt);
 		}
@@ -84,14 +84,14 @@ public class Gladiators implements IMinigame {
 			Player[] ps = gt.team.getPlayers().toArray(new Player[0]);
 			Player p = ps[rand.nextInt(ps.length)];
 
-			giveKit(p);
+			giveGladsKit(p);
 			p.teleport(Game.getLocation("glads-" + gt.color.name().toLowerCase()));
 		} else
 			Minigames.broadcastAll(Minigames.getBroadcastMessage(gt.color, "%s team has been eliminated!", gt.name));
 
 	}
 
-	public void giveKit(Player p) {
+	public void giveGladsKit(Player p) {
 		Minigames.clearInv(p);
 		PlayerInventory pi = p.getInventory();
 
@@ -161,5 +161,14 @@ public class Gladiators implements IMinigame {
 				p.getWorld().playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1, 1);
 			}
 		}
+	}
+
+	@Override
+	public void giveKit(Player p) {
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
 	}
 }

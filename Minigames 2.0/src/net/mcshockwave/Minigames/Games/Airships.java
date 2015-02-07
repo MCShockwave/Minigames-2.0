@@ -43,22 +43,9 @@ public class Airships implements IMinigame {
 
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
-		
+
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
-				for (Player p : Minigames.getOptedIn()) {
-					p.getInventory().addItem(
-							ItemMetaUtils.addEnchantment(new ItemStack(Material.BOW), Enchantment.ARROW_INFINITE, 1));
-					p.setAllowFlight(true);
-					p.setFlying(true);
-					p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 10000000, 0));
-					if (Minigames.hasItem(p, ShopItem.Demoman)) {
-						p.getInventory().setItem(8, new ItemStack(Material.TNT));
-					}
-					if (Minigames.hasItem(p, ShopItem.Jammer)) {
-						p.getInventory().setItem(8, new ItemStack(Material.NETHER_STAR));
-					}
-				}
 				Minigames.broadcast("You will get your %s in 10 seconds! Spread out!", "arrow");
 			}
 		}, 5);
@@ -90,9 +77,10 @@ public class Airships implements IMinigame {
 
 						p.damage(p.getMaxHealth());
 					}
-					
+
 					if (p.getHealth() <= 6) {
-						PacketUtils.playParticleEffect(ParticleEffect.FLAME, p.getLocation().add(0, 1, 0), 0, 0.05f, 10);
+						PacketUtils
+								.playParticleEffect(ParticleEffect.FLAME, p.getLocation().add(0, 1, 0), 0, 0.05f, 10);
 					}
 				}
 			}
@@ -246,6 +234,26 @@ public class Airships implements IMinigame {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void giveKit(Player p) {
+		p.getInventory().addItem(
+				ItemMetaUtils.addEnchantment(new ItemStack(Material.BOW), Enchantment.ARROW_INFINITE, 1));
+		p.setAllowFlight(true);
+		p.setFlying(true);
+		p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 10000000, 0));
+		if (Minigames.hasItem(p, ShopItem.Demoman)) {
+			p.getInventory().setItem(8, new ItemStack(Material.TNT));
+		}
+		if (Minigames.hasItem(p, ShopItem.Jammer)) {
+			p.getInventory().setItem(8, new ItemStack(Material.NETHER_STAR));
+		}
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
 	}
 
 }

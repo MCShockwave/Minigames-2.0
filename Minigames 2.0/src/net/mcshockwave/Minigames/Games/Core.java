@@ -235,4 +235,9 @@ public class Core implements IMinigame {
 		}
 	}
 
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
+	}
+
 }

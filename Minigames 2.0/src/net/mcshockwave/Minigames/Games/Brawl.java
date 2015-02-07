@@ -23,23 +23,23 @@ import java.util.ArrayList;
 
 public class Brawl implements IMinigame {
 
-	public Player	b1		= null, b2 = null;
+	public Player				b1			= null, b2 = null;
 
-	public long		invin	= 0;
-	
-	public ArrayList<String> selection = new ArrayList<>();
+	public long					invin		= 0;
+
+	public ArrayList<String>	selection	= new ArrayList<>();
 
 	@Override
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
-		
+
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				selectRandoms();
 			}
 		}, 50);
 	}
-	
+
 	public void resetSelectionList() {
 		for (String s : Minigames.alivePlayers) {
 			selection.add(s);
@@ -87,10 +87,10 @@ public class Brawl implements IMinigame {
 			if (selection.size() < 1) {
 				resetSelectionList();
 			}
-			
+
 			String name = selection.get(rand.nextInt(selection.size()));
 			ret = Bukkit.getPlayer(name);
-			
+
 			if (ret == null && name != null) {
 				selection.remove(name);
 			}
@@ -172,6 +172,15 @@ public class Brawl implements IMinigame {
 		} else {
 			event.setCancelled(true);
 		}
+	}
+
+	@Override
+	public void giveKit(Player p) {
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
 	}
 
 }

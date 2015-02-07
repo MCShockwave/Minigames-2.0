@@ -34,10 +34,6 @@ public class GiantStomp implements IMinigame {
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
 
-		for (Player p : Minigames.getOptedIn()) {
-			giveItems(p);
-		}
-
 		final Location spawn = Game.getFFASpawn();
 
 		giant = (Giant) spawn.getWorld().spawnEntity(spawn, EntityType.GIANT);
@@ -59,9 +55,7 @@ public class GiantStomp implements IMinigame {
 		}, 100L, 2L);
 	}
 
-	private void giveItems(Player p) {
-		Minigames.clearInv(p);
-		Minigames.milkPlayer(p);
+	public void giveKit(Player p) {
 		p.getInventory().addItem(
 				ItemMetaUtils.addEnchantment(new ItemStack(Material.STONE_SWORD), Enchantment.KNOCKBACK, 1));
 	}
@@ -95,6 +89,12 @@ public class GiantStomp implements IMinigame {
 		if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
 			e.setDamage(0);
 		}
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

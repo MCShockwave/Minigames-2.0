@@ -716,4 +716,18 @@ public class VillageBattle implements IMinigame {
 		}
 	}
 
+	@Override
+	public void giveKit(Player p) {
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		if (gs.getVal() > ys.getVal()) {
+			return g.getTeam("Green").team;
+		} else if (ys.getVal() > gs.getVal()) {
+			return g.getTeam("Yellow").team;
+		}
+		return null;
+	}
+
 }

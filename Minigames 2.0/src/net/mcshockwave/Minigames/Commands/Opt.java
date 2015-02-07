@@ -5,10 +5,9 @@ import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.SQLTable.Rank;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,11 +20,6 @@ public class Opt implements CommandExecutor {
 
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
-			
-			if (!SQLTable.hasRank(p.getName(), Rank.JR_MOD)) {
-				MCShockwave.send(p, "%s is disabled for non-staff due to buggy-ness", "/opt");
-				return false;
-			}
 
 			if (!SQLTable.hasRank(p.getName(), Rank.IRON)) {
 				MCShockwave.send(p, "You must be %s to use /opt! Buy it at buy.mcshockwave.net", "Iron+");
@@ -38,16 +32,13 @@ public class Opt implements CommandExecutor {
 				Minigames.send(ChatColor.DARK_AQUA, p, "Opted %s to the minigame!", "in");
 				Minigames.optedOut.remove(p.getName());
 
+				Minigames.resetPlayer(p);
 				if (Minigames.started) {
 					p.teleport(Game.getLocation("lobby"));
 					Minigames.spectate(p);
 				} else {
-					p.teleport(new Location(p.getWorld(), 0, 103, 0));
+					p.teleport(Multiworld.getGame().getBlockAt(0, 103, 0).getLocation());
 					p.setAllowFlight(false);
-				}
-				p.setPlayerListName(p.getName());
-				for (Player p2 : Bukkit.getOnlinePlayers()) {
-					MCShockwave.updateTab(p2);
 				}
 			} else {
 				Minigames.send(ChatColor.DARK_AQUA, p, "Opted %s of the minigame!", "out");
@@ -59,17 +50,10 @@ public class Opt implements CommandExecutor {
 					if (Minigames.alivePlayers.contains(p.getName())) {
 						Minigames.sendDeathToGame(p);
 					}
-					p.teleport(new Location(p.getWorld(), 0, 103, 0));
 					p.setAllowFlight(false);
-					Minigames.resetPlayer(p);
-				} else {
-					String name = p.getName();
-					name = name.substring(0, name.length() > 14 ? 13 : name.length());
-					p.setPlayerListName(ChatColor.GRAY + name);
-					for (Player p2 : Bukkit.getOnlinePlayers()) {
-						MCShockwave.updateTab(p2);
-					}
 				}
+
+				p.teleport(Multiworld.getGame().getBlockAt(0, 103, 0).getLocation());
 			}
 		}
 

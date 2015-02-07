@@ -450,4 +450,14 @@ public class Boarding implements IMinigame {
 
 		return cast.toArray(new Location[0]);
 	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		if (gs.getVal() > ys.getVal()) {
+			return g.getTeam("Green").team;
+		} else if (ys.getVal() > gs.getVal()) {
+			return g.getTeam("Yellow").team;
+		}
+		return null;
+	}
 }

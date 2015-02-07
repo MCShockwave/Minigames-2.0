@@ -100,11 +100,6 @@ public class LaserTag implements IMinigame {
 				}
 			}
 		}.runTaskTimer(plugin, 1, 1);
-
-		for (Player p : Minigames.getOptedIn()) {
-			giveItems(p);
-			p.setLevel(maxCharge);
-		}
 	}
 
 	public void disableMsgs(Player d, Player k) {
@@ -156,8 +151,8 @@ public class LaserTag implements IMinigame {
 					double rad = 1;
 					if (c.getLocation().distanceSquared(st) < rad * rad
 							|| c.getEyeLocation().distanceSquared(st) < rad * rad) {
-						rep = maxDis;
 						if (c.getLevel() > 0) {
+							rep = maxDis;
 							c.damage(0);
 							int dmg = rand.nextInt(50) + 150;
 							int lvlSet = c.getLevel() - dmg;
@@ -215,11 +210,6 @@ public class LaserTag implements IMinigame {
 		}
 	}
 
-	public void giveItems(Player p) {
-		p.getInventory().clear();
-		p.getInventory().addItem(ItemMetaUtils.setItemName(new ItemStack(Material.DIAMOND_HOE), "§fLaser Gun"));
-	}
-
 	public void addPoints(GameTeam gt, int add) {
 		setPoints(gt, getPoints(gt) + add);
 	}
@@ -265,5 +255,22 @@ public class LaserTag implements IMinigame {
 			LaserTagMapGenerator.generate(Multiworld.getGame().getSpawnLocation().clone().add(0, -1, 0), 75);
 			Bukkit.broadcastMessage("§aDone!");
 		}
+	}
+
+	@Override
+	public void giveKit(Player p) {
+		p.getInventory().clear();
+		p.getInventory().addItem(ItemMetaUtils.setItemName(new ItemStack(Material.DIAMOND_HOE), "§fLaser Gun"));
+		p.setLevel(maxCharge);
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		if (yscore.getVal() > gscore.getVal()) {
+			return g.getTeam("Yellow").team;
+		} else if (gscore.getVal() > yscore.getVal()) {
+			return g.getTeam("Green").team;
+		}
+		return null;
 	}
 }

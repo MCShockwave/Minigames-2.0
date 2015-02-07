@@ -1,5 +1,6 @@
 package net.mcshockwave.Minigames.Games;
 
+import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
@@ -22,13 +23,7 @@ public class Spleef implements IMinigame {
 	@Override
 	public void onGameStart() {
 		Minigames.showDefaultSidebar();
-		
-		for (Player p : Minigames.getOptedIn()) {
-			p.getInventory().addItem(new ItemStack(Material.DIAMOND_SPADE));
-			if (p.getGameMode() != GameMode.SURVIVAL) {
-				p.setGameMode(GameMode.SURVIVAL);
-			}
-		}
+
 		Minigames.broadcast("You have %s seconds of invincibility!", invincibilityTime);
 		invin = System.currentTimeMillis() + (invincibilityTime * 1000);
 	}
@@ -62,6 +57,19 @@ public class Spleef implements IMinigame {
 				b.setType(Material.SNOW_BLOCK);
 			}
 		}, 300);
+	}
+
+	@Override
+	public void giveKit(Player p) {
+		p.getInventory().addItem(new ItemStack(Material.DIAMOND_SPADE));
+		if (p.getGameMode() != GameMode.SURVIVAL) {
+			p.setGameMode(GameMode.SURVIVAL);
+		}
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
 	}
 
 }

@@ -34,17 +34,11 @@ public class Ghostbusters implements IMinigame {
 
 	@Override
 	public void onGameStart() {
-		for (Player p : getGhosts().getPlayers()) {
-			giveKit(p, true);
-		}
-		for (Player p : getHumans().getPlayers()) {
-			giveKit(p, false);
-		}
 	}
 
-	public void giveKit(Player p, boolean ghosts) {
+	public void giveKit(Player p) {
 		ItemStack[] items;
-		if (ghosts) {
+		if (Game.getTeam(p).color == getGhosts().color) {
 			items = new ItemStack[] { new ItemStack(Material.DIAMOND_SWORD),
 					new ItemStack(Material.POTION, 4, (short) 16428), new ItemStack(Material.POTION, 1, (short) 8229),
 					new ItemStack(Material.POTION, 1, (short) 8229), new ItemStack(Material.POTION, 1, (short) 8229) };
@@ -114,5 +108,10 @@ public class Ghostbusters implements IMinigame {
 				MCShockwave.send(e.getPlayer(), "Do not climb the %s!", "hills");
 			}
 		}
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
 	}
 }

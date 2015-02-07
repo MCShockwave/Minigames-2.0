@@ -87,4 +87,9 @@ public class Target implements IMinigame {
 		}
 	}
 
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
+	}
+
 }

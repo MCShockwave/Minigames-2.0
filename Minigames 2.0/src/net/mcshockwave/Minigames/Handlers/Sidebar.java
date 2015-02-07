@@ -2,6 +2,7 @@ package net.mcshockwave.Minigames.Handlers;
 
 import net.mcshockwave.Minigames.Minigames;
 
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 
@@ -109,7 +110,11 @@ public class Sidebar {
 			this.name = name;
 			if (isDisplayed()) {
 				setDisplayed(false);
-				setDisplayed(true);
+				new BukkitRunnable() {
+					public void run() {
+						setDisplayed(true);
+					}
+				}.runTaskLater(Minigames.ins, 1);
 			}
 		}
 

@@ -175,12 +175,12 @@ public class Siege implements IMinigame {
 
 		if (e instanceof Villager) {
 			Villager v = (Villager) e;
-			if (v == yv) {
+			if (v.equals(yv)) {
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.YELLOW,
 						"The %s Villager has died!\n%s can no longer respawn!", "Yellow", "Yellow"));
 				yhp.remove();
 			}
-			if (v == gv) {
+			if (v.equals(gv)) {
 				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.GREEN,
 						"The %s Villager has died!\n%s can no longer respawn!", "Green", "Green"));
 				ghp.remove();
@@ -358,7 +358,7 @@ public class Siege implements IMinigame {
 						for (Entity e : fb.getNearbyEntities(2, 2, 2)) {
 							if (e instanceof Damageable
 									&& (e instanceof Player && Minigames.alivePlayers.contains(((Player) e).getName()) || !(e instanceof Player))) {
-								((Damageable) e).damage(e.getTicksLived() / 2, fb);
+								((Damageable) e).damage(e.getTicksLived() / 10, fb);
 							}
 						}
 
@@ -367,6 +367,21 @@ public class Siege implements IMinigame {
 						}
 					}
 				}.runTaskTimer(plugin, 3, 3);
+			}
+		}
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		if (yv.isDead() && gv.isDead()) {
+			return null;
+		} else {
+			if (yv.isDead() && !gv.isDead() || gv.getHealth() > yv.getHealth()) {
+				return g.getTeam("Green").team;
+			} else if (gv.isDead() && !yv.isDead() || yv.getHealth() > gv.getHealth()) {
+				return g.getTeam("Yellow").team;
+			} else {
+				return null;
 			}
 		}
 	}

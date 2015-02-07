@@ -123,4 +123,9 @@ public class Infection implements IMinigame {
 		}
 	}
 
+	@Override
+	public Object determineWinner(Game g) {
+		return g.getTeam("Humans").team;
+	}
+
 }

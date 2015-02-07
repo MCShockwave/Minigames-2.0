@@ -113,10 +113,6 @@ public class StormTheCastle implements IMinigame {
 		crystalHealth.setDisplayed(false);
 		remainingKnights.setDisplayed(false);
 
-		for (Player p : Minigames.getOptedIn()) {
-			giveItems(p);
-		}
-
 		particles = new BukkitRunnable() {
 			public void run() {
 				if (!crystalHealth.isDisplayed() && !remainingKnights.isDisplayed()) {
@@ -239,48 +235,18 @@ public class StormTheCastle implements IMinigame {
 			if (p.getInventory().contains(Material.TNT)) {
 				p.getWorld().dropItemNaturally(Game.getLocation("barbarian-supply"), new ItemStack(Material.TNT));
 			}
-			giveItems(p);
+			giveKit(p);
 		} else {
 			if (remainingKnights.isDisplayed()) {
 				Minigames.resetPlayer(p);
 				Minigames.setDead(p, false);
 			} else {
-				giveItems(p);
+				giveKit(p);
 			}
 			remainingKnights.setVal(Game.Storm_The_Castle.getTeam("Knights").getPlayers().size());
 			if (remainingKnights.getVal() < 1) {
 				Minigames.stop(Game.Storm_The_Castle.getTeam("Barbarians").team);
 			}
-		}
-	}
-
-	private void giveItems(Player p) {
-		Minigames.clearInv(p);
-		Minigames.milkPlayer(p);
-
-		if (p.getGameMode() != GameMode.SURVIVAL) {
-			p.setGameMode(GameMode.SURVIVAL);
-		}
-
-		GameTeam gt = Game.getTeam(p);
-		PlayerInventory pi = p.getInventory();
-		if (gt == Game.Storm_The_Castle.getTeam("Knights")) {
-			pi.setHelmet(new ItemStack(Material.LEATHER_HELMET));
-			pi.setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
-			pi.setLeggings(new ItemStack(Material.IRON_LEGGINGS));
-			pi.setBoots(new ItemStack(Material.LEATHER_BOOTS));
-			pi.setItem(0, new ItemStack(Material.STONE_SWORD));
-			if (cacheLocId != -1) {
-				pi.setHelmet(new ItemStack(Material.IRON_HELMET));
-				pi.setBoots(new ItemStack(Material.IRON_BOOTS));
-				pi.getItem(0).setType(Material.IRON_SWORD);
-			}
-		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
-			pi.setHelmet(new ItemStack(Material.CHAINMAIL_HELMET));
-			pi.setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
-			pi.setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
-			pi.setBoots(new ItemStack(Material.CHAINMAIL_BOOTS));
-			pi.addItem(new ItemStack(Material.IRON_AXE));
 		}
 	}
 
@@ -595,6 +561,42 @@ public class StormTheCastle implements IMinigame {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void giveKit(Player p) {
+		Minigames.clearInv(p);
+		Minigames.milkPlayer(p);
+
+		if (p.getGameMode() != GameMode.SURVIVAL) {
+			p.setGameMode(GameMode.SURVIVAL);
+		}
+
+		GameTeam gt = Game.getTeam(p);
+		PlayerInventory pi = p.getInventory();
+		if (gt == Game.Storm_The_Castle.getTeam("Knights")) {
+			pi.setHelmet(new ItemStack(Material.LEATHER_HELMET));
+			pi.setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+			pi.setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+			pi.setBoots(new ItemStack(Material.LEATHER_BOOTS));
+			pi.setItem(0, new ItemStack(Material.STONE_SWORD));
+			if (cacheLocId != -1) {
+				pi.setHelmet(new ItemStack(Material.IRON_HELMET));
+				pi.setBoots(new ItemStack(Material.IRON_BOOTS));
+				pi.getItem(0).setType(Material.IRON_SWORD);
+			}
+		} else if (gt == Game.Storm_The_Castle.getTeam("Barbarians")) {
+			pi.setHelmet(new ItemStack(Material.CHAINMAIL_HELMET));
+			pi.setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
+			pi.setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
+			pi.setBoots(new ItemStack(Material.CHAINMAIL_BOOTS));
+			pi.addItem(new ItemStack(Material.IRON_AXE));
+		}
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return g.getTeam("Knights").team;
 	}
 
 }

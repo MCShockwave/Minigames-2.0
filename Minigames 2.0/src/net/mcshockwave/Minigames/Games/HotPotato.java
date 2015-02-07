@@ -5,8 +5,6 @@ import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Handlers.Sidebar;
-import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -20,15 +18,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 public class HotPotato implements IMinigame {
 
-	List<Player>						potPl	= new ArrayList<Player>();
-
-	public HashMap<String, GameScore>	hp		= new HashMap<>();
+	public boolean hasPotato(Player p) {
+		return p.getInventory().contains(Material.BAKED_POTATO);
+	}
 
 	@Override
 	public void onGameStart() {
@@ -36,24 +30,14 @@ public class HotPotato implements IMinigame {
 		int size = Minigames.getOptedIn().size();
 		for (int i = 0; i < (size > max ? max : size > 1 ? size - 1 : size); i++) {
 			Player p = Game.getRandomPlayer();
-			if (!potPl.contains(p)) {
+			if (!hasPotato(p)) {
 				selectNewPlayer(p, null);
 			} else {
 				i--;
 			}
 		}
 
-		for (Player p : Minigames.getOptedIn()) {
-			updateHP(p);
-		}
-	}
-
-	public void updateHP(Player p) {
-		if (hp.containsKey(p.getName())) {
-			hp.get(p.getName()).setVal((int) p.getHealth());
-		} else {
-			hp.put(p.getName(), Sidebar.getNewScore("§o" + p.getName(), (int) p.getHealth()));
-		}
+		Minigames.showDefaultSidebar();
 	}
 
 	@Override
@@ -63,12 +47,10 @@ public class HotPotato implements IMinigame {
 	@Override
 	public void onPlayerDeath(DeathEvent e) {
 		Minigames.broadcastDeath(e.p, null, "%s burned to death", "");
-		if (potPl.contains(e.p)) {
+		if (hasPotato(e.p)) {
 			selectNewPlayer(getNearestPlayerTo(e.p), e.p);
 			e.p.setFireTicks(0);
 		}
-
-		hp.get(e.p.getName()).remove();
 	}
 
 	public void selectNewPlayer(Player p, Player old) {
@@ -77,18 +59,17 @@ public class HotPotato implements IMinigame {
 		}
 
 		if (old != null) {
-			potPl.remove(old);
 			old.setFireTicks(0);
 			old.getInventory().clear();
 			old.removePotionEffect(PotionEffectType.SPEED);
 		}
 
-		potPl.add(p);
 		p.getInventory().addItem(new ItemStack(Material.BAKED_POTATO));
+		p.getInventory().setItem(17, new ItemStack(Material.BAKED_POTATO));
 
 		Minigames.send(p, "Get rid of the potato by %s another player!", "left-clicking");
 		p.setFireTicks(Integer.MAX_VALUE);
-		p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
+		p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
 	}
 
 	@EventHandler
@@ -105,10 +86,8 @@ public class HotPotato implements IMinigame {
 			Player d = (Player) event.getDamager();
 
 			if (Minigames.alivePlayers.contains(p.getName())) {
-				if (!CooldownUtils.isOnCooldown("HotPotato", d.getName())) {
-					event.setCancelled(true);
-
-					if (potPl.contains(p) || d.equals(p)) {
+				if (!CooldownUtils.isOnCooldown("HotPotato", p.getName())) {
+					if (hasPotato(p)) {
 						return;
 					}
 
@@ -124,13 +103,6 @@ public class HotPotato implements IMinigame {
 		if (event.getCause() == DamageCause.FIRE_TICK) {
 			event.setDamage(2f);
 		}
-		if (event.getEntity() instanceof Player) {
-			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-				public void run() {
-					updateHP((Player) event.getEntity());
-				}
-			}, 1);
-		}
 	}
 
 	public Player getNearestPlayerTo(Player p) {
@@ -138,12 +110,23 @@ public class HotPotato implements IMinigame {
 		Player r = null;
 		for (String cn : Minigames.alivePlayers) {
 			Player c = Bukkit.getPlayer(cn);
-			double cdis = c.getLocation().distanceSquared(p.getLocation()); // DoUEvnCDis
-			if (!c.equals(p) && dis == -1 || cdis < dis) {
-				dis = cdis;
-				r = c;
+			if (c != null && !hasPotato(c)) {
+				double cdis = c.getLocation().distanceSquared(p.getLocation()); // DoUEvnCDis
+				if (!c.equals(p) && dis == -1 || cdis < dis) {
+					dis = cdis;
+					r = c;
+				}
 			}
 		}
 		return r;
+	}
+
+	@Override
+	public void giveKit(Player p) {
+	}
+
+	@Override
+	public Object determineWinner(Game g) {
+		return null;
 	}
 }
