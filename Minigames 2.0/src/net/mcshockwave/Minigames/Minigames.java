@@ -634,16 +634,14 @@ public class Minigames extends JavaPlugin {
 			if (p.getGameMode() != GameMode.ADVENTURE) {
 				p.setGameMode(GameMode.ADVENTURE);
 			}
-			clearInv(p);
 			p.setFallDistance(0);
 			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10, 100));
+			Minigames.resetPlayer(p);
 		}
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			sendAll(p, getBroadcastMessage("%s has started!", currentGame.name),
 					getBroadcastMessage("You will earn %s points if you win", pointsOnWin));
-
-			p.setHealth(20);
 		}
 
 		Bukkit.getPluginManager().registerEvents(currentGame.mclass, ins);
@@ -1033,6 +1031,7 @@ public class Minigames extends JavaPlugin {
 	}
 
 	public static void resetPlayer(Player p) {
+		p.setMaxHealth(20);
 		p.setHealth(20);
 		p.setFireTicks(0);
 		p.setWalkSpeed(0.2f);
