@@ -315,13 +315,13 @@ public class Minigames extends JavaPlugin {
 			weatherTask.cancel();
 		}
 
+		Sidebar.clearScores();
 		try {
 			if (sidebar != null) {
 				sidebar.unregister();
 			}
 		} catch (Exception e) {
 		}
-		Sidebar.clearScores();
 
 		if (winner != null) {
 			String winName = null;
@@ -504,12 +504,13 @@ public class Minigames extends JavaPlugin {
 				if (getOptedIn().size() <= 2 || Minigames.countingDown) {
 					return;
 				}
-				Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
-					public void run() {
-						startCount();
-					}
-				}, 100);
 				resetScoreboard();
+			}
+		});
+		util.add(100);
+		util.add(new Runnable() {
+			public void run() {
+				startCount();
 			}
 		});
 		util.execute();
