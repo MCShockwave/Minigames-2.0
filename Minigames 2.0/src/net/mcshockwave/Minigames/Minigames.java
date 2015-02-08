@@ -734,10 +734,6 @@ public class Minigames extends JavaPlugin {
 			}
 		}
 
-		for (Player p : getOptedIn()) {
-			currentGame.mclass.giveKit(p);
-		}
-
 		if (Bukkit.getScoreboardManager().getMainScoreboard().getObjective("Sidebar") != null) {
 			Bukkit.getScoreboardManager().getMainScoreboard().getObjective("Sidebar").unregister();
 		}
@@ -764,6 +760,10 @@ public class Minigames extends JavaPlugin {
 		}
 
 		SoundUtils.playSoundToAll(Sound.AMBIENCE_THUNDER, 1, 0.75f);
+		currentGame.mclass.onGameStart();
+		for (Player p : getOptedIn()) {
+			currentGame.mclass.giveKit(p);
+		}
 
 		int time = currentGame.time;
 		int[] secs = { 45, 30, 15, 10, 5, 4, 3, 2, 1 };
@@ -783,7 +783,6 @@ public class Minigames extends JavaPlugin {
 				}
 			}, ((time - 1) * 1200) + (60 - i) * 20));
 		}
-		currentGame.mclass.onGameStart();
 		timer.add(Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 			public void run() {
 				Minigames.broadcast(ChatColor.GREEN, "Times up! Ending %s!", "game");
