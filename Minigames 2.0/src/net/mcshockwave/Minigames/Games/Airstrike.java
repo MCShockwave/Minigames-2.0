@@ -48,8 +48,6 @@ public class Airstrike implements IMinigame {
 
 	@Override
 	public void onGameStart() {
-		Minigames.showDefaultSidebar();
-
 		final GameTeam sh = Game.Airstrike.teams[0];
 
 		gunner = Game.getRandomPlayer().getName();
@@ -64,6 +62,7 @@ public class Airstrike implements IMinigame {
 			}
 			sh.team.addPlayer(Bukkit.getPlayer(sniper));
 		}
+		Minigames.showDefaultSidebar();
 
 		if (bomber != null) {
 			Minigames.broadcast(ChatColor.RED, "%s is the %s!", bomber, "Bomber");
@@ -267,9 +266,13 @@ public class Airstrike implements IMinigame {
 	public void onPlayerRegainHealth(EntityRegainHealthEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player p = (Player) event.getEntity();
-			if (Minigames.alivePlayers.contains(p.getName()) && Game.getTeam(p).color == ChatColor.RED) {
+			if (Minigames.alivePlayers.contains(p.getName())) {
 				if (event.getRegainReason() == RegainReason.SATIATED) {
-					event.setAmount(0.1);
+					if (Game.getTeam(p).color == ChatColor.RED) {
+						event.setAmount(0.25);
+					} else {
+						event.setAmount(0.5);
+					}
 				}
 			}
 		}
@@ -289,7 +292,9 @@ public class Airstrike implements IMinigame {
 			for (ItemStack it : e.p.getInventory().getContents()) {
 				if (it != null && it.getType() == Material.BOW && ItemMetaUtils.hasCustomName(it)) {
 					String s = ItemMetaUtils.getItemName(it);
-					Player give = e.gt.getPlayers().get(rand.nextInt(e.gt.getPlayers().size()));
+					Player give = null;
+					while ((give = e.gt.getPlayers().get(rand.nextInt(e.gt.getPlayers().size()))) != e.p) {
+					}
 					give.getInventory().addItem(it);
 					Minigames.broadcast(ChatColor.RED, "%s has received the %s!", give.getName(),
 							ChatColor.stripColor(s));
