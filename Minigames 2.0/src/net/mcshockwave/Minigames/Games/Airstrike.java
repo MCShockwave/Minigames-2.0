@@ -9,6 +9,7 @@ import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 import net.mcshockwave.Minigames.worlds.Multiworld;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -18,7 +19,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -27,6 +27,8 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -49,26 +51,35 @@ public class Airstrike implements IMinigame {
 		Minigames.showDefaultSidebar();
 
 		final GameTeam sh = Game.Airstrike.teams[0];
-		switch (sh.getPlayers().size()) {
-			case 1:
-				bomber = sh.getPlayers().get(0).getName();
-				break;
-			case 2:
-				bomber = sh.getPlayers().get(0).getName();
-				gunner = sh.getPlayers().get(1).getName();
-				break;
-			case 3:
-				bomber = sh.getPlayers().get(0).getName();
-				gunner = sh.getPlayers().get(1).getName();
-				sniper = sh.getPlayers().get(2).getName();
-				break;
-			default:
-				break;
+
+		gunner = Game.getRandomPlayer().getName();
+		sh.team.addPlayer(Bukkit.getPlayer(gunner));
+		if (Minigames.getOptedIn().size() > 5) {
+			while ((bomber = Game.getRandomPlayer().getName()).equals(gunner)) {
+			}
+			sh.team.addPlayer(Bukkit.getPlayer(bomber));
+		}
+		if (Minigames.getOptedIn().size() > 8) {
+			while ((sniper = Game.getRandomPlayer().getName()).equals(gunner) || sniper.equals(bomber)) {
+			}
+			sh.team.addPlayer(Bukkit.getPlayer(sniper));
 		}
 
-		Minigames.broadcast(ChatColor.RED, "%s is the %s!", bomber == null ? "Nobody" : bomber, "Bomber");
-		Minigames.broadcast(ChatColor.RED, "%s is the %s!", sniper == null ? "Nobody" : sniper, "Sniper");
-		Minigames.broadcast(ChatColor.RED, "%s is the %s!", gunner == null ? "Nobody" : gunner, "Gunner");
+		if (bomber != null) {
+			Minigames.broadcast(ChatColor.RED, "%s is the %s!", bomber, "Bomber");
+		}
+		if (sniper != null) {
+			Minigames.broadcast(ChatColor.RED, "%s is the %s!", sniper, "Sniper");
+		}
+		if (gunner != null) {
+			Minigames.broadcast(ChatColor.RED, "%s is the %s!", gunner, "Gunner");
+		}
+
+		for (Player p : sh.getPlayers()) {
+			p.teleport(Game.getSpawn(sh));
+			p.setAllowFlight(true);
+			p.setFlying(true);
+		}
 
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
@@ -94,6 +105,12 @@ public class Airstrike implements IMinigame {
 						p.playSound(p.getLocation(), Sound.ENDERDRAGON_HIT, 10, 0);
 						p.damage(2);
 					}
+					int y = p.getWorld().getHighestBlockYAt(p.getLocation());
+					if (y < Game.getInt("min-y")) {
+						Minigames.send(ChatColor.RED, p, "You are too %s! Fly back!", "far out");
+						p.playSound(p.getLocation(), Sound.ENDERDRAGON_HIT, 10, 0);
+						p.damage(2);
+					}
 				}
 			}
 		}.runTaskTimer(plugin, 20, 20);
@@ -108,7 +125,7 @@ public class Airstrike implements IMinigame {
 			if (it != null && ItemMetaUtils.hasCustomName(it)) {
 				String name = ChatColor.stripColor(ItemMetaUtils.getItemName(it));
 				if (name.equalsIgnoreCase("Sniper Bow")) {
-					event.getProjectile().setVelocity(event.getProjectile().getVelocity().multiply(3));
+					event.getProjectile().setVelocity(event.getProjectile().getVelocity().multiply(1.5));
 				}
 				if (name.equalsIgnoreCase("Bomb Bow")) {
 					if (CooldownUtils.isOnCooldown("BombBow", p.getName())) {
@@ -116,8 +133,9 @@ public class Airstrike implements IMinigame {
 					} else {
 						TNTPrimed tnt = (TNTPrimed) p.getWorld().spawnEntity(p.getEyeLocation(), EntityType.PRIMED_TNT);
 						tnt.setFuseTicks(40);
+						tnt.setVelocity(event.getProjectile().getVelocity());
 						event.setProjectile(tnt);
-						CooldownUtils.addCooldown("BombBow", p.getName(), 100);
+						CooldownUtils.addCooldown("BombBow", p.getName(), 50);
 					}
 				}
 			}
@@ -179,20 +197,6 @@ public class Airstrike implements IMinigame {
 				b.getType() == Material.GRASS ? Material.DIRT : b.getType(), (byte) 0);
 		fb.setDropItem(false);
 		fb.setVelocity(Vector.getRandom().multiply(2).subtract(Vector.getRandom()).add(new Vector(0, 0.5, 0)));
-		new BukkitRunnable() {
-			public void run() {
-				for (Entity e : fb.getNearbyEntities(2, 2, 2)) {
-					if (e instanceof Damageable
-							&& (e instanceof Player && Minigames.alivePlayers.contains(((Player) e).getName()) || !(e instanceof Player))) {
-						((Damageable) e).damage(e.getTicksLived() / 10, fb);
-					}
-				}
-
-				if (!fb.isValid() || fb.isDead()) {
-					cancel();
-				}
-			}
-		}.runTaskTimer(plugin, 3, 3);
 	}
 
 	@EventHandler
@@ -210,8 +214,9 @@ public class Airstrike implements IMinigame {
 				if (bs instanceof Chest) {
 					Chest ch = (Chest) bs;
 					Inventory in = ch.getBlockInventory();
+					in.clear();
 					for (int i = 0; i < rand.nextInt(3) + 2; i++) {
-						ItemStack it = new ItemStack(rand.nextInt(4) == 0 ? Material.BOW : Material.ARROW);
+						ItemStack it = new ItemStack(rand.nextInt(3) == 0 ? Material.BOW : Material.ARROW);
 						if (it.getType() == Material.ARROW) {
 							it.setAmount(rand.nextInt(30) + 15);
 						} else {
@@ -224,6 +229,7 @@ public class Airstrike implements IMinigame {
 						}
 						in.setItem(rand.nextInt(in.getSize()), it);
 					}
+					ch.update(true);
 				}
 			}
 		}
@@ -234,16 +240,16 @@ public class Airstrike implements IMinigame {
 		p.getInventory().setChestplate(
 				ItemMetaUtils.setLeatherColor(new ItemStack(Material.LEATHER_CHESTPLATE),
 						Minigames.chatColorToColor(Game.getTeam(p).color)));
-		double hp = 20;
+		double hp = 40;
 		if (Game.getTeam(p).color == ChatColor.RED) {
 			p.getInventory().setItem(17, new ItemStack(Material.ARROW));
 			String name = "";
 			if (p.getName().equals(bomber)) {
 				name = "§cBomb Bow";
-				hp = 20;
+				hp = 30;
 			} else if (p.getName().equals(gunner)) {
 				name = "§cMachine Bow";
-				hp = 30;
+				hp = 40;
 			} else if (p.getName().equals(sniper)) {
 				name = "§cSniper Bow";
 				hp = 40;
@@ -257,6 +263,18 @@ public class Airstrike implements IMinigame {
 		p.setHealth(hp);
 	}
 
+	@EventHandler
+	public void onPlayerRegainHealth(EntityRegainHealthEvent event) {
+		if (event.getEntity() instanceof Player) {
+			Player p = (Player) event.getEntity();
+			if (Minigames.alivePlayers.contains(p.getName()) && Game.getTeam(p).color == ChatColor.RED) {
+				if (event.getRegainReason() == RegainReason.SATIATED) {
+					event.setAmount(0.1);
+				}
+			}
+		}
+	}
+
 	@Override
 	public void onGameEnd() {
 		refillTask.cancel();
@@ -266,6 +284,18 @@ public class Airstrike implements IMinigame {
 	@Override
 	public void onPlayerDeath(DeathEvent e) {
 		Minigames.broadcastDeath(e.p, e.k, "%s was murdered", "%s was shot down by %s");
+
+		if (e.gt.color == ChatColor.RED && e.gt.getPlayers().size() > 1) {
+			for (ItemStack it : e.p.getInventory().getContents()) {
+				if (it != null && it.getType() == Material.BOW && ItemMetaUtils.hasCustomName(it)) {
+					String s = ItemMetaUtils.getItemName(it);
+					Player give = e.gt.getPlayers().get(rand.nextInt(e.gt.getPlayers().size()));
+					give.getInventory().addItem(it);
+					Minigames.broadcast(ChatColor.RED, "%s has received the %s!", give.getName(),
+							ChatColor.stripColor(s));
+				}
+			}
+		}
 	}
 
 	@Override

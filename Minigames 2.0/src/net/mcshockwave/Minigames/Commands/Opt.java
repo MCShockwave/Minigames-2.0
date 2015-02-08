@@ -37,7 +37,7 @@ public class Opt implements CommandExecutor {
 					p.teleport(Game.getLocation("lobby"));
 					Minigames.spectate(p);
 				} else {
-					p.teleport(Multiworld.getGame().getBlockAt(0, 103, 0).getLocation());
+					p.teleport(Multiworld.getLobby().getBlockAt(0, 103, 0).getLocation());
 					p.setAllowFlight(false);
 				}
 			} else {
@@ -53,7 +53,7 @@ public class Opt implements CommandExecutor {
 					p.setAllowFlight(false);
 				}
 
-				p.teleport(Multiworld.getGame().getBlockAt(0, 103, 0).getLocation());
+				p.teleport(Multiworld.getLobby().getBlockAt(0, 103, 0).getLocation());
 			}
 		}
 

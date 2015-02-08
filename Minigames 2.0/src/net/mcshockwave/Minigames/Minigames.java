@@ -637,7 +637,6 @@ public class Minigames extends JavaPlugin {
 			p.setFallDistance(0);
 			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10, 100));
 			resetPlayer(p);
-			currentGame.mclass.giveKit(p);
 		}
 		broadcastAll(getBroadcastMessage("%s has started!", currentGame.name),
 				getBroadcastMessage("You will earn %s points if you win", pointsOnWin));
@@ -686,11 +685,7 @@ public class Minigames extends JavaPlugin {
 						tid = 0;
 					}
 				} else if (currentGame == Game.Airstrike) {
-					if (ts[0].getPlayers().size() <= 3) {
-						tid = 0;
-					} else {
-						tid = 1;
-					}
+					tid = 1;
 				} else {
 					for (int i = 0; i < tsal.size(); i++) {
 						Team t = ts[i];
@@ -737,6 +732,10 @@ public class Minigames extends JavaPlugin {
 					p.getLocation().getChunk().load();
 				}
 			}
+		}
+
+		for (Player p : getOptedIn()) {
+			currentGame.mclass.giveKit(p);
 		}
 
 		if (Bukkit.getScoreboardManager().getMainScoreboard().getObjective("Sidebar") != null) {
