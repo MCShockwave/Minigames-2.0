@@ -293,7 +293,7 @@ public class Airstrike implements IMinigame {
 				if (it != null && it.getType() == Material.BOW && ItemMetaUtils.hasCustomName(it)) {
 					String s = ItemMetaUtils.getItemName(it);
 					Player give = null;
-					while ((give = e.gt.getPlayers().get(rand.nextInt(e.gt.getPlayers().size()))) != e.p) {
+					while ((give = e.gt.getPlayers().get(rand.nextInt(e.gt.getPlayers().size()))) == e.p) {
 					}
 					give.getInventory().addItem(it);
 					Minigames.broadcast(ChatColor.RED, "%s has received the %s!", give.getName(),
