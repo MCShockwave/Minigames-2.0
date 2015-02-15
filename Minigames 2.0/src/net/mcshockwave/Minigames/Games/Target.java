@@ -7,6 +7,7 @@ import net.mcshockwave.Minigames.Minigames;
 import net.mcshockwave.Minigames.Events.DeathEvent;
 import net.mcshockwave.Minigames.Handlers.IMinigame;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -24,8 +25,9 @@ public class Target implements IMinigame {
 		for (Player p : Minigames.getOptedIn()) {
 			giveKit(p);
 		}
-		for (GameTeam gt : Game.Target.teams) {
-			selectTarget(gt);
+		for (final GameTeam gt : Game.Target.teams) {
+			Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {public void run() {selectTarget(gt);}}, 20L);
+			
 		}
 	}
 
