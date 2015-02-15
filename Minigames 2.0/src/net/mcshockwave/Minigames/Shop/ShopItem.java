@@ -241,6 +241,7 @@ public enum ShopItem {
 	// Tiers
 	// TRON
 	// Village Battle
+	// Target
 	Ressurector(
 		Game.Village_Battle,
 		0,
