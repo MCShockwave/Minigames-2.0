@@ -26,8 +26,11 @@ public class Target implements IMinigame {
 			giveKit(p);
 		}
 		for (final GameTeam gt : Game.Target.teams) {
-			Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {public void run() {selectTarget(gt);}}, 20L);
-			
+			Bukkit.getScheduler().runTaskLater(Minigames.ins, new Runnable() {
+				public void run() {
+					selectTarget(gt);
+				}
+			}, 20L);
 		}
 	}
 

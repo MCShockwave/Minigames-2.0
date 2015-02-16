@@ -238,10 +238,10 @@ public enum ShopItem {
 	// Minotaur
 	// Siege
 	// Spleef
+	// Target
 	// Tiers
 	// TRON
 	// Village Battle
-	// Target
 	Ressurector(
 		Game.Village_Battle,
 		0,
