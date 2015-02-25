@@ -25,25 +25,23 @@ import java.util.Random;
 
 public class Multiworld {
 
-	public static int				worldID		= 0;
-	public static String			worldName	= "Game";
-	static Random					rand		= new Random();
+	public static WorldCreator[]	worlds	= new WorldCreator[2];
 
-	public static WorldCreator[]	worlds		= new WorldCreator[2];
+	public static String			mapName	= "";
 
 	static {
 		resetGameName();
-		loadWorldGenerators();
 	}
 
 	public static void loadWorldGenerators() {
 		worlds[0] = wc("Lobby", Environment.NORMAL, WorldType.FLAT);
-		worlds[1] = wc(worldName, Environment.NORMAL, WorldType.FLAT);
+		worlds[1] = wc("", Environment.NORMAL, WorldType.FLAT);
 	}
 
 	public static void resetGameName() {
-		worldID = rand.nextInt(100000000);
-		worldName = "Game" + worldID;
+		if (Minigames.currentMap != null) {
+			mapName = Minigames.currentMap.getWorldName();
+		}
 		loadWorldGenerators();
 	}
 
@@ -87,7 +85,7 @@ public class Multiworld {
 	}
 
 	public static World getGame() {
-		return Bukkit.getWorld(worldName);
+		return Bukkit.getWorld(mapName);
 	}
 
 	public static void deleteWorld(final String w) {

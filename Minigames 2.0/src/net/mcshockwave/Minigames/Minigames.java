@@ -199,7 +199,7 @@ public class Minigames extends JavaPlugin {
 								canOpenShop = true;
 
 								try {
-									Multiworld.deleteWorld(Multiworld.worldName);
+									Multiworld.deleteWorld(Multiworld.mapName);
 									Multiworld.resetGameName();
 								} catch (Exception e) {
 									e.printStackTrace();
@@ -526,7 +526,7 @@ public class Minigames extends JavaPlugin {
 			if (Multiworld.getGame() != null) {
 				try {
 					System.out.println("Deleting game world file...");
-					Multiworld.deleteWorld(Multiworld.worldName);
+					Multiworld.deleteWorld(Multiworld.mapName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -536,7 +536,7 @@ public class Minigames extends JavaPlugin {
 				public void run() {
 					System.out.println("Copying world files...");
 
-					Multiworld.copyWorld(fileName, Multiworld.worldName);
+					Multiworld.copyWorld(fileName, Multiworld.mapName);
 					System.out.println("Copied world " + mapname + " (" + fileName + ") to Game");
 				}
 			}, 60l);
@@ -551,7 +551,7 @@ public class Minigames extends JavaPlugin {
 
 					System.out.println("Loading arena world...");
 
-					World w = new WorldCreator(Multiworld.worldName).type(WorldType.FLAT).createWorld();
+					World w = new WorldCreator(Multiworld.mapName).type(WorldType.FLAT).createWorld();
 
 					System.out.println("Setting gamerules...");
 
@@ -572,7 +572,7 @@ public class Minigames extends JavaPlugin {
 
 					System.out.println("Copying text file...");
 
-					WorldFileUtils.set(Multiworld.worldName, WorldFileUtils.get(fileName));
+					WorldFileUtils.set(Multiworld.mapName, WorldFileUtils.get(fileName));
 
 					System.out.println("Done resetting world! (name " + mapname + ") (fileName " + fileName + ")");
 
@@ -593,7 +593,7 @@ public class Minigames extends JavaPlugin {
 			if (gameWorldDone > 2) {
 				gameWorldDone = 0;
 
-				new WorldCreator(Multiworld.worldName).environment(Environment.NORMAL).generateStructures(false)
+				new WorldCreator(Multiworld.mapName).environment(Environment.NORMAL).generateStructures(false)
 						.type(WorldType.FLAT).createWorld();
 				resetGameWorld(currentGame, currentMap);
 			}
@@ -742,7 +742,7 @@ public class Minigames extends JavaPlugin {
 		sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 		Sidebar.setDisplayName(currentGame.name);
 
-		if (FileElements.has("time", Multiworld.worldName)) {
+		if (FileElements.has("time", Multiworld.mapName)) {
 			Multiworld.getGame().setTime(Game.getInt("time"));
 		} else {
 			Multiworld.getGame().setTime(isMapNight ? 18000 : 5000);
