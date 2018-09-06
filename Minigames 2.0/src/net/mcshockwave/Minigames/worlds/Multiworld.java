@@ -136,6 +136,7 @@ public class Multiworld {
 		File source = new File(s);
 		File target = new File(t);
 		try {
+			System.out.println("Trying to copy " + s + " to " + t);
 			copyTo(source, target);
 		} catch (IOException e) {
 			e.printStackTrace();

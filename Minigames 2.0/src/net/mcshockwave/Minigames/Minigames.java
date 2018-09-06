@@ -213,6 +213,7 @@ public class Minigames extends JavaPlugin {
 								} else
 									currentMap = currentGame.maplist.get(rand.nextInt(currentGame.maplist.size()));
 
+								Multiworld.resetGameName();
 								resetGameWorld(currentGame, currentMap);
 
 								if (currentMap.canBeNight && rand.nextInt(4) == 0) {
