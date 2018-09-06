@@ -1,22 +1,14 @@
 package net.mcshockwave.Minigames.Games;
 
-import net.mcshockwave.MCS.MCShockwave;
-import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
-import net.mcshockwave.MCS.Utils.SchedulerUtils;
-import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Minigames;
-import net.mcshockwave.Minigames.Events.DeathEvent;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Handlers.Sidebar;
-import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
-import net.mcshockwave.Minigames.worlds.Multiworld;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Damageable;
@@ -41,7 +33,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
+import net.mcshockwave.MCS.MCShockwave;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.MCS.Utils.SchedulerUtils;
+import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 public class Siege implements IMinigame {
 
@@ -75,12 +76,12 @@ public class Siege implements IMinigame {
 
 				yv.setCustomName(ChatColor.YELLOW + "Yellow King");
 				yv.setCustomNameVisible(true);
-				yv.setMaxHealth(startHealth);
+				yv.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(startHealth);
 				yv.setHealth(startHealth);
 
 				gv.setCustomName(ChatColor.GREEN + "Green King");
 				gv.setCustomNameVisible(true);
-				gv.setMaxHealth(startHealth);
+				gv.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(startHealth);
 				gv.setHealth(startHealth);
 			}
 		}, 10l);
@@ -103,10 +104,10 @@ public class Siege implements IMinigame {
 						continue;
 					}
 
-					fb.getWorld().playSound(fb.getLocation(), Sound.FIZZ, 4, 1);
+					fb.getWorld().playSound(fb.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 4, 1);
 
-					PacketUtils.playParticleEffect(ParticleEffect.FLAME, fb.getLocation(), 0.5f, 0.05f, 4);
-					PacketUtils.playParticleEffect(ParticleEffect.FIREWORKS_SPARK, fb.getLocation(), 0.5f, 0.05f, 4);
+					PacketUtils.playParticleEffect(Particle.FLAME, fb.getLocation(), 0.5f, 0.05f, 4);
+					PacketUtils.playParticleEffect(Particle.FIREWORKS_SPARK, fb.getLocation(), 0.5f, 0.05f, 4);
 
 					if (fb.getTicksLived() < 10) {
 						continue;
@@ -261,7 +262,7 @@ public class Siege implements IMinigame {
 						set(wl, cata[0], rel, rot);
 					}
 				}, 600);
-				wl.getWorld().playSound(wl.getLocation(), Sound.DOOR_OPEN, 10, 0);
+				wl.getWorld().playSound(wl.getLocation(), Sound.BLOCK_WOODEN_DOOR_OPEN, 10, 0);
 
 				SchedulerUtils util = SchedulerUtils.getNew();
 				for (final String[] c : cata) {

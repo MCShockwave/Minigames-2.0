@@ -128,7 +128,7 @@ public class FourCorners implements IMinigame {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		Action a = event.getAction();
-		ItemStack it = p.getItemInHand();
+		ItemStack it = p.getInventory().getItemInMainHand();
 
 		if (a.name().contains("RIGHT_CLICK") && it.getType() == Material.NETHER_STAR) {
 			if (chosen < 0) {
@@ -195,7 +195,7 @@ public class FourCorners implements IMinigame {
 					Minigames.send(ChatColor.BLUE, p, "You chose corner %s!", "Blue");
 				}
 
-				p.setItemInHand(null);
+				p.getInventory().setItemInMainHand(null);
 				p.closeInventory();
 			}
 		}

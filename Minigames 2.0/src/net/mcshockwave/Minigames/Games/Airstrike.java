@@ -1,19 +1,13 @@
 package net.mcshockwave.Minigames.Games;
 
-import net.mcshockwave.MCS.Utils.CooldownUtils;
-import net.mcshockwave.MCS.Utils.ItemMetaUtils;
-import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Minigames;
-import net.mcshockwave.Minigames.Events.DeathEvent;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.worlds.Multiworld;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -38,13 +32,20 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
+import net.mcshockwave.MCS.Utils.CooldownUtils;
+import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Game.GameTeam;
+import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 public class Airstrike implements IMinigame {
 
-	public String	sniper, bomber, gunner;
+	public String sniper, bomber, gunner;
 
-	public BukkitTask	refillTask	= null, oobTask = null;
+	public BukkitTask refillTask = null, oobTask = null;
 
 	@Override
 	public void onGameStart() {
@@ -96,18 +97,18 @@ public class Airstrike implements IMinigame {
 				for (Player p : sh.getPlayers()) {
 					if (p.getLocation().getBlockY() < Game.getInt("shooter-min-y")) {
 						Minigames.send(ChatColor.RED, p, "You are too %s! Fly higher!", "low");
-						p.playSound(p.getLocation(), Sound.ENDERDRAGON_HIT, 10, 0);
+						p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_HURT, 10, 0);
 						p.damage(2);
 					}
 					if (p.getLocation().getBlockY() > Game.getInt("shooter-max-y")) {
 						Minigames.send(ChatColor.RED, p, "You are too %s! Fly lower!", "high");
-						p.playSound(p.getLocation(), Sound.ENDERDRAGON_HIT, 10, 0);
+						p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_HURT, 10, 0);
 						p.damage(2);
 					}
 					int y = p.getWorld().getHighestBlockYAt(p.getLocation());
 					if (y < Game.getInt("min-y")) {
 						Minigames.send(ChatColor.RED, p, "You are too %s! Fly back!", "far out");
-						p.playSound(p.getLocation(), Sound.ENDERDRAGON_HIT, 10, 0);
+						p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_HURT, 10, 0);
 						p.damage(2);
 					}
 				}
@@ -147,7 +148,7 @@ public class Airstrike implements IMinigame {
 		}
 	}
 
-	public HashMap<String, BukkitTask>	machine	= new HashMap<>();
+	public HashMap<String, BukkitTask> machine = new HashMap<>();
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -156,19 +157,19 @@ public class Airstrike implements IMinigame {
 		if (event.getAction().name().contains("RIGHT_CLICK")) {
 			if (it != null && it.getType() == Material.BOW && ItemMetaUtils.hasCustomName(it)
 					&& ChatColor.stripColor(ItemMetaUtils.getItemName(it)).equalsIgnoreCase("Machine Bow")) {
-				p.getWorld().playSound(p.getLocation(), Sound.BAT_LOOP, 5, 2);
+				p.getWorld().playSound(p.getLocation(), Sound.ENTITY_BAT_LOOP, 5, 2);
 				machine.put(p.getName(), new BukkitRunnable() {
 					public void run() {
-						if (machine.containsKey(p.getName()) && p.getItemInHand() != null
-								&& p.getItemInHand().getType() == Material.BOW) {
+						if (machine.containsKey(p.getName()) && p.getInventory().getItemInMainHand() != null
+								&& p.getInventory().getItemInMainHand().getType() == Material.BOW) {
 							Entity e = p.launchProjectile(Arrow.class);
 							float spread = 8;
 							float x = (rand.nextFloat() - rand.nextFloat()) / spread;
 							float y = (rand.nextFloat() - rand.nextFloat() / 1.5F) / spread;
 							float z = (rand.nextFloat() - rand.nextFloat()) / spread;
-							e.setVelocity(p.getLocation().getDirection().normalize().multiply(1.5)
-									.add(new Vector(x, y, z)));
-							p.getWorld().playSound(p.getLocation(), Sound.BAT_TAKEOFF, 5, 2);
+							e.setVelocity(
+									p.getLocation().getDirection().normalize().multiply(1.5).add(new Vector(x, y, z)));
+							p.getWorld().playSound(p.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 5, 2);
 						} else {
 							cancel();
 						}
@@ -236,9 +237,8 @@ public class Airstrike implements IMinigame {
 
 	public void giveKit(Player p) {
 		Minigames.clearInv(p);
-		p.getInventory().setChestplate(
-				ItemMetaUtils.setLeatherColor(new ItemStack(Material.LEATHER_CHESTPLATE),
-						Minigames.chatColorToColor(Game.getTeam(p).color)));
+		p.getInventory().setChestplate(ItemMetaUtils.setLeatherColor(new ItemStack(Material.LEATHER_CHESTPLATE),
+				Minigames.chatColorToColor(Game.getTeam(p).color)));
 		double hp = 40;
 		if (Game.getTeam(p).color == ChatColor.RED) {
 			p.getInventory().setItem(17, new ItemStack(Material.ARROW));
@@ -253,12 +253,10 @@ public class Airstrike implements IMinigame {
 				name = "§cSniper Bow";
 				hp = 40;
 			}
-			p.getInventory().addItem(
-					ItemMetaUtils.setItemName(
-							ItemMetaUtils.addEnchantment(new ItemStack(Material.BOW), Enchantment.ARROW_INFINITE, 1),
-							name));
+			p.getInventory().addItem(ItemMetaUtils.setItemName(
+					ItemMetaUtils.addEnchantment(new ItemStack(Material.BOW), Enchantment.ARROW_INFINITE, 1), name));
 		}
-		p.setMaxHealth(hp);
+		p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
 		p.setHealth(hp);
 	}
 

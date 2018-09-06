@@ -1,21 +1,12 @@
 package net.mcshockwave.Minigames.Games;
 
-import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
-import net.mcshockwave.MCS.Utils.ItemMetaUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
-import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Minigames;
-import net.mcshockwave.Minigames.Events.DeathEvent;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Shop.ShopItem;
-import net.mcshockwave.Minigames.Utils.LocUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
@@ -29,8 +20,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -38,6 +29,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
+import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
+import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Shop.ShopItem;
+import net.mcshockwave.Minigames.Utils.LocUtils;
 
 public class Airships implements IMinigame {
 
@@ -75,12 +76,12 @@ public class Airships implements IMinigame {
 
 						}
 
-						p.damage(p.getMaxHealth());
+						p.damage(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 					}
 
 					if (p.getHealth() <= 6) {
 						PacketUtils
-								.playParticleEffect(ParticleEffect.FLAME, p.getLocation().add(0, 1, 0), 0, 0.05f, 10);
+								.playParticleEffect(Particle.FLAME, p.getLocation().add(0, 1, 0), 0, 0.05f, 10);
 					}
 				}
 			}
@@ -161,7 +162,7 @@ public class Airships implements IMinigame {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		Action a = event.getAction();
-		ItemStack it = p.getItemInHand();
+		ItemStack it = p.getInventory().getItemInMainHand();
 
 		if (it.getType() == Material.BOW && a.name().contains("RIGHT_CLICK")
 				&& p.hasPotionEffect(PotionEffectType.CONFUSION)) {
@@ -170,14 +171,14 @@ public class Airships implements IMinigame {
 		}
 
 		if (it.getType() == Material.TNT && a == Action.RIGHT_CLICK_AIR) {
-			p.setItemInHand(null);
+			p.getInventory().setItemInMainHand(null);
 
 			final TNTPrimed tnt = (TNTPrimed) p.getWorld().spawnEntity(p.getEyeLocation(), EntityType.PRIMED_TNT);
 			tnt.setVelocity(p.getLocation().getDirection().multiply(2));
 
 			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 				public void run() {
-					tnt.getWorld().playSound(tnt.getLocation(), Sound.EXPLODE, 10, 1);
+					tnt.getWorld().playSound(tnt.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 10, 1);
 					for (int i = 0; i < 100; i++) {
 						Arrow a = tnt.getWorld().spawnArrow(tnt.getLocation(),
 								new Vector(rand.nextGaussian() * 2, rand.nextFloat(), rand.nextGaussian() * 2),
@@ -194,9 +195,9 @@ public class Airships implements IMinigame {
 		}
 
 		if (it.getType() == Material.NETHER_STAR && a == Action.RIGHT_CLICK_AIR) {
-			p.setItemInHand(null);
+			p.getInventory().setItemInMainHand(null);
 
-			p.getWorld().playSound(p.getLocation(), Sound.FIZZ, 3, 1);
+			p.getWorld().playSound(p.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 3, 1);
 
 			int ra = 8;
 			for (Entity e : p.getNearbyEntities(ra, ra, ra)) {

@@ -23,11 +23,11 @@ import java.util.ArrayList;
 
 public class Brawl implements IMinigame {
 
-	public Player				b1			= null, b2 = null;
+	public Player b1 = null, b2 = null;
 
-	public long					invin		= 0;
+	public long invin = 0;
 
-	public ArrayList<String>	selection	= new ArrayList<>();
+	public ArrayList<String> selection = new ArrayList<>();
 
 	@Override
 	public void onGameStart() {
@@ -159,13 +159,13 @@ public class Brawl implements IMinigame {
 
 		if ((b1 == e && b2 == d || b1 == d && b2 == e) && System.currentTimeMillis() >= invin) {
 			if (Minigames.hasItem((Player) d, ShopItem.Outcast)
-					&& ((Player) d).getItemInHand().getType() == Material.WOOD_SWORD) {
+					&& ((Player) d).getInventory().getItemInMainHand().getType() == Material.WOOD_SWORD) {
 				event.setDamage(1);
 			} else
 				event.setDamage(0);
 
 			if (Minigames.hasItem((Player) d, ShopItem.Ruthless)
-					&& ((Player) d).getItemInHand().getType() == Material.STICK) {
+					&& ((Player) d).getInventory().getItemInMainHand().getType() == Material.STICK) {
 				((Player) e).removePotionEffect(PotionEffectType.CONFUSION);
 				((Player) e).addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 100, 0));
 			}

@@ -36,7 +36,7 @@ public class ShopListener implements Listener {
 				} else {
 					ShopUtils.buyItemPermanently(p, si, in);
 				}
-				p.playSound(p.getLocation(), Sound.CLICK, 1, 1);
+				p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
 			}
 		}
 	}

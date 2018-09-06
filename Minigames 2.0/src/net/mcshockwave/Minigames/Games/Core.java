@@ -116,11 +116,11 @@ public class Core implements IMinigame {
 			p.setItemInHand(null);
 
 			p.getWorld().playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 0);
-			p.getWorld().playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);
+			p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDERMEN_TELEPORT, 1, 1);
 			// Location loc = tree[rand.nextInt(tree.length)];
 			// p.teleport(loc);
 			p.getWorld().playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 0);
-			p.getWorld().playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);
+			p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDERMEN_TELEPORT, 1, 1);
 			p.setHealth(20);
 		}
 
@@ -230,7 +230,7 @@ public class Core implements IMinigame {
 				}
 			}
 
-			p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1, 1.3f);
+			p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1.3f);
 			cooldown.put(p, System.currentTimeMillis() + 15000);
 		}
 	}

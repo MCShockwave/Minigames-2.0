@@ -1,5 +1,43 @@
 package net.mcshockwave.Minigames;
 
+import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Random;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
+import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Team;
+
 import net.mcshockwave.MCS.MCShockwave;
 import net.mcshockwave.MCS.SQLTable;
 import net.mcshockwave.MCS.SQLTable.Rank;
@@ -33,44 +71,7 @@ import net.mcshockwave.Minigames.Utils.TeleportUtils;
 import net.mcshockwave.Minigames.worlds.FileElements;
 import net.mcshockwave.Minigames.worlds.Multiworld;
 import net.mcshockwave.Minigames.worlds.WorldFileUtils;
-import net.minecraft.server.v1_7_R4.PacketPlayOutGameStateChange;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
-import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
-import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Team;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Random;
+import net.minecraft.server.v1_12_R1.PacketPlayOutGameStateChange;
 
 public class Minigames extends JavaPlugin {
 
@@ -258,7 +259,7 @@ public class Minigames extends JavaPlugin {
 								}
 							}
 							if (b <= 5) {
-								SoundUtils.playSoundToAll(Sound.ORB_PICKUP, 1, (float) ((float) ((b * 2)) / 5f));
+								SoundUtils.playSoundToAll(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, (float) ((float) ((b * 2)) / 5f));
 							}
 						}
 					}, time));
@@ -338,7 +339,7 @@ public class Minigames extends JavaPlugin {
 				Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 					public void run() {
 						PointsUtils.addPoints(win, points, "winning " + name);
-						win.playSound(win.getLocation(), Sound.LEVEL_UP, 1, 1);
+						win.playSound(win.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 						Statistics.incrWins(win.getName(), true);
 					}
 				}, 20);
@@ -346,7 +347,7 @@ public class Minigames extends JavaPlugin {
 					Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 						public void run() {
 							if (p2 != win) {
-								p2.playSound(p2.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
+								p2.playSound(p2.getEyeLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
 							}
 						}
 					}, 20l);
@@ -372,7 +373,7 @@ public class Minigames extends JavaPlugin {
 						Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 							public void run() {
 								PointsUtils.addPoints(w, points, "winning " + name);
-								w.playSound(w.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
+								w.playSound(w.getEyeLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 								Statistics.incrWins(w.getName(), false);
 							}
 						}, 20);
@@ -388,7 +389,7 @@ public class Minigames extends JavaPlugin {
 						Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 							public void run() {
 								PointsUtils.addPoints(pl, points, "your team winning " + name);
-								pl.playSound(pl.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
+								pl.playSound(pl.getEyeLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 								Statistics.incrWins(pl.getName(), false);
 							}
 						}, 20);
@@ -399,7 +400,7 @@ public class Minigames extends JavaPlugin {
 					Bukkit.getScheduler().runTaskLater(ins, new Runnable() {
 						public void run() {
 							if (!win.hasPlayer(p2) && !Game.getTeam(win).deadPlayers.contains(p2.getName())) {
-								p2.playSound(p2.getEyeLocation(), Sound.ANVIL_LAND, 1, 1);
+								p2.playSound(p2.getEyeLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
 							}
 						}
 					}, 20l);
@@ -759,7 +760,7 @@ public class Minigames extends JavaPlugin {
 			}.runTaskTimer(ins, 0, 20);
 		}
 
-		SoundUtils.playSoundToAll(Sound.AMBIENCE_THUNDER, 1, 0.75f);
+		SoundUtils.playSoundToAll(Sound.ENTITY_LIGHTNING_THUNDER, 1, 0.75f);
 		currentGame.mclass.onGameStart();
 		for (Player p : getOptedIn()) {
 			currentGame.mclass.giveKit(p);
@@ -1053,7 +1054,7 @@ public class Minigames extends JavaPlugin {
 	}
 
 	public static void resetPlayer(Player p) {
-		p.setMaxHealth(20);
+		p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
 		p.setHealth(20);
 		p.setFireTicks(0);
 		p.setWalkSpeed(0.2f);

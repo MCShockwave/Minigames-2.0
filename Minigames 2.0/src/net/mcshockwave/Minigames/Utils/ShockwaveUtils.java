@@ -1,11 +1,11 @@
 package net.mcshockwave.Minigames.Utils;
 
-import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
-import net.mcshockwave.Minigames.Minigames;
+import java.util.ArrayList;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -16,8 +16,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.Random;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.Minigames.Minigames;
 
 public class ShockwaveUtils {
 
@@ -38,8 +38,8 @@ public class ShockwaveUtils {
 					for (Block b : bir) {
 						if (b.getLocation().distanceSquared(l) <= i2 * i2 && !bor.contains(b)) {
 							if (rand.nextInt(10) == 1) {
-								PacketUtils.playParticleEffect(ParticleEffect.EXPLODE, b.getLocation(), 0, 0.1f, 10);
-								b.getWorld().playSound(b.getLocation(), Sound.EXPLODE, 1, 1);
+								PacketUtils.playParticleEffect(Particle.EXPLOSION_NORMAL, b.getLocation(), 0, 0.1f, 10);
+								b.getWorld().playSound(b.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
 							}
 							bor.add(b);
 							for (Entity e : l.getWorld().getEntities()) {

@@ -1,25 +1,15 @@
 package net.mcshockwave.Minigames;
 
-import net.mcshockwave.MCS.MCShockwave;
-import net.mcshockwave.MCS.SQLTable;
-import net.mcshockwave.MCS.Challenges.Challenge.ChallengeModifier;
-import net.mcshockwave.MCS.Challenges.ChallengeManager;
-import net.mcshockwave.MCS.Currency.LevelUtils;
-import net.mcshockwave.MCS.Utils.ItemMetaUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
-import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Commands.Force;
-import net.mcshockwave.Minigames.Commands.MgInfo;
-import net.mcshockwave.Minigames.worlds.FileElements;
-import net.mcshockwave.Minigames.worlds.Multiworld;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -55,11 +45,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
-import java.util.Random;
+import net.mcshockwave.MCS.MCShockwave;
+import net.mcshockwave.MCS.SQLTable;
+import net.mcshockwave.MCS.Challenges.Challenge.ChallengeModifier;
+import net.mcshockwave.MCS.Challenges.ChallengeManager;
+import net.mcshockwave.MCS.Currency.LevelUtils;
+import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.Minigames.Game.GameTeam;
+import net.mcshockwave.Minigames.Commands.Force;
+import net.mcshockwave.Minigames.Commands.MgInfo;
+import net.mcshockwave.Minigames.worlds.FileElements;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 public class DefaultListener implements Listener {
 
-	public Minigames	plugin;
+	public Minigames plugin;
 
 	public DefaultListener(Minigames instance) {
 		plugin = instance;
@@ -121,7 +122,7 @@ public class DefaultListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		Action a = event.getAction();
-		ItemStack it = p.getItemInHand();
+		ItemStack it = p.getInventory().getItemInMainHand();
 
 		if (!Minigames.alivePlayers.contains(p.getName()) && Minigames.getOptedIn().contains(p)
 				&& p.getGameMode() != GameMode.CREATIVE) {
@@ -139,9 +140,8 @@ public class DefaultListener implements Listener {
 						cc = Game.getTeam(sp).color;
 					}
 
-					i.addItem(ItemMetaUtils.setHeadName(
-							ItemMetaUtils.setItemName(new ItemStack(Material.SKULL_ITEM, 1, (short) 3),
-									cc + sp.getName()), sp.getName()));
+					i.addItem(ItemMetaUtils.setHeadName(ItemMetaUtils.setItemName(
+							new ItemStack(Material.SKULL_ITEM, 1, (short) 3), cc + sp.getName()), sp.getName()));
 				}
 			}
 			p.openInventory(i);
@@ -203,9 +203,9 @@ public class DefaultListener implements Listener {
 				}
 			}
 		}
-		PacketUtils.sendPacketGlobally(p.getEyeLocation(), 50,
-				PacketUtils.generateParticles(ParticleEffect.LAVA, p.getEyeLocation(), 0, 1, 50));
-		p.getWorld().playSound(p.getEyeLocation(), Sound.CHICKEN_EGG_POP, 1, 0);
+
+		PacketUtils.playParticleEffect(Particle.LAVA, p.getEyeLocation(), 0, 1, 50);
+		p.getWorld().playSound(p.getEyeLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 0);
 		PlayerRespawnEvent pre = new PlayerRespawnEvent(p, p.getWorld().getSpawnLocation(), false);
 		Bukkit.getPluginManager().callEvent(pre);
 		p.setHealth(20);
@@ -237,7 +237,7 @@ public class DefaultListener implements Listener {
 				String name = ItemMetaUtils.getItemName(cu);
 				name = name.substring(11);
 
-				p.playSound(p.getEyeLocation(), Sound.CLICK, 1, 1);
+				p.playSound(p.getEyeLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
 				Force.forceGame(p, name, false);
 			}
 
@@ -352,7 +352,8 @@ public class DefaultListener implements Listener {
 			Player d = (Player) de;
 
 			if (!Minigames.alivePlayers.contains(d.getName()) || !Minigames.alivePlayers.contains(p.getName())
-					|| Minigames.optedOut.contains(d.getName()) || Minigames.started && !Minigames.currentGame.allowPVP) {
+					|| Minigames.optedOut.contains(d.getName())
+					|| Minigames.started && !Minigames.currentGame.allowPVP) {
 				event.setCancelled(true);
 			} else
 				event.setCancelled(false);
@@ -392,21 +393,22 @@ public class DefaultListener implements Listener {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
 
-		if (event.getTo().getY() < (Multiworld.getGame() != null
-				&& event.getTo().getWorld().getName().equalsIgnoreCase(Multiworld.getGame().getName())
-				&& FileElements.has("min-y", Multiworld.mapName) ? Game.getDouble("min-y") : 80)) {
+		if (event.getTo()
+				.getY() < (Multiworld.getGame() != null
+						&& event.getTo().getWorld().getName().equalsIgnoreCase(Multiworld.getGame().getName())
+						&& FileElements.has("min-y", Multiworld.mapName) ? Game.getDouble("min-y") : 80)) {
 			if (Minigames.optedOut.contains(p.getName()) || Minigames.explode) {
 				p.teleport(p.getWorld().getSpawnLocation());
 			} else {
-				p.damage(p.getMaxHealth());
+				p.damage(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			}
 		}
 	}
 
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (!Minigames.started || event.getEntity() != null
-				&& event.getEntity().getWorld().getName().equalsIgnoreCase("Lobby")) {
+		if (!Minigames.started
+				|| event.getEntity() != null && event.getEntity().getWorld().getName().equalsIgnoreCase("Lobby")) {
 			event.blockList().clear();
 		}
 	}
@@ -469,7 +471,7 @@ public class DefaultListener implements Listener {
 		}
 		Bukkit.getScheduler().runTask(plugin, new Runnable() {
 			public void run() {
-				event.getPlayer().setItemInHand(null);
+				event.getPlayer().getInventory().setItemInMainHand(null);
 			}
 		});
 	}

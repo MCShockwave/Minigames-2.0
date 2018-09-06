@@ -154,7 +154,7 @@ public class LaserTagMapGenerator {
 					bs.update(true);
 				}
 			} else {
-				b.setData(col.getData());
+				b.setData(col.getWoolData());
 			}
 		}
 	}
@@ -176,7 +176,7 @@ public class LaserTagMapGenerator {
 				int at = z[x];
 				if (at >= 0) {
 					placeBlock(loc.clone().add(x, 0, i).getBlock(), Material.STAINED_CLAY,
-							DyeColor.getByData((byte) at));
+							DyeColor.getByWoolData((byte) at));
 				}
 			}
 		}

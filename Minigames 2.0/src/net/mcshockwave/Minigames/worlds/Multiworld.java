@@ -99,7 +99,7 @@ public class Multiworld {
 				}
 			}
 			for (Chunk c : wld.getLoadedChunks()) {
-				c.unload(false, false);
+				c.unload(false);
 			}
 			if (Bukkit.unloadWorld(w, false)) {
 				System.out.println("Unloaded world");

@@ -1,14 +1,10 @@
 package net.mcshockwave.Minigames.Commands;
 
-import net.mcshockwave.MCS.SQLTable;
-import net.mcshockwave.MCS.SQLTable.Rank;
-import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Game.GameMap;
-import net.mcshockwave.Minigames.Minigames;
-import net.mcshockwave.Minigames.Shop.ShopUtils;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
@@ -16,6 +12,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
+
+import net.mcshockwave.MCS.SQLTable;
+import net.mcshockwave.MCS.SQLTable.Rank;
+import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Game.GameMap;
+import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Shop.ShopUtils;
 
 public class MGC implements CommandExecutor {
 
@@ -95,7 +98,7 @@ public class MGC implements CommandExecutor {
 			}
 
 			if (args[0].equalsIgnoreCase("inspect")) {
-				Block b = p.getTargetBlock(null, 10);
+				Block b = p.getTargetBlock((Set<Material>) null, 10);
 				if (b != null) {
 					p.sendMessage("§6Block: (" + b.getType().name() + ")");
 					p.sendMessage("§7 " + b.getLocation());

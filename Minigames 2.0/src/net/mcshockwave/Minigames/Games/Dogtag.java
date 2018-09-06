@@ -105,7 +105,7 @@ public class Dogtag implements IMinigame {
 				e.p.getLocation(),
 				ItemMetaUtils.setItemName(new ItemStack(Material.SKULL_ITEM, 1, (short) 3), UUID.randomUUID()
 						.toString()));
-		i.setPassenger(sk);
+		i.addPassenger(sk);
 
 		tag.put(i, e.p.getName());
 
@@ -252,7 +252,7 @@ public class Dogtag implements IMinigame {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		final Player p = event.getPlayer();
 		Action a = event.getAction();
-		ItemStack it = p.getItemInHand();
+		ItemStack it = p.getInventory().getItemInMainHand();
 		final Block b = event.getClickedBlock();
 
 		if (it.getType() == Material.SULPHUR && a == Action.RIGHT_CLICK_BLOCK) {
@@ -260,7 +260,7 @@ public class Dogtag implements IMinigame {
 				it.setAmount(it.getAmount() - 1);
 			} else
 				it.setType(Material.AIR);
-			p.setItemInHand(it);
+			p.getInventory().setItemInMainHand(it);
 
 			mines.put(b, Game.getTeam(p));
 			Minigames.send(p, "Placed %s at location!", "mine");
@@ -280,7 +280,7 @@ public class Dogtag implements IMinigame {
 			if (mines.get(u) != Game.getTeam(p)) {
 				mines.remove(u);
 
-				p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1, 0.8f);
+				p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 0.8f);
 				p.damage(p.getHealth());
 			}
 		}

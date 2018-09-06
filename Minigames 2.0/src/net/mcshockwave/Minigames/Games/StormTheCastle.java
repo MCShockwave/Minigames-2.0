@@ -1,26 +1,15 @@
 package net.mcshockwave.Minigames.Games;
 
-import net.mcshockwave.MCS.Utils.CooldownUtils;
-import net.mcshockwave.MCS.Utils.ItemMetaUtils;
-import net.mcshockwave.MCS.Utils.MiscUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
-import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Minigames;
-import net.mcshockwave.Minigames.Events.DeathEvent;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Handlers.Sidebar;
-import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
-import net.mcshockwave.Minigames.Utils.LocUtils;
-import net.mcshockwave.Minigames.worlds.Multiworld;
+import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
@@ -46,7 +35,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
+import net.mcshockwave.MCS.Utils.CooldownUtils;
+import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.MiscUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Game.GameTeam;
+import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
+import net.mcshockwave.Minigames.Utils.LocUtils;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 public class StormTheCastle implements IMinigame {
 
@@ -116,11 +117,11 @@ public class StormTheCastle implements IMinigame {
 		particles = new BukkitRunnable() {
 			public void run() {
 				if (!crystalHealth.isDisplayed() && !remainingKnights.isDisplayed()) {
-					PacketUtils.playParticleEffect(ParticleEffect.DRIP_WATER, crystalLocation, 1.5f, 0,
+					PacketUtils.playParticleEffect(Particle.DRIP_WATER, crystalLocation, 1.5f, 0,
 							inhibitorsRemaining.getVal() * 2);
 
 					for (Location l : inhibitors) {
-						PacketUtils.playParticleEffect(ParticleEffect.WITCH_MAGIC, l.clone().add(0.5, 0.5, 0.5), 0.5f,
+						PacketUtils.playParticleEffect(Particle.SPELL_WITCH, l.clone().add(0.5, 0.5, 0.5), 0.5f,
 								0.5f, 3);
 					}
 				}
@@ -151,7 +152,7 @@ public class StormTheCastle implements IMinigame {
 					int pz = p.getLocation().getBlockZ();
 					if (more && pz > z || !more && pz < z) {
 						p.sendMessage("§cWhere are you going? Your team needs you! Fall back!");
-						p.playSound(p.getLocation(), Sound.ENDERDRAGON_HIT, 10, 0);
+						p.playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_HURT, 10, 0);
 						p.damage(2);
 					}
 				}
@@ -188,7 +189,7 @@ public class StormTheCastle implements IMinigame {
 			if (Minigames.alivePlayers.contains(p.getName())) {
 				if (p.getInventory().contains(Material.TNT) || p.getInventory().contains(Material.BEACON)) {
 					p.getInventory().clear();
-					p.damage(p.getMaxHealth());
+					p.damage(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 				}
 			}
 		}
@@ -312,7 +313,7 @@ public class StormTheCastle implements IMinigame {
 				TNTPrimed tnt = (TNTPrimed) b.getWorld().spawnEntity(b.getLocation(), EntityType.PRIMED_TNT);
 				tnt.setFuseTicks(10);
 				p.getInventory().clear();
-				p.damage(p.getMaxHealth(), tnt);
+				p.damage(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), tnt);
 			}
 			if (b.getType() == Material.BEACON) {
 				if (inhibitorsRemaining.isDisplayed() && b.getLocation().distanceSquared(crystalLocation) <= 10 * 10) {
@@ -327,7 +328,7 @@ public class StormTheCastle implements IMinigame {
 								"The Barbarians have taken down the Crystal's %s!", "shield"), Minigames
 								.getBroadcastMessage("The %s is vulnerable! Barbarians must try to destroy it!",
 										"Crystal"));
-						crystalLocation.getWorld().playSound(crystalLocation, Sound.ENDERDRAGON_DEATH, 20, 2);
+						crystalLocation.getWorld().playSound(crystalLocation, Sound.ENTITY_ENDERDRAGON_DEATH, 20, 2);
 						cleanObjectives();
 
 						reinforcements.setVal(reinforcements.getVal() + reinforcementBonus);
@@ -341,7 +342,7 @@ public class StormTheCastle implements IMinigame {
 				e.setCancelled(true);
 				return;
 			}
-			p.setItemInHand(ItemMetaUtils.setItemName(new ItemStack(Material.TRIPWIRE_HOOK), "§fDetonator"));
+			p.getInventory().setItemInMainHand(ItemMetaUtils.setItemName(new ItemStack(Material.TRIPWIRE_HOOK), "§fDetonator"));
 			new BukkitRunnable() {
 				public void run() {
 					b.setType(Material.TNT);
@@ -387,7 +388,7 @@ public class StormTheCastle implements IMinigame {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		Action a = event.getAction();
-		ItemStack it = p.getItemInHand();
+		ItemStack it = p.getInventory().getItemInMainHand();
 
 		if (a.name().contains("RIGHT_CLICK") && it != null && it.getType() == Material.TRIPWIRE_HOOK) {
 			if (!CooldownUtils.isOnCooldown("STC-Cache", p.getName())) {
@@ -397,7 +398,7 @@ public class StormTheCastle implements IMinigame {
 				cacheStatus.setName("§eCache - §c✕");
 
 				Minigames.broadcastAll(Minigames.getBroadcastMessage("%s has been destroyed!", "Cache"));
-				p.setItemInHand(null);
+				p.getInventory().setItemInMainHand(null);
 			} else {
 				Minigames.send(p, "Explosive is %s! (%ss remaining)", "arming",
 						CooldownUtils.getCooldownForSec("STC-Cache", p.getName(), 1));
@@ -457,7 +458,7 @@ public class StormTheCastle implements IMinigame {
 								.broadcastAll(Minigames.getBroadcastMessage("The Barbarians have destroyed the %s!",
 										"Spawn Crystal"), Minigames.getBroadcastMessage(ChatColor.RED,
 										"The Knights must make a %s! They will not respawn!", "last stand"));
-						crystalLocation.getWorld().playSound(crystalLocation, Sound.ENDERDRAGON_DEATH, 20, 0);
+						crystalLocation.getWorld().playSound(crystalLocation, Sound.ENTITY_ENDERDRAGON_DEATH, 20, 0);
 
 						for (Player p : Game.Storm_The_Castle.getTeam("Knights").getPlayers()) {
 							p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
@@ -495,7 +496,7 @@ public class StormTheCastle implements IMinigame {
 							"Barbarians must place %s near the Spawn Crystal to weaken it!", "inhibitors"));
 
 					cleanObjectives();
-					crystalLocation.getWorld().playSound(crystalLocation, Sound.ENDERDRAGON_DEATH, 20, 2);
+					crystalLocation.getWorld().playSound(crystalLocation, Sound.ENTITY_ENDERDRAGON_DEATH, 20, 2);
 
 					inhibitorsRemaining.setDisplayed(true);
 					reinforcements.setVal(reinforcements.getVal() + reinforcementBonus);

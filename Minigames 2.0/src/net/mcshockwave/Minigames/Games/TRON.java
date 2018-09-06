@@ -9,6 +9,7 @@ import net.mcshockwave.Minigames.Handlers.IMinigame;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -68,7 +69,7 @@ public class TRON implements IMinigame {
 				if (!Minigames.alivePlayers.contains(p.getName())) {
 					return;
 				}
-				p.damage(p.getMaxHealth());
+				p.damage(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			}
 		}, time * 20));
 	}

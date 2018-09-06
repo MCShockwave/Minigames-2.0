@@ -9,6 +9,7 @@ import net.mcshockwave.Minigames.Handlers.IMinigame;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -45,22 +46,22 @@ public class Target implements IMinigame {
 			wasTargetKill = true;
 			Minigames.broadcastDeath(e.p, e.k, "%s was killed by an unknown cause", "%s was brutally murdered by %s");
 			Minigames.setDead(e.p, false);
-			e.p.setMaxHealth(20);
-			e.p.setHealth(e.p.getMaxHealth());
+			e.p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+			e.p.setHealth(e.p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			selectTarget(e.gt);
 		} else {
 			giveKit(e.p);
 		}
 		if (e.k != null && (yellowTarget.equals(e.k.getName()) || greenTarget.equals(e.k.getName()))) {
-			if (e.k.getMaxHealth() < 20) {
+			if (e.k.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() < 20) {
 				if (wasTargetKill) {
 					Minigames.send(e.gt.color, e.k, "Health set to 10 hearts for killing the %s target!", e.gt.name);
-					e.k.setMaxHealth(20);
+					e.k.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
 					e.k.setHealth(20);
 				} else {
 					Minigames.send(e.gt.color, e.k, "+1 heart for killing %s", e.p.getName());
-					e.k.setMaxHealth(e.k.getMaxHealth() + 2);
-					e.k.setHealth(e.k.getMaxHealth());
+					e.k.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(e.k.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() + 2);
+					e.k.setHealth(e.k.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 				}
 			}
 		}
@@ -78,7 +79,7 @@ public class Target implements IMinigame {
 		if (gt.team.getSize() > 0) {
 			Player[] ps = gt.team.getPlayers().toArray(new Player[0]);
 			Player p = ps[rand.nextInt(ps.length)];
-			p.setMaxHealth(10);
+			p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10);
 			p.setHealth(10);
 			p.getInventory().setHelmet(new ItemStack(Material.GOLD_HELMET));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 10));

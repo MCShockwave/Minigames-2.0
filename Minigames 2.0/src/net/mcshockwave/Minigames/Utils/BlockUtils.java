@@ -126,7 +126,7 @@ public class BlockUtils {
 
 	@SuppressWarnings("deprecation")
 	public static void setBlocks(final Location s, Location e, final Material m, final int color) {
-		setBlocks(s, e, m, DyeColor.getByData((byte) color));
+		setBlocks(s, e, m, DyeColor.getByWoolData((byte) color));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -143,7 +143,7 @@ public class BlockUtils {
 			b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, m.getId());
 		}
 		b.setType(m);
-		b.setData(color.getData());
+		b.setData(color.getWoolData());
 	}
 
 }

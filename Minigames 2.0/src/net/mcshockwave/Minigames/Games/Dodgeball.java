@@ -110,7 +110,7 @@ public class Dodgeball implements IMinigame {
 				if (canBeHit.contains(p)) {
 					canBeHit.remove(p);
 					event.setDamage(0f);
-					p.getWorld().playSound(p.getLocation(), Sound.HURT_FLESH, 1, 1);
+					p.getWorld().playSound(p.getLocation(), Sound.ENTITY_PLAYER_HURT, 1, 1);
 					return;
 				}
 				event.setDamage(20f);
@@ -222,7 +222,7 @@ public class Dodgeball implements IMinigame {
 						}
 					}
 
-					p.getWorld().playSound(p.getLocation(), Sound.PORTAL_TRIGGER, 5, 2);
+					p.getWorld().playSound(p.getLocation(), Sound.BLOCK_PORTAL_TRIGGER, 5, 2);
 				}
 
 			}

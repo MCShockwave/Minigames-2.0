@@ -1,18 +1,12 @@
 package net.mcshockwave.Minigames.Games;
 
-import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Minigames;
-import net.mcshockwave.Minigames.Events.DeathEvent;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Shop.ShopItem;
-import net.mcshockwave.Minigames.worlds.Multiworld;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -22,12 +16,20 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Game.GameTeam;
+import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Shop.ShopItem;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 public class Gladiators implements IMinigame {
 
@@ -49,10 +51,10 @@ public class Gladiators implements IMinigame {
 			public void run() {
 				for (Player p : Minigames.getOptedIn()) {
 					if (p.getHealth() < 5) {
-						PacketUtils.playBlockParticles(Material.REDSTONE_BLOCK, 0, p.getEyeLocation());
-						p.getWorld().playSound(p.getLocation(), Sound.DIG_WOOL, 1, 2);
+						PacketUtils.playBlockParticles(new MaterialData(Material.REDSTONE_BLOCK), p.getEyeLocation());
+						p.getWorld().playSound(p.getLocation(), Sound.BLOCK_CLOTH_BREAK, 1, 2);
 					} else if (p.getHealth() < 10) {
-						PacketUtils.playBlockParticles(Material.REDSTONE_WIRE, 0, p.getEyeLocation());
+						PacketUtils.playBlockParticles(new MaterialData(Material.REDSTONE_WIRE), p.getEyeLocation());
 					}
 				}
 			}
@@ -75,7 +77,7 @@ public class Gladiators implements IMinigame {
 		}, 60L);
 
 		if (e.k != null) {
-			e.k.setHealth(e.k.getMaxHealth());
+			e.k.setHealth(e.k.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 		}
 	}
 
@@ -127,8 +129,8 @@ public class Gladiators implements IMinigame {
 
 			if (de instanceof Player) {
 				if (Minigames.hasItem(p, ShopItem.Provocateur)) {
-					p.getWorld().playSound(p.getLocation(), Sound.HURT_FLESH, 1, 1);
-					PacketUtils.playBlockParticles(Material.IRON_BLOCK, 0, p.getEyeLocation());
+					p.getWorld().playSound(p.getLocation(), Sound.ENTITY_PLAYER_HURT, 1, 1);
+					PacketUtils.playBlockParticles(new MaterialData(Material.IRON_BLOCK), p.getEyeLocation());
 				}
 			}
 		}
@@ -158,7 +160,7 @@ public class Gladiators implements IMinigame {
 				maaCool.put(p, System.currentTimeMillis() + 2000);
 
 				p.setVelocity(p.getVelocity().add(p.getLocation().getDirection().multiply(3).setY(-1)));
-				p.getWorld().playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1, 1);
+				p.getWorld().playSound(p.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 1, 1);
 			}
 		}
 	}

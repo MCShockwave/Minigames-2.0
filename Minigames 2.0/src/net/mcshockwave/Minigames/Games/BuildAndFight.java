@@ -1,20 +1,14 @@
 package net.mcshockwave.Minigames.Games;
 
-import net.mcshockwave.MCS.Utils.ItemMetaUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Minigames;
-import net.mcshockwave.Minigames.Events.DeathEvent;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Shop.ShopItem;
-import net.mcshockwave.Minigames.Utils.BlockUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -29,16 +23,24 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.util.BlockIterator;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Game.GameTeam;
+import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Shop.ShopItem;
+import net.mcshockwave.Minigames.Utils.BlockUtils;
 
 public class BuildAndFight implements IMinigame {
 
-	boolean			building	= true;
+	boolean building = true;
 
-	public boolean	indes		= false;
+	public boolean indes = false;
 
 	@Override
 	public void onGameStart() {
@@ -46,8 +48,8 @@ public class BuildAndFight implements IMinigame {
 
 		Minigames.showDefaultSidebar();
 
-		BlockUtils.save(Game.getLocation("bridge-corner-1"), Game.getLocation("bridge-corner-2"), "baf-bridge", true,
-				0, false);
+		BlockUtils.save(Game.getLocation("bridge-corner-1"), Game.getLocation("bridge-corner-2"), "baf-bridge", true, 0,
+				false);
 
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
@@ -58,8 +60,8 @@ public class BuildAndFight implements IMinigame {
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				building = false;
-				Minigames.broadcastAll(Minigames.getBroadcastMessage(ChatColor.RED, "Times up! You may now %s!",
-						"fight"));
+				Minigames.broadcastAll(
+						Minigames.getBroadcastMessage(ChatColor.RED, "Times up! You may now %s!", "fight"));
 				for (String al : Minigames.alivePlayers) {
 					if (Bukkit.getPlayer(al) != null) {
 						Player p = Bukkit.getPlayer(al);
@@ -77,8 +79,9 @@ public class BuildAndFight implements IMinigame {
 			p.setGameMode(GameMode.SURVIVAL);
 		}
 		if (building) {
-			p.getInventory().addItem(
-					new ItemStack(Minigames.hasItem(p, ShopItem.Builder) ? Material.STAINED_GLASS : Material.WOOL, 64,
+			p.getInventory()
+					.addItem(new ItemStack(
+							Minigames.hasItem(p, ShopItem.Builder) ? Material.STAINED_GLASS : Material.WOOL, 64,
 							(short) Game.getWoolColor(Game.getTeam(p))));
 			p.getInventory().addItem(new ItemStack(Material.SHEARS));
 		} else {
@@ -105,8 +108,8 @@ public class BuildAndFight implements IMinigame {
 		if (e.k != null && Minigames.hasItem(e.k, ShopItem.Fighter)) {
 			double hp = e.k.getHealth();
 			hp += 10;
-			if (hp > e.k.getMaxHealth()) {
-				hp = e.k.getMaxHealth();
+			if (hp > e.k.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+				hp = e.k.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 			}
 			e.k.setHealth(hp);
 		}
@@ -130,9 +133,8 @@ public class BuildAndFight implements IMinigame {
 			return false;
 		}
 		if (gt != null) {
-			if (building
-					&& (gt.color == ChatColor.YELLOW && b.getBiome() != Biome.PLAINS || gt.color == ChatColor.GREEN
-							&& b.getBiome() != Biome.FOREST)) {
+			if (building && (gt.color == ChatColor.YELLOW && b.getBiome() != Biome.PLAINS
+					|| gt.color == ChatColor.GREEN && b.getBiome() != Biome.FOREST)) {
 				return false;
 			} else {
 				return true;
@@ -146,9 +148,9 @@ public class BuildAndFight implements IMinigame {
 		event.setCancelled(!canBuild(event.getPlayer(), event.getBlock()));
 		if (!event.isCancelled()) {
 			if (Minigames.hasItem(event.getPlayer(), ShopItem.Builder)) {
-				ItemStack it = event.getPlayer().getItemInHand();
+				ItemStack it = event.getPlayer().getInventory().getItemInMainHand();
 				it.setAmount(64);
-				event.getPlayer().setItemInHand(it);
+				event.getPlayer().getInventory().setItemInMainHand(it);
 			}
 		}
 	}
@@ -168,12 +170,11 @@ public class BuildAndFight implements IMinigame {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onProjectileHit(ProjectileHitEvent event) {
 		Projectile e = event.getEntity();
-		BlockIterator iterator = new BlockIterator(e.getWorld(), e.getLocation().toVector(), e.getVelocity()
-				.normalize(), 0, 4);
+		BlockIterator iterator = new BlockIterator(e.getWorld(), e.getLocation().toVector(),
+				e.getVelocity().normalize(), 0, 4);
 		Block hit = null;
 
 		List<Block> aff = new ArrayList<>();
@@ -198,15 +199,14 @@ public class BuildAndFight implements IMinigame {
 		for (Block hb : aff) {
 			if ((hb.getType() == Material.WOOL || !indes && hb.getType() != Material.STAINED_CLAY)
 					&& hb.getType() != Material.STAINED_GLASS) {
-				PacketUtils.sendPacketGlobally(hb.getLocation(), 50,
-						PacketUtils.generateBlockParticles(hb.getType(), hb.getData(), hb.getLocation()));
-				hb.getWorld().playSound(hb.getLocation(), Sound.DIG_WOOL, 1, 1);
+
+				PacketUtils.playBlockParticles(new MaterialData(hb.getType()), hb.getLocation());
+				hb.getWorld().playSound(hb.getLocation(), Sound.BLOCK_CLOTH_BREAK, 1, 1);
 				hb.setType(Material.AIR);
 			}
 			if (hb.getType() == Material.STAINED_GLASS) {
-				PacketUtils.sendPacketGlobally(hb.getLocation(), 50,
-						PacketUtils.generateBlockParticles(hb.getType(), hb.getData(), hb.getLocation()));
-				hb.getWorld().playSound(hb.getLocation(), Sound.GLASS, 1, 1);
+				PacketUtils.playBlockParticles(new MaterialData(hb.getType()), hb.getLocation());
+				hb.getWorld().playSound(hb.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
 				hb.setType(Material.WOOL);
 			}
 		}

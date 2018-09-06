@@ -1,8 +1,44 @@
 package net.mcshockwave.Minigames.Games;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Effect;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.material.Button;
+import org.bukkit.material.MaterialData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
+
 import net.mcshockwave.MCS.Utils.ItemMetaUtils;
 import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
 import net.mcshockwave.MCS.Utils.SchedulerUtils;
 import net.mcshockwave.Minigames.Game;
 import net.mcshockwave.Minigames.Game.GameTeam;
@@ -15,48 +51,14 @@ import net.mcshockwave.Minigames.Shop.ShopItem;
 import net.mcshockwave.Minigames.Utils.ItemUtils;
 import net.mcshockwave.Minigames.worlds.Multiworld;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.material.Button;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
 public class Boarding implements IMinigame {
 
-	int						gr				= 50, yr = 50;
+	int gr = 50, yr = 50;
 
-	GameScore				gs, ys;
+	GameScore gs, ys;
 
-	HashMap<Player, Long>	lastFireTime	= new HashMap<Player, Long>();
-	private final int		reloadTime		= 10;
+	HashMap<Player, Long> lastFireTime = new HashMap<Player, Long>();
+	private final int reloadTime = 10;
 
 	@Override
 	public void onGameStart() {
@@ -120,7 +122,7 @@ public class Boarding implements IMinigame {
 
 		if (e.k != null) {
 			if (Minigames.hasItem(e.k, ShopItem.Privateer)) {
-				e.k.setHealth(e.k.getMaxHealth());
+				e.k.setHealth(e.k.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			}
 			if (Minigames.hasItem(e.k, ShopItem.Scavenger)) {
 				if (e.k.getInventory().getItem(8) == null) {
@@ -162,9 +164,8 @@ public class Boarding implements IMinigame {
 
 			if (de instanceof Player) {
 
-				PacketUtils.sendPacketGlobally(p.getLocation(), 20,
-						PacketUtils.generateBlockParticles(Material.IRON_BLOCK, 0, p.getEyeLocation()));
-				p.getWorld().playSound(p.getLocation(), Sound.ANVIL_LAND, 1, 1.5f);
+				PacketUtils.playBlockParticles(new MaterialData(Material.IRON_BLOCK), p.getEyeLocation());
+				p.getWorld().playSound(p.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1.5f);
 
 				event.setDamage(event.getDamage() * 0.15);
 
@@ -196,7 +197,7 @@ public class Boarding implements IMinigame {
 					Arrow ar = p.launchProjectile(Arrow.class);
 					ar.setVelocity(ar.getVelocity().multiply(10));
 
-					p.getWorld().playSound(p.getLocation(), Sound.ZOMBIE_WOOD, 1, 0);
+					p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_DOOR_WOOD, 1, 0);
 					Location play = p.getEyeLocation().add(p.getLocation().getDirection());
 					play.getWorld().playEffect(play, Effect.SMOKE, 0);
 
@@ -210,11 +211,11 @@ public class Boarding implements IMinigame {
 					}, reloadTimeCus * 20);
 				} else {
 					Minigames.send(ChatColor.RED, p, "Musket is %s!", "reloading");
-					p.playSound(p.getLocation(), Sound.CLICK, 1, 1);
+					p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
 				}
 			} else {
 				Minigames.send(ChatColor.RED, p, "Musket is %s!", "out of ammo");
-				p.playSound(p.getLocation(), Sound.CLICK, 1, 1);
+				p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
 			}
 		}
 
@@ -244,8 +245,8 @@ public class Boarding implements IMinigame {
 								EntityType.PRIMED_TNT);
 						tnt.setFuseTicks(60);
 						double spr = 0.2;
-						Vector velSpr = vel.clone().add(
-								new Vector(rand.nextGaussian() * spr, 0.2, rand.nextGaussian() * spr));
+						Vector velSpr = vel.clone()
+								.add(new Vector(rand.nextGaussian() * spr, 0.2, rand.nextGaussian() * spr));
 						if (Game.hasElement("cannon-power")) {
 							velSpr.multiply(Game.getDouble("cannon-power"));
 						}
@@ -253,7 +254,7 @@ public class Boarding implements IMinigame {
 						tnt.setFireTicks(Integer.MAX_VALUE);
 						tnt.setIsIncendiary(true);
 
-						cur.getWorld().playSound(cur, Sound.WITHER_SHOOT, 10, 2);
+						cur.getWorld().playSound(cur, Sound.ENTITY_WITHER_SHOOT, 10, 2);
 					}
 				}
 			}
@@ -268,14 +269,14 @@ public class Boarding implements IMinigame {
 				count++;
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 					public void run() {
-						PacketUtils.playParticleEffect(ParticleEffect.EXPLODE, l, 0, 0.01f, 2);
+						PacketUtils.playParticleEffect(Particle.EXPLOSION_NORMAL, l, 0, 0.01f, 2);
 					}
 				}, count);
 			}
 			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 				public void run() {
 					int rad = 2;
-					PacketUtils.playParticleEffect(ParticleEffect.DRIP_WATER, tl, rad, 0F, 50);
+					PacketUtils.playParticleEffect(Particle.DRIP_WATER, tl, rad, 0F, 50);
 					tl.getWorld().playEffect(tl, Effect.EXTINGUISH, 0);
 					for (int x = tl.getBlockX() - rad; x < tl.getBlockX() + rad; x++) {
 						for (int y = tl.getBlockY() - rad; y < tl.getBlockY() + rad; y++) {
@@ -291,7 +292,8 @@ public class Boarding implements IMinigame {
 			}, count);
 		}
 
-		if (Game.hasElement("enable-large-cannons") && Game.getString("enable-large-cannons").equalsIgnoreCase("true")) {
+		if (Game.hasElement("enable-large-cannons")
+				&& Game.getString("enable-large-cannons").equalsIgnoreCase("true")) {
 			if (Minigames.alivePlayers.contains(p.getName()) && a == Action.RIGHT_CLICK_BLOCK && b != null
 					&& b.getType() == Material.STONE_BUTTON) {
 				Button bt = (Button) b.getState().getData();
@@ -305,7 +307,7 @@ public class Boarding implements IMinigame {
 					SchedulerUtils ut = SchedulerUtils.getNew();
 					ut.add(new Runnable() {
 						public void run() {
-							b.getWorld().playSound(b.getLocation(), Sound.WITHER_SPAWN, 10, 0.6f);
+							b.getWorld().playSound(b.getLocation(), Sound.ENTITY_WITHER_SPAWN, 10, 0.6f);
 						}
 					});
 					for (int i = 0; i < 12; i++) {
@@ -331,13 +333,12 @@ public class Boarding implements IMinigame {
 					ut.add(new Runnable() {
 						public void run() {
 							if (fin != null) {
-								fin.getWorld().playSound(fin.getLocation(), Sound.EXPLODE, 10, 2);
+								fin.getWorld().playSound(fin.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 10, 2);
 
 								Vector vel = new Vector((rand.nextDouble() * 2 - 1) / 2, 0, dir);
 								Location start = fin.getLocation().add(0.5, 0.5, 0.5);
 								for (int i = 0; i < 200; i++) {
-									PacketUtils.sendPacketGlobally(start, 200, PacketUtils.generateParticles(
-											ParticleEffect.FIREWORKS_SPARK, start, 0, 0.2f, 3));
+									PacketUtils.playParticleEffect(Particle.FIREWORKS_SPARK, start, 0, 0.2f, 3);
 									start.add(vel);
 									if (!start.getBlock().getType().isTransparent()) {
 										start.getWorld().createExplosion(start, 12);
@@ -364,7 +365,7 @@ public class Boarding implements IMinigame {
 		}
 	}
 
-	public static final Material[]	nobreak	= { Material.IRON_BLOCK, Material.DOUBLE_STEP, Material.IRON_FENCE,
+	public static final Material[] nobreak = { Material.IRON_BLOCK, Material.DOUBLE_STEP, Material.IRON_FENCE,
 			Material.STAINED_GLASS, Material.REDSTONE_LAMP_ON, Material.REDSTONE_BLOCK };
 
 	public void setReinforcements(GameTeam gt, int set) {
@@ -405,7 +406,7 @@ public class Boarding implements IMinigame {
 			if (p.getLocation().add(0, -1, 0).getBlock().getType() != Material.AIR
 					|| p.getLocation().add(0, -2, 0).getBlock().getType() != Material.AIR) {
 				p.setVelocity(p.getVelocity().add(new Vector(0, 1.5, 0)));
-				p.getWorld().playSound(p.getLocation(), Sound.ENDERDRAGON_WINGS, 3, 1);
+				p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_FLAP, 3, 1);
 			} else
 				p.setVelocity(p.getVelocity().add(new Vector(0, -0.1, 0)));
 		}

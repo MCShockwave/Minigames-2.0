@@ -1,27 +1,14 @@
 package net.mcshockwave.Minigames.Games;
 
-import net.mcshockwave.MCS.MCShockwave;
-import net.mcshockwave.MCS.Utils.CooldownUtils;
-import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
-import net.mcshockwave.MCS.Utils.ItemMetaUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
-import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Minigames;
-import net.mcshockwave.Minigames.Events.DeathEvent;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Handlers.Sidebar;
-import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
-import net.mcshockwave.Minigames.Shop.ShopItem;
-import net.mcshockwave.Minigames.Utils.LocUtils;
-import net.mcshockwave.Minigames.worlds.Multiworld;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -45,28 +32,42 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import net.mcshockwave.MCS.MCShockwave;
+import net.mcshockwave.MCS.Utils.CooldownUtils;
+import net.mcshockwave.MCS.Utils.FireworkLaunchUtils;
+import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Game.GameTeam;
+import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
+import net.mcshockwave.Minigames.Shop.ShopItem;
+import net.mcshockwave.Minigames.Utils.LocUtils;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 public class VillageBattle implements IMinigame {
 
-	Location					gspawn	= null;
-	Location					yspawn	= null;
+	Location gspawn = null;
+	Location yspawn = null;
 
-	HashMap<Player, Profession>	types	= new HashMap<Player, Profession>();
+	HashMap<Player, Profession> types = new HashMap<Player, Profession>();
 
-	ArrayList<Villager>			greVil	= new ArrayList<Villager>();
-	ArrayList<Villager>			yelVil	= new ArrayList<Villager>();
+	ArrayList<Villager> greVil = new ArrayList<Villager>();
+	ArrayList<Villager> yelVil = new ArrayList<Villager>();
 
-	HashMap<Player, Long>		cool	= new HashMap<Player, Long>();
+	HashMap<Player, Long> cool = new HashMap<Player, Long>();
 
-	BukkitTask					bt		= null;
+	BukkitTask bt = null;
 
-	GameScore					gs		= null, ys = null;
+	GameScore gs = null, ys = null;
 
 	@Override
 	public void onGameStart() {
@@ -124,28 +125,33 @@ public class VillageBattle implements IMinigame {
 		p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100000, 0));
 	}
 
+	public static final Profession[] professions = { Profession.BLACKSMITH, Profession.BUTCHER, Profession.FARMER,
+			Profession.LIBRARIAN, Profession.PRIEST };
+
 	public Villager spawnVillager(boolean isGreen, boolean update) {
 		Location l = getValidSpawnPoint(isGreen);
 		Villager v = (Villager) Multiworld.getGame().spawnEntity(l, EntityType.VILLAGER);
-		Profession p = Profession.values()[rand.nextInt(Profession.values().length)];
+		Profession p = professions[rand.nextInt(professions.length)];
 		v.setProfession(p);
 		String cusname = (isGreen ? ChatColor.GREEN : ChatColor.YELLOW).toString();
 		switch (p) {
-			case BLACKSMITH:
-				cusname += "Blacksmith";
-				break;
-			case BUTCHER:
-				cusname += "Butcher";
-				break;
-			case FARMER:
-				cusname += "Farmer";
-				break;
-			case LIBRARIAN:
-				cusname += "Librarian";
-				break;
-			case PRIEST:
-				cusname += "Priest";
-				break;
+		case BLACKSMITH:
+			cusname += "Blacksmith";
+			break;
+		case BUTCHER:
+			cusname += "Butcher";
+			break;
+		case FARMER:
+			cusname += "Farmer";
+			break;
+		case LIBRARIAN:
+			cusname += "Librarian";
+			break;
+		case PRIEST:
+			cusname += "Priest";
+			break;
+		default:
+			break;
 		}
 		v.setCustomName(cusname);
 		v.setCustomNameVisible(true);
@@ -223,8 +229,8 @@ public class VillageBattle implements IMinigame {
 
 	public void giveKit(Player p, Profession pro) {
 		p.setLevel(100);
-		p.getInventory().setHelmet(
-				ItemMetaUtils.setItemName(
+		p.getInventory()
+				.setHelmet(ItemMetaUtils.setItemName(
 						ItemMetaUtils.setHeadName(new ItemStack(Material.SKULL_ITEM, 1, (short) 3), "MHF_Villager"),
 						ChatColor.RESET + "Villager Head"));
 		ProfessionKit pk = ProfessionKit.valueOf(pro.name());
@@ -233,24 +239,24 @@ public class VillageBattle implements IMinigame {
 			for (int i = 0; i < desc.length; i++) {
 				desc[i] = ChatColor.AQUA + desc[i];
 			}
-			p.getInventory().setItem(
-					1,
-					ItemMetaUtils.setLore(
-							ItemMetaUtils.setItemName(new ItemStack(Material.ENCHANTED_BOOK), ChatColor.AQUA
-									+ pk.specAbilName), desc));
+			p.getInventory().setItem(1, ItemMetaUtils.setLore(
+					ItemMetaUtils.setItemName(new ItemStack(Material.ENCHANTED_BOOK), ChatColor.AQUA + pk.specAbilName),
+					desc));
 			p.getInventory().addItem(pk.main);
 			if (Minigames.hasItem(p, ShopItem.Disruptor)) {
-				p.getInventory().setItem(
-						8,
-						ItemMetaUtils.setItemName(ItemMetaUtils.setLore(new ItemStack(Material.NETHER_STAR),
-								"Click to disable enemy", "possessing for 15 seconds!"), "§eDisruptor"));
+				p.getInventory()
+						.setItem(8,
+								ItemMetaUtils.setItemName(
+										ItemMetaUtils.setLore(new ItemStack(Material.NETHER_STAR),
+												"Click to disable enemy", "possessing for 15 seconds!"),
+										"§eDisruptor"));
 			}
 			if (pk.main.getType() == Material.BOW) {
 				p.getInventory().setItem(27, new ItemStack(Material.ARROW));
 			}
 			p.addPotionEffect(new PotionEffect(pk.pos, 10000000, 0));
-			p.addPotionEffect(new PotionEffect(pk.neg, 10000000,
-					(pk.neg == PotionEffectType.DAMAGE_RESISTANCE ? -2 : 0)));
+			p.addPotionEffect(
+					new PotionEffect(pk.neg, 10000000, (pk.neg == PotionEffectType.DAMAGE_RESISTANCE ? -2 : 0)));
 		}
 	}
 
@@ -260,8 +266,8 @@ public class VillageBattle implements IMinigame {
 			if (types.get(e.getPlayer()) == Profession.BUTCHER) {
 				if (e.getTo().getY() >= 107
 						&& (e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.DIRT
-								|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS || e
-								.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
+								|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS
+								|| e.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.STONE)) {
 
 					Player p = e.getPlayer();
 					Location l = p.getWorld().getHighestBlockAt(e.getFrom()).getLocation();
@@ -434,16 +440,18 @@ public class VillageBattle implements IMinigame {
 
 	public int getLvlReq(Profession p) {
 		switch (p) {
-			case BLACKSMITH:
-				return 50;
-			case BUTCHER:
-				return 10;
-			case FARMER:
-				return 20;
-			case LIBRARIAN:
-				return 20;
-			case PRIEST:
-				return 10;
+		case BLACKSMITH:
+			return 50;
+		case BUTCHER:
+			return 10;
+		case FARMER:
+			return 20;
+		case LIBRARIAN:
+			return 20;
+		case PRIEST:
+			return 10;
+		default:
+			break;
 		}
 		return 0;
 	}
@@ -467,7 +475,7 @@ public class VillageBattle implements IMinigame {
 		cool.put(p, System.currentTimeMillis() + ctime * 1000);
 	}
 
-	HashMap<FallingBlock, Player>	anvil	= new HashMap<FallingBlock, Player>();
+	HashMap<FallingBlock, Player> anvil = new HashMap<FallingBlock, Player>();
 
 	@EventHandler
 	public void onAnvilLand(EntityChangeBlockEvent event) {
@@ -481,9 +489,8 @@ public class VillageBattle implements IMinigame {
 				return;
 
 			Block b = event.getBlock();
-			b.getWorld().playSound(b.getLocation(), Sound.ANVIL_LAND, 2, 0);
-			PacketUtils.sendPacketGlobally(b.getLocation(), 50,
-					PacketUtils.generateBlockParticles(Material.ANVIL, 0, b.getLocation()));
+			b.getWorld().playSound(b.getLocation(), Sound.BLOCK_ANVIL_LAND, 2, 0);
+			PacketUtils.playBlockParticles(new MaterialData(Material.ANVIL), b.getLocation());
 
 			for (Entity e : event.getEntity().getNearbyEntities(5, 5, 5)) {
 				if (e instanceof Player) {
@@ -560,6 +567,7 @@ public class VillageBattle implements IMinigame {
 			if (it.getType() == Material.STONE_HOE && pro == Profession.FARMER) {
 				p.setItemInHand(null);
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+
 					public void run() {
 						if (types.containsKey(p)) {
 							p.getInventory().setItem(slot, it);
@@ -593,10 +601,8 @@ public class VillageBattle implements IMinigame {
 				}
 
 				if (pro == Profession.LIBRARIAN) {
-					PacketUtils
-							.sendPacketGlobally(p.getLocation(), 50, PacketUtils.generateParticles(
-									ParticleEffect.ENCHANTMENT_TABLE, p.getLocation(), 0, 1, 100));
-					p.getWorld().playSound(p.getLocation(), Sound.DIG_GRASS, 1, 0);
+					PacketUtils.playParticleEffect(Particle.ENCHANTMENT_TABLE, p.getLocation(), 0, 1, 100);
+					p.getWorld().playSound(p.getLocation(), Sound.BLOCK_GRASS_BREAK, 1, 0);
 
 					for (Entity e : p.getNearbyEntities(5, 5, 5)) {
 						if (e instanceof Player) {
@@ -611,7 +617,7 @@ public class VillageBattle implements IMinigame {
 				}
 
 				if (pro == Profession.FARMER) {
-					p.getWorld().playSound(p.getLocation(), Sound.GHAST_FIREBALL, 1, 0);
+					p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GHAST_SHOOT, 1, 0);
 
 					for (Entity e : p.getNearbyEntities(5, 5, 5)) {
 						if (e instanceof Player) {
@@ -625,9 +631,9 @@ public class VillageBattle implements IMinigame {
 				}
 
 				if (pro == Profession.PRIEST) {
-					PacketUtils.sendPacketGlobally(p.getLocation(), 50,
-							PacketUtils.generateParticles(ParticleEffect.HEART, p.getLocation(), 3, 1, 100));
-					p.getWorld().playSound(p.getLocation(), Sound.BURP, 1, 1);
+
+					PacketUtils.playParticleEffect(Particle.HEART, p.getLocation(), 3, 1, 100);
+					p.getWorld().playSound(p.getLocation(), Sound.ENTITY_PLAYER_BURP, 1, 1);
 					p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 400, 1));
 
 					for (Entity e : p.getNearbyEntities(5, 5, 5)) {
@@ -656,7 +662,7 @@ public class VillageBattle implements IMinigame {
 						}
 					}, 60l);
 
-					p.getWorld().playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1, 0);
+					p.getWorld().playSound(p.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 1, 0);
 				}
 
 				subLvl(p, getLvlReq(pro), 5);
@@ -666,45 +672,23 @@ public class VillageBattle implements IMinigame {
 	}
 
 	public enum ProfessionKit {
-		LIBRARIAN(
-			new ItemStack(Material.STONE_SWORD),
-			"Stun",
-			PotionEffectType.SPEED,
-			PotionEffectType.WEAKNESS,
-			"Gives nearby enemies blindness and",
-			"nausea for 10 seconds"),
-		FARMER(
-			new ItemStack(Material.STONE_HOE),
-			"Slow",
-			PotionEffectType.REGENERATION,
-			PotionEffectType.DAMAGE_RESISTANCE,
-			"Gives nearby enemies slowness",
-			"for 5 seconds"),
-		PRIEST(
-			ItemMetaUtils.addEnchantment(new ItemStack(Material.BOW), Enchantment.ARROW_INFINITE, 1),
-			"Heal",
-			PotionEffectType.INCREASE_DAMAGE,
-			PotionEffectType.DAMAGE_RESISTANCE,
-			"Gives nearby allies and yourself",
-			"regeneration II"),
-		BLACKSMITH(
-			new ItemStack(Material.ANVIL),
-			"Berserk",
-			PotionEffectType.DAMAGE_RESISTANCE,
-			PotionEffectType.SLOW,
-			"Gives yourself Strength III for 5 seconds"),
-		BUTCHER(
-			new ItemStack(Material.IRON_SWORD),
-			"Evade",
-			PotionEffectType.SPEED,
-			PotionEffectType.DAMAGE_RESISTANCE,
-			"Speeds you up for a few seconds");
+		LIBRARIAN(new ItemStack(Material.STONE_SWORD), "Stun", PotionEffectType.SPEED, PotionEffectType.WEAKNESS,
+				"Gives nearby enemies blindness and", "nausea for 10 seconds"),
+		FARMER(new ItemStack(Material.STONE_HOE), "Slow", PotionEffectType.REGENERATION,
+				PotionEffectType.DAMAGE_RESISTANCE, "Gives nearby enemies slowness", "for 5 seconds"),
+		PRIEST(ItemMetaUtils.addEnchantment(new ItemStack(Material.BOW), Enchantment.ARROW_INFINITE, 1), "Heal",
+				PotionEffectType.INCREASE_DAMAGE, PotionEffectType.DAMAGE_RESISTANCE,
+				"Gives nearby allies and yourself", "regeneration II"),
+		BLACKSMITH(new ItemStack(Material.ANVIL), "Berserk", PotionEffectType.DAMAGE_RESISTANCE, PotionEffectType.SLOW,
+				"Gives yourself Strength III for 5 seconds"),
+		BUTCHER(new ItemStack(Material.IRON_SWORD), "Evade", PotionEffectType.SPEED, PotionEffectType.DAMAGE_RESISTANCE,
+				"Speeds you up for a few seconds");
 
-		ItemStack			main;
-		String				specAbilName;
-		PotionEffectType	pos;
-		PotionEffectType	neg;
-		String[]			desc;
+		ItemStack main;
+		String specAbilName;
+		PotionEffectType pos;
+		PotionEffectType neg;
+		String[] desc;
 
 		private ProfessionKit(ItemStack main, String specAbilName, PotionEffectType pos, PotionEffectType neg,
 				String... desc) {
@@ -714,6 +698,7 @@ public class VillageBattle implements IMinigame {
 			this.neg = neg;
 			this.desc = desc;
 		}
+
 	}
 
 	@Override

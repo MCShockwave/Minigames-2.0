@@ -1,25 +1,13 @@
 package net.mcshockwave.Minigames.Games;
 
-import net.mcshockwave.MCS.Utils.CooldownUtils;
-import net.mcshockwave.MCS.Utils.ItemMetaUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils;
-import net.mcshockwave.MCS.Utils.PacketUtils.ParticleEffect;
-import net.mcshockwave.Minigames.Game;
-import net.mcshockwave.Minigames.Game.GameTeam;
-import net.mcshockwave.Minigames.Minigames;
-import net.mcshockwave.Minigames.Events.DeathEvent;
-import net.mcshockwave.Minigames.Handlers.IMinigame;
-import net.mcshockwave.Minigames.Handlers.PreGame;
-import net.mcshockwave.Minigames.Handlers.Sidebar;
-import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
-import net.mcshockwave.Minigames.Utils.LaserTagMapGenerator;
-import net.mcshockwave.Minigames.worlds.Multiworld;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -34,7 +22,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
+import net.mcshockwave.MCS.Utils.CooldownUtils;
+import net.mcshockwave.MCS.Utils.ItemMetaUtils;
+import net.mcshockwave.MCS.Utils.PacketUtils;
+import net.mcshockwave.Minigames.Game;
+import net.mcshockwave.Minigames.Game.GameTeam;
+import net.mcshockwave.Minigames.Minigames;
+import net.mcshockwave.Minigames.Events.DeathEvent;
+import net.mcshockwave.Minigames.Handlers.IMinigame;
+import net.mcshockwave.Minigames.Handlers.PreGame;
+import net.mcshockwave.Minigames.Handlers.Sidebar;
+import net.mcshockwave.Minigames.Handlers.Sidebar.GameScore;
+import net.mcshockwave.Minigames.Utils.LaserTagMapGenerator;
+import net.mcshockwave.Minigames.worlds.Multiworld;
 
 public class LaserTag implements IMinigame {
 
@@ -103,7 +103,7 @@ public class LaserTag implements IMinigame {
 	}
 
 	public void disableMsgs(Player d, Player k) {
-		d.getWorld().playSound(d.getLocation(), Sound.WITHER_SPAWN, 2, 2);
+		d.getWorld().playSound(d.getLocation(), Sound.ENTITY_WITHER_SPAWN, 2, 2);
 		Minigames.broadcastDeath(d, k, "%s was disabled from standing around an enemy base", "%s was disabled by %s");
 		Minigames.send(ChatColor.RED, d, "You are %s! You cannot shoot! Go back to your base to %s!", "disabled",
 				"recharge");
@@ -137,12 +137,12 @@ public class LaserTag implements IMinigame {
 			double spr = 50;
 			vel.add(new Vector(rand.nextGaussian() / spr, rand.nextGaussian() / spr, rand.nextGaussian() / spr));
 
-			st.getWorld().playSound(st, Sound.BLAZE_HIT, 2, 2);
+			st.getWorld().playSound(st, Sound.ENTITY_BLAZE_HURT, 2, 2);
 			int rep = 0;
 			int maxDis = 500;
 			while (st.getBlock().getType().isTransparent() && ++rep < maxDis) {
 				st.add(vel);
-				PacketUtils.playParticleEffect(ParticleEffect.MAGIC_CRIT, st, 0.05f, 0.05f, 2);
+				PacketUtils.playParticleEffect(Particle.CRIT_MAGIC, st, 0.05f, 0.05f, 2);
 				for (Player c : Minigames.getOptedIn()) {
 					if (!Minigames.alivePlayers.contains(c.getName()) || Game.getTeam(c) != null
 							&& Game.getTeam(p) != null && Game.getTeam(p).color == Game.getTeam(c).color) {
@@ -160,11 +160,11 @@ public class LaserTag implements IMinigame {
 								disableMsgs(c, p);
 								lvlSet = 0;
 							} else
-								c.getWorld().playSound(c.getLocation(), Sound.BLAZE_HIT, 2, 0);
+								c.getWorld().playSound(c.getLocation(), Sound.ENTITY_BLAZE_HURT, 2, 0);
 							c.setLevel(lvlSet);
 						} else {
 							p.sendMessage("§cPlayer is disabled!");
-							p.playSound(p.getLocation(), Sound.BLAZE_DEATH, 10, 2);
+							p.playSound(p.getLocation(), Sound.ENTITY_BLAZE_DEATH, 10, 2);
 						}
 					}
 				}
@@ -177,7 +177,7 @@ public class LaserTag implements IMinigame {
 								.equals(gb1) || hit.equals(gb2)))) {
 					hp--;
 					hit.getWorld().playEffect(hit.getLocation(), Effect.STEP_SOUND, Material.BEACON);
-					hit.getWorld().playSound(hit.getLocation(), Sound.WITHER_HURT, 10, 2);
+					hit.getWorld().playSound(hit.getLocation(), Sound.ENTITY_WITHER_HURT, 10, 2);
 					if (hp <= 0) {
 						Minigames.broadcast(Game.getTeam(p).color, "%s destroyed the %s base!", p.getName(),
 								(Game.getTeam(p).color == ChatColor.GREEN ? "§e§oYellow" : "§a§oGreen"));
